@@ -1,0 +1,62 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background - VS Code Dark theme -->
+  <rect width="1200" height="630" fill="#1e1e1e"/>
+
+  <!-- Title bar simulation -->
+  <rect y="0" width="1200" height="35" fill="#3c3c3c"/>
+  <circle cx="20" cy="17.5" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="17.5" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="17.5" r="6" fill="#27c93f"/>
+
+  <!-- Activity bar -->
+  <rect x="0" y="35" width="48" height="595" fill="#333333"/>
+
+  <!-- Sidebar -->
+  <rect x="48" y="35" width="200" height="595" fill="#252526"/>
+  <text x="60" y="65" fill="#cccccc" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600">EXPLORER</text>
+
+  <!-- File tree items -->
+  <text x="72" y="95" fill="#cccccc" font-family="monospace" font-size="13">README.md</text>
+  <text x="72" y="120" fill="#cccccc" font-family="monospace" font-size="13">about.md</text>
+  <text x="72" y="145" fill="#cccccc" font-family="monospace" font-size="13">experience.json</text>
+  <text x="72" y="170" fill="#cccccc" font-family="monospace" font-size="13">skills.ts</text>
+
+  <!-- Tab bar -->
+  <rect x="248" y="35" width="952" height="35" fill="#252526"/>
+  <rect x="248" y="35" width="120" height="35" fill="#1e1e1e"/>
+  <text x="268" y="57" fill="#ffffff" font-family="monospace" font-size="12">README.md</text>
+
+  <!-- Editor area -->
+  <rect x="248" y="70" width="952" height="525" fill="#1e1e1e"/>
+
+  <!-- Code content simulation -->
+  <text x="280" y="120" fill="#569cd6" font-family="'Fira Code', monospace" font-size="24" font-weight="500"># Rafael Carrion</text>
+  <text x="280" y="170" fill="#ce9178" font-family="'Fira Code', monospace" font-size="20">Full-Stack Developer</text>
+  <text x="280" y="210" fill="#6a9955" font-family="'Fira Code', monospace" font-size="16">// Barcelona, Spain</text>
+
+  <!-- Tech stack simulation -->
+  <text x="280" y="280" fill="#dcdcaa" font-family="'Fira Code', monospace" font-size="16">const</text>
+  <text x="340" y="280" fill="#9cdcfe" font-family="'Fira Code', monospace" font-size="16">skills</text>
+  <text x="400" y="280" fill="#d4d4d4" font-family="'Fira Code', monospace" font-size="16">=</text>
+  <text x="420" y="280" fill="#d4d4d4" font-family="'Fira Code', monospace" font-size="16">[</text>
+  <text x="300" y="310" fill="#ce9178" font-family="'Fira Code', monospace" font-size="16">"C#"</text>
+  <text x="360" y="310" fill="#d4d4d4" font-family="'Fira Code', monospace" font-size="16">,</text>
+  <text x="380" y="310" fill="#ce9178" font-family="'Fira Code', monospace" font-size="16">".NET"</text>
+  <text x="455" y="310" fill="#d4d4d4" font-family="'Fira Code', monospace" font-size="16">,</text>
+  <text x="475" y="310" fill="#ce9178" font-family="'Fira Code', monospace" font-size="16">"TypeScript"</text>
+  <text x="620" y="310" fill="#d4d4d4" font-family="'Fira Code', monospace" font-size="16">,</text>
+  <text x="300" y="340" fill="#ce9178" font-family="'Fira Code', monospace" font-size="16">"React"</text>
+  <text x="380" y="340" fill="#d4d4d4" font-family="'Fira Code', monospace" font-size="16">,</text>
+  <text x="400" y="340" fill="#ce9178" font-family="'Fira Code', monospace" font-size="16">"Docker"</text>
+  <text x="495" y="340" fill="#d4d4d4" font-family="'Fira Code', monospace" font-size="16">,</text>
+  <text x="515" y="340" fill="#ce9178" font-family="'Fira Code', monospace" font-size="16">"SQL"</text>
+  <text x="280" y="370" fill="#d4d4d4" font-family="'Fira Code', monospace" font-size="16">];</text>
+
+  <!-- URL / branding -->
+  <text x="280" y="480" fill="#007acc" font-family="'Fira Code', monospace" font-size="32" font-weight="600">racafe.dev</text>
+
+  <!-- Status bar -->
+  <rect x="0" y="595" width="1200" height="35" fill="#007acc"/>
+  <text x="20" y="617" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="12">main</text>
+  <text x="1100" y="617" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="12">TypeScript</text>
+</svg>
