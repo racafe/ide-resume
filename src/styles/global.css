@@ -76,7 +76,38 @@
 
   /* Tab bar */
   .tab-bar {
-    @apply flex bg-ide-tab border-b border-ide-border overflow-x-auto;
+    @apply flex bg-ide-tab border-b border-ide-border overflow-x-auto relative;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  .tab-bar::-webkit-scrollbar {
+    @apply hidden; /* Hide scrollbar for cleaner look */
+  }
+
+  /* Tab overflow scroll indicators */
+  .tab-bar-container {
+    @apply relative flex-1;
+  }
+
+  .tab-scroll-indicator {
+    @apply absolute top-0 bottom-0 w-6 flex items-center justify-center opacity-0 pointer-events-none transition-opacity z-10;
+  }
+
+  .tab-scroll-indicator.visible {
+    @apply opacity-100 pointer-events-auto cursor-pointer;
+  }
+
+  .tab-scroll-indicator-left {
+    @apply left-0 bg-gradient-to-r from-ide-tab to-transparent;
+  }
+
+  .tab-scroll-indicator-right {
+    @apply right-0 bg-gradient-to-l from-ide-tab to-transparent;
+  }
+
+  .tab-scroll-indicator svg {
+    @apply text-ide-textMuted hover:text-ide-text transition-colors;
   }
 
   .tab {

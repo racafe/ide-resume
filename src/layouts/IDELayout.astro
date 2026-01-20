@@ -80,9 +80,29 @@ const { title = 'Rafael Carrión - IDE Resume' } = Astro.props;
 
         <!-- Editor Area -->
         <main class="editor-area">
-          <!-- Tab Bar -->
-          <div class="tab-bar" id="tab-bar">
-            <slot name="tabs" />
+          <!-- Tab Bar with Scroll Indicators -->
+          <div class="tab-bar-container">
+            <button
+              class="tab-scroll-indicator tab-scroll-indicator-left"
+              id="tab-scroll-left"
+              aria-label="Scroll tabs left"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <div class="tab-bar" id="tab-bar">
+              <slot name="tabs" />
+            </div>
+            <button
+              class="tab-scroll-indicator tab-scroll-indicator-right"
+              id="tab-scroll-right"
+              aria-label="Scroll tabs right"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
           </div>
 
           <!-- Editor Content -->
@@ -158,6 +178,51 @@ const { title = 'Rafael Carrión - IDE Resume' } = Astro.props;
             }
           }, 300);
         }, 2000);
+
+        // Tab bar scroll handling
+        const tabBar = document.getElementById('tab-bar');
+        const scrollLeft = document.getElementById('tab-scroll-left');
+        const scrollRight = document.getElementById('tab-scroll-right');
+
+        function updateScrollIndicators() {
+          if (!tabBar || !scrollLeft || !scrollRight) return;
+
+          const canScrollLeft = tabBar.scrollLeft > 0;
+          const canScrollRight = tabBar.scrollLeft < tabBar.scrollWidth - tabBar.clientWidth - 1;
+
+          scrollLeft.classList.toggle('visible', canScrollLeft);
+          scrollRight.classList.toggle('visible', canScrollRight);
+        }
+
+        // Update indicators on scroll
+        tabBar?.addEventListener('scroll', updateScrollIndicators);
+
+        // Click to scroll
+        scrollLeft?.addEventListener('click', () => {
+          tabBar?.scrollBy({ left: -150, behavior: 'smooth' });
+        });
+
+        scrollRight?.addEventListener('click', () => {
+          tabBar?.scrollBy({ left: 150, behavior: 'smooth' });
+        });
+
+        // Horizontal mouse wheel scrolling on tab bar
+        tabBar?.addEventListener('wheel', (e) => {
+          if (e.deltaY !== 0) {
+            e.preventDefault();
+            tabBar.scrollBy({ left: e.deltaY, behavior: 'auto' });
+          }
+        });
+
+        // Observe DOM changes to update indicators when tabs are added/removed
+        const observer = new MutationObserver(updateScrollIndicators);
+        if (tabBar) {
+          observer.observe(tabBar, { childList: true });
+        }
+
+        // Initial check after a short delay to ensure layout is complete
+        setTimeout(updateScrollIndicators, 100);
+        window.addEventListener('resize', updateScrollIndicators);
       });
     </script>
 
