@@ -1,0 +1,30 @@
+{
+  "plugins": [
+    "prettier-plugin-astro"
+  ],
+  "singleQuote": true,
+  "quoteProps": "preserve",
+  "printWidth": 120,
+  "htmlWhitespaceSensitivity": "ignore",
+  "trailingComma": "es5",
+  "overrides": [
+    {
+      "files": "*.astro",
+      "options": {
+        "parser": "astro"
+      }
+    },
+    {
+      "files": "*.md",
+      "options": {
+        "parser": "markdown"
+      }
+    },
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]
+}
