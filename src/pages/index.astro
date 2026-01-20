@@ -87,6 +87,49 @@ import '@styles/global.css';
 </IDELayout>
 
 <script>
+  // Language mode mapping based on file extension
+  const languageModeMap: Record<string, string> = {
+    md: 'Markdown',
+    json: 'JSON',
+    ts: 'TypeScript',
+    tsx: 'TypeScript React',
+    js: 'JavaScript',
+    jsx: 'JavaScript React',
+    yaml: 'YAML',
+    yml: 'YAML',
+    txt: 'Plain Text',
+    html: 'HTML',
+    css: 'CSS',
+    astro: 'Astro',
+  };
+
+  // Update status bar based on active file
+  function updateStatusBar(filename: string) {
+    const ext = filename.split('.').pop()?.toLowerCase() || '';
+    const language = languageModeMap[ext] || 'Plain Text';
+
+    // Update language mode
+    const statusLanguage = document.getElementById('status-language');
+    if (statusLanguage) {
+      statusLanguage.textContent = language;
+      statusLanguage.setAttribute('title', `Select Language Mode (${language})`);
+    }
+
+    // Update file type indicator
+    const statusFileType = document.getElementById('status-file-type');
+    const statusFileTypeText = document.getElementById('status-file-type-text');
+    if (statusFileType && statusFileTypeText) {
+      statusFileTypeText.textContent = language;
+      statusFileType.setAttribute('title', `File type: ${language}`);
+    }
+
+    // Reset line/col for new file (would need actual editor integration for real values)
+    const statusLineCol = document.getElementById('status-line-col');
+    if (statusLineCol) {
+      statusLineCol.textContent = 'Ln 1, Col 1';
+    }
+  }
+
   // Tab management - listen for file-open events from FileExplorer
   window.addEventListener('file-open', ((event: CustomEvent<{ filename: string }>) => {
     const { filename } = event.detail;
@@ -100,6 +143,7 @@ import '@styles/global.css';
       // Activate existing tab
       tabBar.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
       existingTab.classList.add('active');
+      updateStatusBar(filename);
       return;
     }
 
@@ -129,6 +173,9 @@ import '@styles/global.css';
       const remainingTabs = tabBar.querySelectorAll('.tab');
       if (remainingTabs.length > 0) {
         remainingTabs[0].classList.add('active');
+        // Update status bar for newly active tab
+        const activeFile = remainingTabs[0].getAttribute('data-file');
+        if (activeFile) updateStatusBar(activeFile);
       }
     });
 
@@ -136,9 +183,11 @@ import '@styles/global.css';
     newTab.addEventListener('click', () => {
       tabBar.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
       newTab.classList.add('active');
+      updateStatusBar(filename);
     });
 
     tabBar.appendChild(newTab);
+    updateStatusBar(filename);
   }) as EventListener);
 
   // Helper function to generate file icon HTML
@@ -175,6 +224,9 @@ import '@styles/global.css';
         const remainingTabs = tabBar?.querySelectorAll('.tab');
         if (remainingTabs && remainingTabs.length > 0) {
           remainingTabs[0].classList.add('active');
+          // Update status bar for newly active tab
+          const activeFile = remainingTabs[0].getAttribute('data-file');
+          if (activeFile) updateStatusBar(activeFile);
         }
       }
     });
@@ -186,6 +238,9 @@ import '@styles/global.css';
       const tabBar = tab.parentElement;
       tabBar?.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
+      // Update status bar for clicked tab
+      const filename = tab.getAttribute('data-file');
+      if (filename) updateStatusBar(filename);
     });
   });
 </script>
