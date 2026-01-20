@@ -567,4 +567,92 @@
     @apply inline-block w-10 pr-4 text-right text-ide-lineNumber select-none;
     min-width: 2.5rem;
   }
+
+  /* Contact Form - TSX Style */
+  .contact-form-editor {
+    @apply max-w-3xl;
+  }
+
+  .tsx-form-field {
+    @apply relative;
+  }
+
+  .tsx-input,
+  .tsx-textarea {
+    @apply font-code text-code bg-ide-sidebarActive border border-ide-border rounded px-3 py-2 text-ide-string w-64 my-1 ml-[7.5rem];
+    @apply focus:outline-none focus:border-ide-accent focus:ring-1 focus:ring-ide-accent;
+    @apply placeholder:text-ide-textMuted placeholder:italic;
+  }
+
+  .tsx-textarea {
+    @apply w-80 resize-none;
+  }
+
+  .tsx-input:focus,
+  .tsx-textarea:focus {
+    @apply bg-ide-sidebar;
+  }
+
+  .tsx-error {
+    @apply text-ide-error text-code-sm font-code ml-[7.5rem] h-5;
+  }
+
+  .tsx-error:not(:empty) {
+    @apply py-1;
+  }
+
+  .tsx-error::before {
+    content: '// TypeError: ';
+    @apply text-ide-comment;
+  }
+
+  .tsx-error:empty::before {
+    content: '';
+  }
+
+  .tsx-submit-section {
+    @apply mt-2;
+  }
+
+  .tsx-submit-btn {
+    @apply font-code text-code bg-ide-statusBar text-white px-4 py-2 rounded ml-[7.5rem] my-2;
+    @apply hover:bg-ide-statusBarHover transition-colors cursor-pointer;
+    @apply flex items-center gap-2;
+  }
+
+  .tsx-submit-btn:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .tsx-submit-btn .btn-text {
+    @apply text-ide-function;
+  }
+
+  .tsx-submit-btn:hover .btn-text {
+    @apply text-white;
+  }
+
+  /* Success State */
+  .tsx-success {
+    @apply mt-4 p-4 bg-ide-string/10 border border-ide-string/30 rounded;
+  }
+
+  .tsx-success .code-block {
+    @apply mb-4;
+  }
+
+  .tsx-reset-btn {
+    @apply font-code text-code bg-ide-sidebar border border-ide-border px-3 py-1.5 rounded;
+    @apply hover:bg-ide-sidebarHover transition-colors cursor-pointer;
+  }
+
+  .tsx-reset-btn:hover .syntax-function {
+    @apply text-ide-accent;
+  }
+
+  /* Validation error state for inputs */
+  .tsx-input.error,
+  .tsx-textarea.error {
+    @apply border-ide-error focus:border-ide-error focus:ring-ide-error;
+  }
 }
