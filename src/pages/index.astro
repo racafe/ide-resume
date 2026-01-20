@@ -24,63 +24,150 @@ import '@styles/global.css';
     </div>
   </Fragment>
 
-  <!-- Editor Content: README.md -->
-  <div class="markdown-preview max-w-4xl">
-    <h1>Welcome to racafe.dev</h1>
+  <!-- Editor Content Area -->
+  <div class="editor-content-area">
+    <!-- README.md Content -->
+    <div class="file-content active" data-content="README.md">
+      <div class="markdown-preview max-w-4xl">
+        <h1>Welcome to racafe.dev</h1>
 
-    <p>
-      Hello! I'm <strong>Rafael Carrión</strong>, a Full-Stack Developer based in Barcelona. This portfolio is designed
-      to look and feel like <a href="https://code.visualstudio.com/">VS Code</a> — because if you're going to read about a
-      developer, why not do it in their natural habitat?
-    </p>
+        <p>
+          Hello! I'm <strong>Rafael Carrión</strong>, a Full-Stack Developer based in Barcelona. This portfolio is
+          designed to look and feel like <a href="https://code.visualstudio.com/">VS Code</a> — because if you're going to
+          read about a developer, why not do it in their natural habitat?
+        </p>
 
-    <h2>Quick Start</h2>
+        <h2>Quick Start</h2>
 
-    <p>Navigate through the <strong>file explorer</strong> on the left to discover different sections:</p>
+        <p>Navigate through the <strong>file explorer</strong> on the left to discover different sections:</p>
 
-    <ul>
-      <li><code>README.md</code> — You are here</li>
-      <li><code>about.md</code> — Learn more about me</li>
-      <li><code>experience.json</code> — My professional journey</li>
-      <li><code>skills.ts</code> — Technical toolkit</li>
-      <li><code>education.yaml</code> — Education & certifications</li>
-      <li><code>contact.tsx</code> — Let's connect</li>
-    </ul>
+        <ul>
+          <li><code>README.md</code> — You are here</li>
+          <li><code>about.md</code> — Learn more about me</li>
+          <li><code>experience.json</code> — My professional journey</li>
+          <li><code>skills.ts</code> — Technical toolkit</li>
+          <li><code>education.yaml</code> — Education & certifications</li>
+          <li><code>contact.tsx</code> — Let's connect</li>
+        </ul>
 
-    <h2>Features</h2>
+        <h2>Features</h2>
 
-    <p>This interactive portfolio includes:</p>
+        <p>This interactive portfolio includes:</p>
 
-    <ul>
-      <li><strong>File Explorer</strong> — Click files to open them as tabs</li>
-      <li><strong>Tab System</strong> — Multiple files open at once, just like a real IDE</li>
-      <li><strong>Dark+ Theme</strong> — The classic VS Code look</li>
-      <li><strong>Syntax Highlighting</strong> — Code displayed with proper colors</li>
-    </ul>
+        <ul>
+          <li><strong>File Explorer</strong> — Click files to open them as tabs</li>
+          <li><strong>Tab System</strong> — Multiple files open at once, just like a real IDE</li>
+          <li><strong>Dark+ Theme</strong> — The classic VS Code look</li>
+          <li><strong>Syntax Highlighting</strong> — Code displayed with proper colors</li>
+        </ul>
 
-    <h2>About This Project</h2>
+        <h2>About This Project</h2>
 
-    <p>
-      Built with <a href="https://astro.build/">Astro</a> and styled with
-      <a href="https://tailwindcss.com/">Tailwind CSS</a>. The design faithfully recreates VS Code's Dark+ theme with
-      attention to the small details: the activity bar icons, the file tree animations, and the status bar at the
-      bottom.
-    </p>
+        <p>
+          Built with <a href="https://astro.build/">Astro</a> and styled with
+          <a href="https://tailwindcss.com/">Tailwind CSS</a>. The design faithfully recreates VS Code's Dark+ theme
+          with attention to the small details: the activity bar icons, the file tree animations, and the status bar at
+          the bottom.
+        </p>
 
-    <blockquote>
-      <p>"Any sufficiently advanced portfolio is indistinguishable from an actual IDE."</p>
-    </blockquote>
+        <blockquote>
+          <p>"Any sufficiently advanced portfolio is indistinguishable from an actual IDE."</p>
+        </blockquote>
 
-    <div class="tip-box">
-      <div class="tip-box-title">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
-          </path>
-        </svg>
-        Tip
+        <div class="tip-box">
+          <div class="tip-box-title">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+              >
+              </path>
+            </svg>
+            Tip
+          </div>
+          <div class="tip-box-content">
+            Use the file explorer on the left to navigate, or click on any tab to switch between open files.
+          </div>
+        </div>
       </div>
-      <div class="tip-box-content">
-        Use the file explorer on the left to navigate, or click on any tab to switch between open files.
+    </div>
+
+    <!-- about.md Content -->
+    <div class="file-content" data-content="about.md">
+      <div class="markdown-preview max-w-4xl">
+        <h1>About Me</h1>
+
+        <p>
+          Hi there! I'm <strong>Rafael Carrión</strong>, a <strong>Full-Stack Developer</strong> based in
+          <strong>Barcelona, Spain</strong>. I'm currently working at
+          <a href="https://funditec.es" target="_blank" rel="noopener noreferrer">Funditec</a>, where I build web
+          applications and solve interesting technical challenges every day.
+        </p>
+
+        <h2>What I Do</h2>
+
+        <p>
+          I specialize in building modern web applications from the ground up. My work spans the entire stack — from
+          crafting intuitive user interfaces to designing robust backend systems and everything in between.
+        </p>
+
+        <ul>
+          <li><strong>Frontend:</strong> React, Vue.js, TypeScript, Tailwind CSS</li>
+          <li><strong>Backend:</strong> Node.js, Python, REST APIs, GraphQL</li>
+          <li><strong>Database:</strong> PostgreSQL, MongoDB, Redis</li>
+          <li><strong>DevOps:</strong> Docker, CI/CD, Cloud Services</li>
+        </ul>
+
+        <h2>My Approach</h2>
+
+        <p>
+          I believe in writing clean, maintainable code that solves real problems. I'm passionate about developer
+          experience, performance optimization, and creating software that people actually enjoy using.
+        </p>
+
+        <blockquote>
+          <p>"The best code is no code at all. The second best is code that's easy to understand and change."</p>
+        </blockquote>
+
+        <h2>Beyond the Code</h2>
+
+        <p>
+          When I'm not coding, you'll find me exploring Barcelona's coffee shops, contributing to open-source projects,
+          or tinkering with side projects that may or may not see the light of day.
+        </p>
+
+        <h2>Let's Connect</h2>
+
+        <p>I'm always open to interesting conversations and new opportunities. Find me on:</p>
+
+        <ul>
+          <li>
+            <a href="https://github.com/racafe" target="_blank" rel="noopener noreferrer">GitHub</a> — Check out my open-source
+            work
+          </li>
+          <li>
+            <a href="https://linkedin.com/in/rafaelcarrion" target="_blank" rel="noopener noreferrer">LinkedIn</a> — Professional
+            network
+          </li>
+          <li>
+            <a href="https://twitter.com/racafe_dev" target="_blank" rel="noopener noreferrer">Twitter/X</a> — Occasional
+            tech thoughts
+          </li>
+        </ul>
+
+        <div class="tip-box">
+          <div class="tip-box-title">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+              >
+              </path>
+            </svg>
+            Get in Touch
+          </div>
+          <div class="tip-box-content">
+            Want to work together or just say hi? Check out <code>contact.tsx</code> in the file explorer for my contact form.
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -130,6 +217,20 @@ import '@styles/global.css';
     }
   }
 
+  // Switch visible content based on active file
+  function switchContent(filename: string) {
+    // Hide all file content sections
+    document.querySelectorAll('.file-content').forEach((content) => {
+      content.classList.remove('active');
+    });
+
+    // Show the content for the active file
+    const activeContent = document.querySelector(`[data-content="${filename}"]`);
+    if (activeContent) {
+      activeContent.classList.add('active');
+    }
+  }
+
   // Tab management - listen for file-open events from FileExplorer
   window.addEventListener('file-open', ((event: CustomEvent<{ filename: string }>) => {
     const { filename } = event.detail;
@@ -144,6 +245,7 @@ import '@styles/global.css';
       tabBar.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
       existingTab.classList.add('active');
       updateStatusBar(filename);
+      switchContent(filename);
       return;
     }
 
@@ -173,9 +275,12 @@ import '@styles/global.css';
       const remainingTabs = tabBar.querySelectorAll('.tab');
       if (remainingTabs.length > 0) {
         remainingTabs[0].classList.add('active');
-        // Update status bar for newly active tab
+        // Update status bar and content for newly active tab
         const activeFile = remainingTabs[0].getAttribute('data-file');
-        if (activeFile) updateStatusBar(activeFile);
+        if (activeFile) {
+          updateStatusBar(activeFile);
+          switchContent(activeFile);
+        }
       }
     });
 
@@ -184,10 +289,12 @@ import '@styles/global.css';
       tabBar.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
       newTab.classList.add('active');
       updateStatusBar(filename);
+      switchContent(filename);
     });
 
     tabBar.appendChild(newTab);
     updateStatusBar(filename);
+    switchContent(filename);
   }) as EventListener);
 
   // Helper function to generate file icon HTML
@@ -224,9 +331,12 @@ import '@styles/global.css';
         const remainingTabs = tabBar?.querySelectorAll('.tab');
         if (remainingTabs && remainingTabs.length > 0) {
           remainingTabs[0].classList.add('active');
-          // Update status bar for newly active tab
+          // Update status bar and content for newly active tab
           const activeFile = remainingTabs[0].getAttribute('data-file');
-          if (activeFile) updateStatusBar(activeFile);
+          if (activeFile) {
+            updateStatusBar(activeFile);
+            switchContent(activeFile);
+          }
         }
       }
     });
@@ -238,9 +348,12 @@ import '@styles/global.css';
       const tabBar = tab.parentElement;
       tabBar?.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
-      // Update status bar for clicked tab
+      // Update status bar and content for clicked tab
       const filename = tab.getAttribute('data-file');
-      if (filename) updateStatusBar(filename);
+      if (filename) {
+        updateStatusBar(filename);
+        switchContent(filename);
+      }
     });
   });
 </script>

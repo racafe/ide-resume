@@ -131,6 +131,20 @@
     @apply flex-1 overflow-auto p-4 font-code text-code;
   }
 
+  /* Editor content area for multiple file contents */
+  .editor-content-area {
+    @apply flex-1 overflow-auto p-4;
+  }
+
+  /* File content visibility */
+  .file-content {
+    @apply hidden;
+  }
+
+  .file-content.active {
+    @apply block;
+  }
+
   /* Status bar */
   .status-bar {
     @apply h-[22px] bg-ide-statusBar flex items-center justify-between px-2 text-[12px] text-white;
