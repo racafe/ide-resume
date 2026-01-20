@@ -1,63 +1,20 @@
 ---
 import IDELayout from '@layouts/IDELayout.astro';
+import FileExplorer from '@components/FileExplorer.astro';
+import FileIcon from '@components/FileIcon.astro';
 import '@styles/global.css';
 ---
 
 <IDELayout title="Rafael Carrión - IDE Resume">
   <!-- Sidebar: File Explorer -->
   <Fragment slot="sidebar">
-    <!-- Placeholder file tree - will be replaced by FileExplorer component in US-002 -->
-    <div class="file-tree-item" data-file="README.md">
-      <svg class="file-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
-      </svg>
-      <span>README.md</span>
-    </div>
-    <div class="file-tree-item" data-file="about.md">
-      <svg class="file-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
-      </svg>
-      <span>about.md</span>
-    </div>
-    <div class="file-tree-item" data-file="experience.json">
-      <svg class="w-4 h-4 text-ide-warning" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
-      </svg>
-      <span>experience.json</span>
-    </div>
-    <div class="file-tree-item" data-file="skills.ts">
-      <svg class="w-4 h-4 text-ide-keyword" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
-      </svg>
-      <span>skills.ts</span>
-    </div>
-    <div class="file-tree-item" data-file="education.yaml">
-      <svg class="w-4 h-4 text-ide-error" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
-      </svg>
-      <span>education.yaml</span>
-    </div>
-    <div class="file-tree-item" data-file="contact.tsx">
-      <svg class="w-4 h-4 text-ide-type" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
-      </svg>
-      <span>contact.tsx</span>
-    </div>
+    <FileExplorer />
   </Fragment>
 
   <!-- Tabs -->
   <Fragment slot="tabs">
     <div class="tab active" data-file="README.md">
-      <svg class="file-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
-      </svg>
+      <FileIcon filename="README.md" />
       <span class="truncate">README.md</span>
       <button class="tab-close" aria-label="Close tab">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -98,3 +55,107 @@ import '@styles/global.css';
     </div>
   </div>
 </IDELayout>
+
+<script>
+  // Tab management - listen for file-open events from FileExplorer
+  window.addEventListener('file-open', ((event: CustomEvent<{ filename: string }>) => {
+    const { filename } = event.detail;
+    const tabBar = document.getElementById('tab-bar');
+
+    if (!tabBar) return;
+
+    // Check if tab already exists
+    const existingTab = tabBar.querySelector(`[data-file="${filename}"]`);
+    if (existingTab) {
+      // Activate existing tab
+      tabBar.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
+      existingTab.classList.add('active');
+      return;
+    }
+
+    // Remove active class from all tabs
+    tabBar.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
+
+    // Create new tab with icon based on file extension
+    const newTab = document.createElement('div');
+    newTab.className = 'tab active';
+    newTab.setAttribute('data-file', filename);
+    newTab.innerHTML = `
+      ${getFileIconHTML(filename)}
+      <span class="truncate">${filename}</span>
+      <button class="tab-close" aria-label="Close tab">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6L18 18"></path>
+        </svg>
+      </button>
+    `;
+
+    // Add close button functionality
+    const closeBtn = newTab.querySelector('.tab-close');
+    closeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      newTab.remove();
+      // If this was the active tab, activate the first remaining tab
+      const remainingTabs = tabBar.querySelectorAll('.tab');
+      if (remainingTabs.length > 0) {
+        remainingTabs[0].classList.add('active');
+      }
+    });
+
+    // Add click to activate
+    newTab.addEventListener('click', () => {
+      tabBar.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
+      newTab.classList.add('active');
+    });
+
+    tabBar.appendChild(newTab);
+  }) as EventListener);
+
+  // Helper function to generate file icon HTML
+  function getFileIconHTML(filename: string): string {
+    const ext = filename.split('.').pop()?.toLowerCase() || '';
+
+    const colorMap: Record<string, string> = {
+      md: 'text-ide-accent',
+      json: 'text-ide-warning',
+      ts: 'text-ide-keyword',
+      tsx: 'text-ide-type',
+      js: 'text-ide-warning',
+      yaml: 'text-ide-error',
+      txt: 'text-ide-textMuted',
+    };
+
+    const color = colorMap[ext] || 'text-ide-text';
+
+    // Return simplified file icon SVG
+    return `<svg class="w-4 h-4 ${color}" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+    </svg>`;
+  }
+
+  // Handle existing tab close buttons
+  document.querySelectorAll('.tab-close').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const tab = btn.closest('.tab');
+      if (tab) {
+        const tabBar = tab.parentElement;
+        tab.remove();
+        const remainingTabs = tabBar?.querySelectorAll('.tab');
+        if (remainingTabs && remainingTabs.length > 0) {
+          remainingTabs[0].classList.add('active');
+        }
+      }
+    });
+  });
+
+  // Handle existing tab clicks
+  document.querySelectorAll('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const tabBar = tab.parentElement;
+      tabBar?.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+</script>

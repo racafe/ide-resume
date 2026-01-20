@@ -1,0 +1,220 @@
+---
+/**
+ * FileExplorer - VS Code-style file tree sidebar component
+ * Displays the resume sections as files and folders
+ */
+import FileIcon from './FileIcon.astro';
+
+interface FileItem {
+  name: string;
+  type: 'file' | 'folder';
+  children?: FileItem[];
+  expanded?: boolean;
+}
+
+// File tree structure representing the resume
+const fileTree: FileItem[] = [
+  { name: 'README.md', type: 'file' },
+  { name: 'about.md', type: 'file' },
+  { name: 'experience.json', type: 'file' },
+  { name: 'skills.ts', type: 'file' },
+  {
+    name: 'projects',
+    type: 'folder',
+    expanded: true,
+    children: [
+      { name: 'project-alpha.md', type: 'file' },
+      { name: 'project-beta.md', type: 'file' },
+      { name: 'open-source.md', type: 'file' },
+    ],
+  },
+  { name: 'education.yaml', type: 'file' },
+  { name: 'contact.tsx', type: 'file' },
+  { name: 'rafael.config.js', type: 'file' },
+  {
+    name: '.secrets',
+    type: 'folder',
+    expanded: false,
+    children: [
+      { name: 'hobbies.txt', type: 'file' },
+      { name: 'fun-facts.md', type: 'file' },
+    ],
+  },
+];
+---
+
+<div class="file-explorer" id="file-explorer">
+  <div class="file-tree-section">
+    <button class="section-header" aria-expanded="true" aria-controls="file-tree-content">
+      <svg
+        class="chevron w-3 h-3 transition-transform duration-200"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M9 18l6-6-6-6"></path>
+      </svg>
+      <span class="uppercase text-[11px] tracking-wider font-semibold">racafe-portfolio</span>
+    </button>
+    <div class="file-tree-content" id="file-tree-content">
+      {
+        fileTree.map((item) =>
+          item.type === 'folder' ? (
+            <div class="folder-container" data-folder={item.name} data-expanded={item.expanded}>
+              <button class="file-tree-item folder" aria-expanded={item.expanded} aria-controls={`folder-${item.name}`}>
+                <svg
+                  class="chevron w-3 h-3 transition-transform duration-200"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+                <svg class="folder-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z" />
+                </svg>
+                <span class="filename">{item.name}</span>
+              </button>
+              <div class="folder-children" id={`folder-${item.name}`}>
+                {item.children?.map((child) => (
+                  <button class="file-tree-item file nested" data-file={child.name}>
+                    <FileIcon filename={child.name} />
+                    <span class="filename">{child.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <button class="file-tree-item file" data-file={item.name}>
+              <FileIcon filename={item.name} />
+              <span class="filename">{item.name}</span>
+            </button>
+          )
+        )
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .file-explorer {
+    @apply flex flex-col h-full;
+  }
+
+  .file-tree-section {
+    @apply flex flex-col;
+  }
+
+  .section-header {
+    @apply flex items-center gap-1 px-2 py-1.5 w-full text-left text-ide-text hover:bg-ide-sidebarHover cursor-pointer;
+  }
+
+  .section-header .chevron {
+    @apply rotate-90;
+  }
+
+  .section-header[aria-expanded='false'] .chevron {
+    @apply rotate-0;
+  }
+
+  .file-tree-content {
+    @apply flex flex-col;
+  }
+
+  .file-tree-item {
+    @apply flex items-center gap-1.5 px-4 py-[3px] w-full text-left text-code-sm text-ide-text cursor-pointer hover:bg-ide-sidebarHover transition-colors;
+  }
+
+  .file-tree-item.folder {
+    @apply pr-2;
+  }
+
+  .file-tree-item.folder .chevron {
+    @apply rotate-90;
+  }
+
+  .file-tree-item.folder[aria-expanded='false'] .chevron {
+    @apply rotate-0;
+  }
+
+  .file-tree-item.file {
+    @apply pl-6;
+  }
+
+  .file-tree-item.file.nested {
+    @apply pl-10;
+  }
+
+  .file-tree-item.active {
+    @apply bg-ide-sidebarActive;
+  }
+
+  .folder-children {
+    @apply overflow-hidden transition-all duration-200 ease-in-out;
+  }
+
+  .folder-container[data-expanded='false'] .folder-children {
+    @apply max-h-0 opacity-0;
+  }
+
+  .folder-container[data-expanded='true'] .folder-children {
+    @apply max-h-[500px] opacity-100;
+  }
+
+  .folder-icon {
+    @apply text-ide-warning flex-shrink-0;
+  }
+
+  .filename {
+    @apply truncate;
+  }
+</style>
+
+<script>
+  // Handle folder expand/collapse
+  document.querySelectorAll('.folder-container').forEach((container) => {
+    const button = container.querySelector('button.folder');
+
+    button?.addEventListener('click', () => {
+      const isExpanded = container.getAttribute('data-expanded') === 'true';
+      container.setAttribute('data-expanded', String(!isExpanded));
+      button.setAttribute('aria-expanded', String(!isExpanded));
+    });
+  });
+
+  // Handle section header collapse
+  document.querySelectorAll('.section-header').forEach((header) => {
+    header.addEventListener('click', () => {
+      const isExpanded = header.getAttribute('aria-expanded') === 'true';
+      header.setAttribute('aria-expanded', String(!isExpanded));
+      const content = header.nextElementSibling as HTMLElement | null;
+      if (content) {
+        content.style.display = isExpanded ? 'none' : 'flex';
+      }
+    });
+  });
+
+  // Handle file click - dispatch custom event for tab opening
+  document.querySelectorAll('.file-tree-item.file').forEach((item) => {
+    item.addEventListener('click', () => {
+      const filename = item.getAttribute('data-file');
+      if (filename) {
+        // Remove active class from all items
+        document.querySelectorAll('.file-tree-item').forEach((el) => {
+          el.classList.remove('active');
+        });
+        // Add active class to clicked item
+        item.classList.add('active');
+
+        // Dispatch custom event for tab management
+        window.dispatchEvent(
+          new CustomEvent('file-open', {
+            detail: { filename },
+          })
+        );
+      }
+    });
+  });
+</script>

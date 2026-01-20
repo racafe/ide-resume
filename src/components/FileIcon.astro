@@ -1,0 +1,116 @@
+---
+/**
+ * FileIcon - VS Code-style file icons based on file extension
+ */
+
+interface Props {
+  filename: string;
+  class?: string;
+}
+
+const { filename, class: className = '' } = Astro.props;
+
+const ext = filename.split('.').pop()?.toLowerCase() || '';
+
+// Map extensions to colors (matching VS Code's icon colors)
+const colorMap: Record<string, string> = {
+  md: 'text-ide-accent',
+  json: 'text-ide-warning',
+  ts: 'text-ide-keyword',
+  tsx: 'text-ide-type',
+  js: 'text-ide-warning',
+  yaml: 'text-ide-error',
+  txt: 'text-ide-textMuted',
+};
+
+const color = colorMap[ext] || 'text-ide-text';
+---
+
+{
+  ext === 'md' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <text x="7" y="17" font-size="7" font-weight="bold" fill="#1e1e1e">
+        M↓
+      </text>
+    </svg>
+  )
+}
+
+{
+  ext === 'json' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <text x="6" y="17" font-size="6" font-weight="bold" fill="#1e1e1e">{`{}`}</text>
+    </svg>
+  )
+}
+
+{
+  ext === 'ts' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <text x="7" y="17" font-size="7" font-weight="bold" fill="#1e1e1e">
+        TS
+      </text>
+    </svg>
+  )
+}
+
+{
+  ext === 'tsx' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <circle cx="12" cy="14" r="3" fill="#1e1e1e" stroke="#1e1e1e" stroke-width="0.5" />
+      <ellipse cx="12" cy="14" rx="6" ry="2" fill="none" stroke="#1e1e1e" stroke-width="0.8" />
+    </svg>
+  )
+}
+
+{
+  ext === 'js' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <text x="7" y="17" font-size="7" font-weight="bold" fill="#1e1e1e">
+        JS
+      </text>
+    </svg>
+  )
+}
+
+{
+  ext === 'yaml' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <text x="5" y="17" font-size="6" font-weight="bold" fill="#1e1e1e">
+        YML
+      </text>
+    </svg>
+  )
+}
+
+{
+  ext === 'txt' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <line x1="8" y1="13" x2="16" y2="13" stroke="#1e1e1e" stroke-width="1" />
+      <line x1="8" y1="16" x2="14" y2="16" stroke="#1e1e1e" stroke-width="1" />
+    </svg>
+  )
+}
+
+{
+  !['md', 'json', 'ts', 'tsx', 'js', 'yaml', 'txt'].includes(ext) && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+    </svg>
+  )
+}
