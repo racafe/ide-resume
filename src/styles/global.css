@@ -655,4 +655,191 @@
   .tsx-textarea.error {
     @apply border-ide-error focus:border-ide-error focus:ring-ide-error;
   }
+
+  /* ===================================
+     RESPONSIVE / MOBILE DESIGN
+     =================================== */
+
+  /* Mobile Header - Hidden on desktop */
+  .mobile-header {
+    @apply hidden;
+  }
+
+  /* Mobile Sidebar Overlay - Hidden by default */
+  .mobile-sidebar-overlay {
+    @apply fixed inset-0 bg-black/50 z-40;
+  }
+
+  /* Hide on mobile utility */
+  .hide-on-mobile {
+    @apply flex;
+  }
+
+  /* Mobile breakpoint: < 768px */
+  @media (max-width: 767px) {
+    /* Show mobile header */
+    .mobile-header {
+      @apply flex items-center justify-between h-12 px-3 bg-ide-sidebar border-b border-ide-border z-50;
+    }
+
+    /* Mobile menu button */
+    .mobile-menu-btn {
+      @apply w-10 h-10 flex items-center justify-center text-ide-textMuted hover:text-ide-text transition-colors rounded;
+    }
+
+    .mobile-menu-btn:active {
+      @apply bg-ide-sidebarActive;
+    }
+
+    /* Mobile title */
+    .mobile-title {
+      @apply flex items-center gap-2 text-ide-text font-code text-sm;
+    }
+
+    /* Mobile tab selector */
+    .mobile-tab-selector {
+      @apply relative;
+    }
+
+    .mobile-tab-btn {
+      @apply flex items-center gap-1.5 px-2 py-1.5 text-code-sm text-ide-text bg-ide-sidebarActive rounded border border-ide-border;
+      @apply hover:bg-ide-sidebarHover transition-colors;
+      max-width: 140px;
+    }
+
+    .mobile-tab-current {
+      @apply truncate;
+    }
+
+    .mobile-tab-dropdown {
+      @apply absolute right-0 top-full mt-1 min-w-[180px] max-h-[60vh] overflow-y-auto bg-ide-sidebar border border-ide-border rounded shadow-lg z-50;
+    }
+
+    .mobile-tab-option {
+      @apply w-full px-3 py-2 text-left text-code-sm text-ide-text hover:bg-ide-sidebarHover transition-colors;
+    }
+
+    .mobile-tab-option.active {
+      @apply bg-ide-sidebarActive text-ide-accent;
+    }
+
+    /* Hide activity bar on mobile */
+    .activity-bar {
+      @apply hidden;
+    }
+
+    /* Sidebar: slide out from left on mobile */
+    .sidebar {
+      @apply fixed left-0 top-12 bottom-0 w-64 transform -translate-x-full transition-transform duration-300 ease-in-out z-50;
+    }
+
+    .sidebar.mobile-open {
+      @apply translate-x-0;
+    }
+
+    /* Hide desktop tab bar on mobile */
+    .tab-bar-container {
+      @apply hidden;
+    }
+
+    /* Status bar simplification */
+    .hide-on-mobile {
+      @apply hidden;
+    }
+
+    .status-bar {
+      @apply text-[11px] px-2;
+    }
+
+    /* Editor content adjustments */
+    .editor-content-area {
+      @apply p-3;
+    }
+
+    /* Markdown preview mobile adjustments */
+    .markdown-preview {
+      font-size: 15px;
+    }
+
+    .markdown-preview h1 {
+      @apply text-[22px];
+    }
+
+    .markdown-preview h2 {
+      @apply text-lg;
+    }
+
+    /* Code blocks: horizontal scroll on mobile */
+    .code-block {
+      @apply overflow-x-auto;
+    }
+
+    .code-editor {
+      @apply overflow-x-auto;
+    }
+
+    /* Timeline adjustments */
+    .timeline-panel {
+      @apply text-code-sm;
+    }
+
+    .commit-company {
+      @apply text-xs;
+    }
+
+    .commit-role {
+      @apply text-xs;
+    }
+
+    .diff-line {
+      @apply text-xs;
+    }
+
+    /* Contact form adjustments */
+    .tsx-input,
+    .tsx-textarea {
+      @apply ml-0 w-full max-w-xs;
+    }
+
+    .tsx-error {
+      @apply ml-0;
+    }
+
+    .tsx-submit-btn {
+      @apply ml-0;
+    }
+
+    /* Touch-friendly: larger tap targets */
+    .file-tree-item {
+      @apply py-2 text-sm;
+    }
+
+    .tab {
+      @apply py-2.5;
+    }
+
+    .status-bar-item {
+      @apply px-2 py-1;
+    }
+
+    /* Prevent body scroll when mobile menu is open */
+    body.mobile-menu-open {
+      @apply overflow-hidden;
+    }
+  }
+
+  /* Tablet breakpoint: 768px - 1023px */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    /* Narrower sidebar on tablet */
+    .sidebar {
+      @apply w-48;
+    }
+
+    /* Slightly smaller editor padding */
+    .editor-content-area {
+      @apply p-3;
+    }
+  }
+
+  /* Large screens: >= 1024px - default desktop styles apply */
 }
