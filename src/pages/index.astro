@@ -1402,6 +1402,9 @@ import '@styles/global.css';
     gameHighScoreEl.textContent = String(highScore);
   }
 
+  // Flag to track if Konami code has been entered this session (for achievement)
+  let konamiAchievementTriggered = false;
+
   // Konami code detection
   document.addEventListener('keydown', (e) => {
     // Don't trigger if typing in an input
@@ -1414,6 +1417,15 @@ import '@styles/global.css';
       if (konamiIndex === konamiCode.length) {
         konamiIndex = 0;
         openGame();
+        // Unlock KONAMI_MASTER achievement (deferred to ensure unlockAchievement is defined)
+        if (!konamiAchievementTriggered) {
+          konamiAchievementTriggered = true;
+          setTimeout(() => {
+            if (typeof unlockAchievement === 'function') {
+              unlockAchievement('KONAMI_MASTER');
+            }
+          }, 500);
+        }
       }
     } else {
       konamiIndex = 0;
@@ -1627,4 +1639,266 @@ import '@styles/global.css';
   // Close button and backdrop click
   gameCloseBtn?.addEventListener('click', closeGame);
   gameBackdrop?.addEventListener('click', closeGame);
+
+  // ========================================
+  // ACHIEVEMENT SYSTEM
+  // ========================================
+
+  interface Achievement {
+    id: string;
+    name: string;
+    description: string;
+    points: number;
+    hint?: string;
+  }
+
+  const ACHIEVEMENTS: Achievement[] = [
+    { id: 'SECRET_HUNTER', name: 'Secret Hunter', description: 'Found the .secrets folder', points: 100 },
+    {
+      id: 'KONAMI_MASTER',
+      name: 'Konami Master',
+      description: 'Entered the legendary code',
+      points: 500,
+      hint: '↑ ↑ ↓ ↓ ← → ← → B A',
+    },
+    { id: 'CONFIG_READER', name: 'Config Reader', description: 'Read rafael.config.js', points: 50 },
+    { id: 'CAREER_ARCHAEOLOGIST', name: 'Career Archaeologist', description: 'Read the career debug logs', points: 75 },
+    { id: 'TAB_HOARDER', name: 'Tab Hoarder', description: 'Open all files at once', points: 150 },
+    { id: 'NIGHT_OWL', name: 'Night Owl', description: 'Visit the site between 2-4 AM', points: 200 },
+  ];
+
+  const TOTAL_POINTS = ACHIEVEMENTS.reduce((sum, a) => sum + a.points, 0);
+
+  // Load unlocked achievements from localStorage
+  function getUnlockedAchievements(): Set<string> {
+    try {
+      const stored = localStorage.getItem('unlockedAchievements');
+      if (stored) {
+        return new Set(JSON.parse(stored));
+      }
+    } catch {
+      // Ignore parse errors
+    }
+    return new Set();
+  }
+
+  function saveUnlockedAchievements(unlocked: Set<string>): void {
+    localStorage.setItem('unlockedAchievements', JSON.stringify([...unlocked]));
+  }
+
+  let unlockedAchievements = getUnlockedAchievements();
+
+  // Show achievement toast notification
+  function showAchievementToast(achievement: Achievement, isAllComplete = false): void {
+    const container = document.getElementById('achievement-toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'achievement-toast';
+    toast.innerHTML = `
+      <div class="achievement-toast-icon${isAllComplete ? ' all-complete' : ''}">
+        ${
+          isAllComplete
+            ? `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>`
+            : `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+          </svg>`
+        }
+      </div>
+      <div class="achievement-toast-content">
+        <div class="achievement-toast-label">${isAllComplete ? 'All Achievements Unlocked!' : 'Achievement Unlocked'}</div>
+        <div class="achievement-toast-title">${achievement.name}</div>
+        <div class="achievement-toast-description">${achievement.description}</div>
+        <div class="achievement-toast-points">+${achievement.points} pts</div>
+      </div>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+      toast.classList.add('show');
+    });
+
+    // Remove toast after delay
+    setTimeout(
+      () => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        setTimeout(() => {
+          toast.remove();
+        }, 400);
+      },
+      isAllComplete ? 6000 : 4000
+    );
+  }
+
+  // Unlock an achievement
+  function unlockAchievement(achievementId: string): void {
+    if (unlockedAchievements.has(achievementId)) return;
+
+    const achievement = ACHIEVEMENTS.find((a) => a.id === achievementId);
+    if (!achievement) return;
+
+    unlockedAchievements.add(achievementId);
+    saveUnlockedAchievements(unlockedAchievements);
+
+    // Show toast
+    showAchievementToast(achievement);
+
+    // Check if all achievements are now unlocked
+    if (unlockedAchievements.size === ACHIEVEMENTS.length) {
+      setTimeout(() => {
+        showAchievementToast(
+          {
+            id: 'ALL_COMPLETE',
+            name: 'Completionist',
+            description: 'You found all the secrets! You are a true explorer.',
+            points: TOTAL_POINTS,
+          },
+          true
+        );
+      }, 1000);
+    }
+
+    // Update the achievements.unlock display if it's currently visible
+    updateAchievementsDisplay();
+  }
+
+  // Update the achievements.unlock file content dynamically
+  function updateAchievementsDisplay(): void {
+    const achievementsContent = document.querySelector('[data-content="achievements.unlock"]');
+    if (!achievementsContent) return;
+
+    const codeBlock = achievementsContent.querySelector('.code-block code');
+    if (!codeBlock) return;
+
+    const currentScore = [...unlockedAchievements].reduce((sum, id) => {
+      const achievement = ACHIEVEMENTS.find((a) => a.id === id);
+      return sum + (achievement?.points || 0);
+    }, 0);
+
+    // Generate the achievements list HTML
+    let lineNum = 1;
+    let html = '';
+
+    const addLine = (content: string) => {
+      html += `<span class="line"><span class="line-number">${String(lineNum).padStart(2, ' ')}</span>${content}</span>\n`;
+      lineNum++;
+    };
+
+    addLine('<span class="syntax-comment">// achievements.unlock - Hidden Features Registry</span>');
+    addLine('<span class="syntax-comment">// Status: CLASSIFIED</span>');
+    addLine('');
+    addLine('<span class="syntax-type">ACHIEVEMENT_LIST</span> = &#123;');
+    addLine('');
+    addLine('  <span class="syntax-comment">// ══════════════════════════════════════════════</span>');
+    addLine('  <span class="syntax-comment">//  DISCOVERABLE EASTER EGGS</span>');
+    addLine('  <span class="syntax-comment">// ══════════════════════════════════════════════</span>');
+    addLine('');
+
+    ACHIEVEMENTS.forEach((achievement, index) => {
+      const isUnlocked = unlockedAchievements.has(achievement.id);
+      const status = isUnlocked ? '[UNLOCKED]' : '[LOCKED]';
+      const statusClass = isUnlocked ? 'syntax-type' : 'syntax-error';
+
+      addLine(`  <span class="syntax-string">"${achievement.id}"</span>: &#123;`);
+      addLine(
+        `    <span class="syntax-variable">name</span>: <span class="syntax-string">"${achievement.name}"</span>,`
+      );
+      addLine(
+        `    <span class="syntax-variable">description</span>: <span class="syntax-string">"${achievement.description}"</span>,`
+      );
+      if (achievement.hint) {
+        addLine(
+          `    <span class="syntax-variable">hint</span>: <span class="syntax-string">"${achievement.hint}"</span>,`
+        );
+      }
+      addLine(`    <span class="syntax-variable">status</span>: <span class="${statusClass}">"${status}"</span>,`);
+      addLine(
+        `    <span class="syntax-variable">points</span>: <span class="syntax-number">${achievement.points}</span>,`
+      );
+      addLine(`  &#125;${index < ACHIEVEMENTS.length - 1 ? ',' : ''}`);
+      addLine('');
+    });
+
+    addLine('  <span class="syntax-comment">// ══════════════════════════════════════════════</span>');
+    addLine(`  <span class="syntax-comment">//  TOTAL POINTS AVAILABLE: ${TOTAL_POINTS}</span>`);
+    addLine(`  <span class="syntax-comment">//  YOUR SCORE: ${currentScore}</span>`);
+    addLine('  <span class="syntax-comment">// ══════════════════════════════════════════════</span>');
+    addLine('');
+    addLine('&#125;;');
+
+    codeBlock.innerHTML = html.trim();
+  }
+
+  // Track all file names for TAB_HOARDER achievement
+  const ALL_FILES = [
+    'README.md',
+    'about.md',
+    'skills.ts',
+    'contact.tsx',
+    'education.yaml',
+    'experience.json',
+    'entity-framework-mysql.md',
+    'other-projects.md',
+    'rafael.config.js',
+    'konami.md',
+    'achievements.unlock',
+    'career.log',
+  ];
+
+  // Check for NIGHT_OWL achievement on page load
+  function checkNightOwl(): void {
+    const hour = new Date().getHours();
+    if (hour >= 2 && hour < 4) {
+      unlockAchievement('NIGHT_OWL');
+    }
+  }
+
+  // Check for TAB_HOARDER achievement
+  function checkTabHoarder(): void {
+    const tabBar = document.getElementById('tab-bar');
+    if (!tabBar) return;
+
+    const openTabs = new Set(
+      Array.from(tabBar.querySelectorAll('.tab'))
+        .map((tab) => tab.getAttribute('data-file'))
+        .filter(Boolean)
+    );
+
+    const allFilesOpen = ALL_FILES.every((file) => openTabs.has(file));
+    if (allFilesOpen) {
+      unlockAchievement('TAB_HOARDER');
+    }
+  }
+
+  // Listen for file open events to trigger achievements
+  window.addEventListener('file-open', ((event: CustomEvent<{ filename: string }>) => {
+    const { filename } = event.detail;
+
+    // SECRET_HUNTER: Found the .secrets folder (opening any file from it)
+    if (['konami.md', 'achievements.unlock', 'career.log'].includes(filename)) {
+      unlockAchievement('SECRET_HUNTER');
+    }
+
+    // CONFIG_READER: Read rafael.config.js
+    if (filename === 'rafael.config.js') {
+      unlockAchievement('CONFIG_READER');
+    }
+
+    // CAREER_ARCHAEOLOGIST: Read career.log
+    if (filename === 'career.log') {
+      unlockAchievement('CAREER_ARCHAEOLOGIST');
+    }
+
+    // Check for TAB_HOARDER after a small delay to allow the tab to be added
+    setTimeout(checkTabHoarder, 100);
+  }) as EventListener);
+
+  // Initialize achievement system
+  checkNightOwl();
+  updateAchievementsDisplay();
 </script>
