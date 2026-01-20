@@ -865,4 +865,115 @@
   }
 
   /* Large screens: >= 1024px - default desktop styles apply */
+
+  /* ===================================
+     KONAMI CODE EASTER EGG - GAME MODAL
+     =================================== */
+
+  .game-modal {
+    @apply fixed inset-0 z-[100] flex items-center justify-center;
+  }
+
+  .game-modal.hidden {
+    display: none;
+  }
+
+  .game-modal-backdrop {
+    @apply absolute inset-0 bg-black/80;
+  }
+
+  .game-modal-content {
+    @apply relative z-10 bg-ide-sidebar rounded-lg border border-ide-border shadow-2xl overflow-hidden;
+    max-width: 440px;
+    width: 90vw;
+  }
+
+  .game-header {
+    @apply flex items-center justify-between px-4 py-3 bg-ide-activityBar border-b border-ide-border;
+  }
+
+  .game-title {
+    @apply flex items-center gap-2 text-ide-text font-code text-sm font-medium;
+  }
+
+  .game-close-btn {
+    @apply w-6 h-6 flex items-center justify-center text-ide-textMuted hover:text-ide-text hover:bg-ide-sidebarActive rounded transition-colors;
+  }
+
+  .game-stats {
+    @apply flex items-center justify-center gap-6 px-4 py-2 bg-ide-sidebarActive border-b border-ide-border font-code text-sm;
+  }
+
+  .game-stat {
+    @apply flex items-center gap-2;
+  }
+
+  .game-stat-label {
+    @apply text-ide-textMuted;
+  }
+
+  .game-stat-value {
+    @apply text-ide-accent font-medium;
+  }
+
+  .game-canvas-container {
+    @apply relative bg-ide-bg;
+  }
+
+  #game-canvas {
+    @apply block mx-auto;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .game-overlay {
+    @apply absolute inset-0 flex items-center justify-center bg-ide-bg/90;
+  }
+
+  .game-overlay.hidden {
+    display: none;
+  }
+
+  .game-overlay-content {
+    @apply text-center;
+  }
+
+  .game-message {
+    @apply text-ide-text font-code text-lg mb-2;
+  }
+
+  .game-controls {
+    @apply text-ide-comment font-code text-sm;
+  }
+
+  .game-footer {
+    @apply px-4 py-2 bg-ide-activityBar border-t border-ide-border text-center;
+  }
+
+  /* Prevent body scroll when game is open */
+  body.game-modal-open {
+    @apply overflow-hidden;
+  }
+
+  /* Mobile adjustments for game */
+  @media (max-width: 767px) {
+    .game-modal-content {
+      @apply rounded-none;
+      max-width: 100vw;
+      width: 100vw;
+    }
+
+    #game-canvas {
+      width: 100%;
+      height: auto;
+    }
+
+    .game-stats {
+      @apply gap-4 text-xs;
+    }
+
+    .game-message {
+      @apply text-base;
+    }
+  }
 }

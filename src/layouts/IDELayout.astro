@@ -489,5 +489,52 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
         transition: opacity 0.3s ease-out;
       }
     </style>
+
+    <!-- Konami Code Easter Egg Game Modal -->
+    <div id="game-modal" class="game-modal hidden">
+      <div class="game-modal-backdrop"></div>
+      <div class="game-modal-content">
+        <div class="game-header">
+          <div class="game-title">
+            <svg class="w-5 h-5 text-ide-string" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+              >
+              </path>
+            </svg>
+            <span>Snake Game</span>
+          </div>
+          <button id="game-close" class="game-close-btn" aria-label="Close game">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6L18 18"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="game-stats">
+          <div class="game-stat">
+            <span class="game-stat-label">Score:</span>
+            <span id="game-score" class="game-stat-value">0</span>
+          </div>
+          <div class="game-stat">
+            <span class="game-stat-label">High Score:</span>
+            <span id="game-high-score" class="game-stat-value">0</span>
+          </div>
+        </div>
+        <div class="game-canvas-container">
+          <canvas id="game-canvas" width="400" height="400"></canvas>
+          <div id="game-overlay" class="game-overlay">
+            <div class="game-overlay-content">
+              <div id="game-message" class="game-message">Press SPACE to start</div>
+              <div class="game-controls">
+                <span class="syntax-comment">// Use arrow keys to move</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="game-footer">
+          <span class="syntax-comment">// Press ESC to close</span>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
