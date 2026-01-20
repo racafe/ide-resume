@@ -345,4 +345,200 @@
   .markdown-preview .tip-box-content {
     @apply text-ide-textMuted text-sm;
   }
+
+  /* Timeline Panel - Source Control Style */
+  .timeline-panel {
+    @apply font-code text-ide-text;
+  }
+
+  .timeline-header {
+    @apply flex items-center justify-between px-3 py-2 bg-ide-sidebar border-b border-ide-border;
+  }
+
+  .timeline-header-title {
+    @apply flex items-center gap-2 text-[11px] uppercase tracking-wider font-semibold text-ide-textMuted;
+  }
+
+  .timeline-header-count {
+    @apply text-[11px] text-ide-textMuted;
+  }
+
+  .timeline-entries {
+    @apply flex flex-col;
+  }
+
+  .timeline-entry {
+    @apply border-b border-ide-border;
+  }
+
+  .timeline-commit {
+    @apply flex items-center gap-3 w-full px-3 py-2 text-left hover:bg-ide-sidebarHover cursor-pointer transition-colors;
+  }
+
+  .commit-graph {
+    @apply flex flex-col items-center w-4 relative;
+  }
+
+  .commit-line {
+    @apply w-0.5 h-3 bg-ide-accent;
+  }
+
+  .commit-line-bottom {
+    @apply w-0.5 h-3 bg-ide-accent;
+  }
+
+  .commit-line-bottom.faded {
+    @apply bg-gradient-to-b from-ide-accent to-transparent;
+  }
+
+  .commit-dot {
+    @apply w-3 h-3 rounded-full bg-ide-accent border-2 border-ide-bg flex-shrink-0;
+  }
+
+  .commit-dot.volunteer {
+    @apply bg-ide-error;
+  }
+
+  .commit-content {
+    @apply flex-1 min-w-0;
+  }
+
+  .commit-header {
+    @apply flex items-center gap-2 flex-wrap;
+  }
+
+  .commit-icon {
+    @apply text-ide-accent flex-shrink-0;
+  }
+
+  .commit-icon.volunteer {
+    @apply text-ide-error;
+  }
+
+  .commit-company {
+    @apply font-semibold text-ide-text text-sm;
+  }
+
+  .commit-separator {
+    @apply text-ide-textMuted text-xs;
+  }
+
+  .commit-role {
+    @apply text-ide-textMuted text-sm;
+  }
+
+  .commit-meta {
+    @apply flex items-center gap-3 mt-0.5;
+  }
+
+  .commit-date {
+    @apply text-xs text-ide-textMuted;
+  }
+
+  .commit-hash {
+    @apply text-xs text-ide-accent font-code;
+  }
+
+  .commit-chevron {
+    @apply text-ide-textMuted transition-transform duration-200 flex-shrink-0;
+  }
+
+  .timeline-commit[aria-expanded='true'] .commit-chevron {
+    @apply rotate-90;
+  }
+
+  /* Commit Details - Diff Style */
+  .commit-details {
+    @apply overflow-hidden max-h-0 opacity-0 transition-all duration-300 ease-in-out;
+  }
+
+  .timeline-entry[data-expanded='true'] .commit-details {
+    @apply max-h-[1000px] opacity-100;
+  }
+
+  .diff-section {
+    @apply mx-3 mb-3 rounded border border-ide-border overflow-hidden;
+  }
+
+  .diff-header {
+    @apply flex items-center justify-between px-3 py-1.5 bg-ide-sidebar text-xs;
+  }
+
+  .diff-file {
+    @apply text-ide-text font-code;
+  }
+
+  .diff-stats {
+    @apply flex items-center gap-2;
+  }
+
+  .diff-additions {
+    @apply text-ide-string;
+  }
+
+  .diff-deletions {
+    @apply text-ide-error;
+  }
+
+  .diff-content {
+    @apply bg-ide-editor font-code text-code-sm;
+  }
+
+  .diff-line {
+    @apply px-3 py-0.5 border-l-2 border-transparent;
+  }
+
+  .diff-line.diff-add {
+    @apply bg-ide-string/10 border-l-ide-string text-ide-text;
+  }
+
+  .diff-line.diff-remove {
+    @apply bg-ide-error/10 border-l-ide-error text-ide-text;
+  }
+
+  .diff-prefix {
+    @apply text-ide-string mr-2 select-none;
+  }
+
+  .diff-line.diff-remove .diff-prefix {
+    @apply text-ide-error;
+  }
+
+  /* JSON syntax highlighting in diff */
+  .diff-json .diff-line {
+    @apply border-l-transparent bg-transparent;
+  }
+
+  pre.diff-json {
+    @apply m-0 p-3 bg-ide-editor whitespace-pre overflow-x-auto;
+  }
+
+  pre.diff-json code {
+    @apply bg-transparent p-0;
+  }
+
+  .syntax-punctuation {
+    @apply text-ide-text;
+  }
+
+  .syntax-property {
+    @apply text-ide-type;
+  }
+
+  .syntax-string {
+    @apply text-ide-string;
+  }
+
+  .syntax-bracket {
+    @apply text-ide-warning;
+  }
+
+  /* Timeline Footer */
+  .timeline-footer {
+    @apply flex items-center gap-2 px-3 py-3 text-xs text-ide-textMuted italic;
+  }
+
+  .timeline-footer svg {
+    @apply text-ide-accent;
+  }
 }

@@ -170,6 +170,193 @@ import '@styles/global.css';
         </div>
       </div>
     </div>
+
+    <!-- experience.json Content - Source Control/Timeline Panel -->
+    <div class="file-content" data-content="experience.json">
+      <div class="timeline-panel max-w-4xl">
+        <!-- Panel Header -->
+        <div class="timeline-header">
+          <div class="timeline-header-title">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 3v6m0 6v6"></path>
+            </svg>
+            <span>TIMELINE</span>
+          </div>
+          <span class="timeline-header-count">2 entries</span>
+        </div>
+
+        <!-- Timeline Entries -->
+        <div class="timeline-entries">
+          <!-- Funditec Entry -->
+          <div class="timeline-entry" data-entry="funditec">
+            <button class="timeline-commit" aria-expanded="false">
+              <div class="commit-graph">
+                <div class="commit-line"></div>
+                <div class="commit-dot"></div>
+                <div class="commit-line-bottom"></div>
+              </div>
+              <div class="commit-content">
+                <div class="commit-header">
+                  <svg class="commit-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="12" r="4"></circle>
+                  </svg>
+                  <span class="commit-company">Funditec</span>
+                  <span class="commit-separator">•</span>
+                  <span class="commit-role">Full-Stack Developer</span>
+                </div>
+                <div class="commit-meta">
+                  <span class="commit-date">Feb 2023 - Present</span>
+                  <span class="commit-hash">#HEAD</span>
+                </div>
+              </div>
+              <svg
+                class="commit-chevron w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </button>
+            <div class="commit-details">
+              <div class="diff-section">
+                <div class="diff-header">
+                  <span class="diff-file">responsibilities.diff</span>
+                  <span class="diff-stats">
+                    <span class="diff-additions">+8</span>
+                  </span>
+                </div>
+                <div class="diff-content">
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Developing and maintaining web applications using React, Node.js, and
+                    TypeScript
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Building RESTful APIs and microservices architecture
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Implementing CI/CD pipelines and DevOps practices
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Collaborating with cross-functional teams on product features
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Code reviews and mentoring junior developers
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Database design and optimization (PostgreSQL, MongoDB)
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Performance optimization and technical debt reduction
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Participating in agile ceremonies and sprint planning
+                  </div>
+                </div>
+              </div>
+              <div class="diff-section">
+                <div class="diff-header">
+                  <span class="diff-file">tech-stack.json</span>
+                </div>
+                <pre
+                  class="diff-content diff-json"><code><span class="syntax-punctuation">&#123;</span>
+  <span class="syntax-property">"frontend"</span><span class="syntax-punctuation">:</span> <span class="syntax-bracket">[</span><span class="syntax-string">"React"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"TypeScript"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"Tailwind"</span><span class="syntax-bracket">]</span><span class="syntax-punctuation">,</span>
+  <span class="syntax-property">"backend"</span><span class="syntax-punctuation">:</span> <span class="syntax-bracket">[</span><span class="syntax-string">"Node.js"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"Express"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"Python"</span><span class="syntax-bracket">]</span><span class="syntax-punctuation">,</span>
+  <span class="syntax-property">"database"</span><span class="syntax-punctuation">:</span> <span class="syntax-bracket">[</span><span class="syntax-string">"PostgreSQL"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"MongoDB"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"Redis"</span><span class="syntax-bracket">]</span><span class="syntax-punctuation">,</span>
+  <span class="syntax-property">"devops"</span><span class="syntax-punctuation">:</span> <span class="syntax-bracket">[</span><span class="syntax-string">"Docker"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"GitHub Actions"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"AWS"</span><span class="syntax-bracket">]</span>
+<span class="syntax-punctuation">&#125;</span></code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cruz Roja Entry -->
+          <div class="timeline-entry" data-entry="cruzroja">
+            <button class="timeline-commit" aria-expanded="false">
+              <div class="commit-graph">
+                <div class="commit-line"></div>
+                <div class="commit-dot volunteer"></div>
+                <div class="commit-line-bottom faded"></div>
+              </div>
+              <div class="commit-content">
+                <div class="commit-header">
+                  <svg class="commit-icon volunteer w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                    >
+                    </path>
+                  </svg>
+                  <span class="commit-company">Cruz Roja Española</span>
+                  <span class="commit-separator">•</span>
+                  <span class="commit-role">Technology Volunteer</span>
+                </div>
+                <div class="commit-meta">
+                  <span class="commit-date">Sep 2021 - Jan 2023</span>
+                  <span class="commit-hash">#a1b2c3d</span>
+                </div>
+              </div>
+              <svg
+                class="commit-chevron w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+            </button>
+            <div class="commit-details">
+              <div class="diff-section">
+                <div class="diff-header">
+                  <span class="diff-file">contributions.diff</span>
+                  <span class="diff-stats">
+                    <span class="diff-additions">+5</span>
+                  </span>
+                </div>
+                <div class="diff-content">
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Developed internal tools to streamline volunteer coordination
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Built data visualization dashboards for humanitarian aid tracking
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Provided technical support and training to staff members
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Maintained and improved legacy systems
+                  </div>
+                  <div class="diff-line diff-add">
+                    <span class="diff-prefix">+</span> Collaborated on digital transformation initiatives
+                  </div>
+                </div>
+              </div>
+              <div class="diff-section">
+                <div class="diff-header">
+                  <span class="diff-file">impact.json</span>
+                </div>
+                <pre
+                  class="diff-content diff-json"><code><span class="syntax-punctuation">&#123;</span>
+  <span class="syntax-property">"type"</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"volunteer"</span><span class="syntax-punctuation">,</span>
+  <span class="syntax-property">"focus"</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"technology &amp; digital transformation"</span><span class="syntax-punctuation">,</span>
+  <span class="syntax-property">"learning"</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"nonprofit tech challenges &amp; social impact"</span>
+<span class="syntax-punctuation">&#125;</span></code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline Footer -->
+        <div class="timeline-footer">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+          </svg>
+          <span>Career journey continues...</span>
+        </div>
+      </div>
+    </div>
   </div>
 </IDELayout>
 
@@ -354,6 +541,17 @@ import '@styles/global.css';
         updateStatusBar(filename);
         switchContent(filename);
       }
+    });
+  });
+
+  // Timeline expand/collapse functionality
+  document.querySelectorAll('.timeline-entry').forEach((entry) => {
+    const commitButton = entry.querySelector('.timeline-commit');
+
+    commitButton?.addEventListener('click', () => {
+      const isExpanded = entry.getAttribute('data-expanded') === 'true';
+      entry.setAttribute('data-expanded', String(!isExpanded));
+      commitButton.setAttribute('aria-expanded', String(!isExpanded));
     });
   });
 </script>
