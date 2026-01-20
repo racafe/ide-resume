@@ -12,7 +12,45 @@ const { title = 'Rafael Carrión - IDE Resume' } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Rafael Carrión - Full-Stack Developer Portfolio styled as a VS Code IDE" />
+
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Optimized Google Fonts loading with display=swap for better FCP -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content="Full-Stack Developer Portfolio styled as a VS Code IDE" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://racafe.dev" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content="Full-Stack Developer Portfolio styled as a VS Code IDE" />
+
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#1e1e1e" />
+
     <title>{title}</title>
   </head>
   <body>
@@ -202,38 +240,47 @@ const { title = 'Rafael Carrión - IDE Resume' } = Astro.props;
     </div>
 
     <script>
-      // Loading screen animation
+      // Loading screen animation - optimized for fast FCP
       document.addEventListener('DOMContentLoaded', () => {
         const loadingScreen = document.getElementById('loading-screen');
         const ideContainer = document.getElementById('ide-container');
         const loadingStatus = document.querySelector('.loading-status');
 
-        const loadingSteps = ['Loading workspace...', 'Initializing extensions...', 'Parsing file tree...', 'Ready!'];
+        // Respect reduced motion preference - skip animation entirely
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        let stepIndex = 0;
-        const stepInterval = setInterval(() => {
-          stepIndex++;
-          if (stepIndex < loadingSteps.length && loadingStatus) {
-            loadingStatus.textContent = loadingSteps[stepIndex];
-          }
-        }, 500);
+        if (prefersReducedMotion) {
+          // Skip loading animation for users who prefer reduced motion
+          if (loadingScreen) loadingScreen.style.display = 'none';
+          if (ideContainer) ideContainer.classList.remove('opacity-0');
+        } else {
+          const loadingSteps = ['Loading workspace...', 'Initializing...', 'Ready!'];
+          let stepIndex = 0;
 
-        // Fade out loading screen after animation completes
-        setTimeout(() => {
-          clearInterval(stepInterval);
-          if (loadingScreen) {
-            loadingScreen.style.opacity = '0';
-            loadingScreen.style.transition = 'opacity 0.3s ease-out';
-          }
-          if (ideContainer) {
-            ideContainer.classList.remove('opacity-0');
-          }
-          setTimeout(() => {
-            if (loadingScreen) {
-              loadingScreen.style.display = 'none';
+          const stepInterval = setInterval(() => {
+            stepIndex++;
+            if (stepIndex < loadingSteps.length && loadingStatus) {
+              loadingStatus.textContent = loadingSteps[stepIndex];
             }
           }, 300);
-        }, 2000);
+
+          // Reduced loading time from 2s to 1s for faster FCP
+          setTimeout(() => {
+            clearInterval(stepInterval);
+            if (loadingScreen) {
+              loadingScreen.style.opacity = '0';
+              loadingScreen.style.transition = 'opacity 0.2s ease-out';
+            }
+            if (ideContainer) {
+              ideContainer.classList.remove('opacity-0');
+            }
+            setTimeout(() => {
+              if (loadingScreen) {
+                loadingScreen.style.display = 'none';
+              }
+            }, 200);
+          }, 1000);
+        }
 
         // Tab bar scroll handling
         const tabBar = document.getElementById('tab-bar');

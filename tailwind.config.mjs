@@ -62,7 +62,7 @@ export default {
         "fade-in": "fadeIn 0.3s ease-out",
         "slide-in": "slideIn 0.3s ease-out",
         cursor: "cursor 1s ease-in-out infinite",
-        "loading-bar": "loadingBar 2s ease-in-out",
+        "loading-bar": "loadingBar 1s ease-in-out",
       },
       keyframes: {
         fadeIn: {

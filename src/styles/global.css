@@ -1,5 +1,4 @@
-/* Google Fonts - Fira Code and JetBrains Mono */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+/* Google Fonts are loaded via <link> in the layout for better performance */
 
 @tailwind base;
 @tailwind components;
@@ -175,9 +174,11 @@
     @apply text-ide-accent;
   }
 
-  /* Loading screen */
+  /* Loading screen - optimized for fast rendering */
   .loading-screen {
     @apply fixed inset-0 bg-ide-bg flex flex-col items-center justify-center z-50;
+    will-change: opacity;
+    contain: layout style paint;
   }
 
   .loading-logo {
@@ -194,6 +195,18 @@
 
   .loading-bar {
     @apply h-full bg-ide-accent animate-loading-bar;
+  }
+
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .loading-bar {
+      animation: none;
+      width: 100%;
+    }
+
+    .loading-screen {
+      display: none;
+    }
   }
 
   .loading-status {
@@ -740,6 +753,7 @@
     /* Sidebar: slide out from left on mobile */
     .sidebar {
       @apply fixed left-0 top-12 bottom-0 w-64 transform -translate-x-full transition-transform duration-300 ease-in-out z-50;
+      will-change: transform;
     }
 
     .sidebar.mobile-open {
