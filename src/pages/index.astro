@@ -1,0 +1,100 @@
+---
+import IDELayout from '@layouts/IDELayout.astro';
+import '@styles/global.css';
+---
+
+<IDELayout title="Rafael Carrión - IDE Resume">
+  <!-- Sidebar: File Explorer -->
+  <Fragment slot="sidebar">
+    <!-- Placeholder file tree - will be replaced by FileExplorer component in US-002 -->
+    <div class="file-tree-item" data-file="README.md">
+      <svg class="file-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+      </svg>
+      <span>README.md</span>
+    </div>
+    <div class="file-tree-item" data-file="about.md">
+      <svg class="file-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+      </svg>
+      <span>about.md</span>
+    </div>
+    <div class="file-tree-item" data-file="experience.json">
+      <svg class="w-4 h-4 text-ide-warning" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+      </svg>
+      <span>experience.json</span>
+    </div>
+    <div class="file-tree-item" data-file="skills.ts">
+      <svg class="w-4 h-4 text-ide-keyword" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+      </svg>
+      <span>skills.ts</span>
+    </div>
+    <div class="file-tree-item" data-file="education.yaml">
+      <svg class="w-4 h-4 text-ide-error" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+      </svg>
+      <span>education.yaml</span>
+    </div>
+    <div class="file-tree-item" data-file="contact.tsx">
+      <svg class="w-4 h-4 text-ide-type" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+      </svg>
+      <span>contact.tsx</span>
+    </div>
+  </Fragment>
+
+  <!-- Tabs -->
+  <Fragment slot="tabs">
+    <div class="tab active" data-file="README.md">
+      <svg class="file-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+        <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+      </svg>
+      <span class="truncate">README.md</span>
+      <button class="tab-close" aria-label="Close tab">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6L18 18"></path>
+        </svg>
+      </button>
+    </div>
+  </Fragment>
+
+  <!-- Editor Content: Placeholder README -->
+  <div class="max-w-4xl mx-auto">
+    <div class="prose prose-invert prose-sm">
+      <h1 class="text-ide-text text-2xl font-semibold mb-4">Welcome to racafe IDE</h1>
+      <p class="text-ide-text mb-4">
+        This is a VS Code-themed portfolio and resume for <strong>Rafael Carrión</strong>, a Full-Stack Developer based
+        in Barcelona.
+      </p>
+      <h2 class="text-ide-text text-lg font-semibold mb-2 mt-6">Quick Start</h2>
+      <p class="text-ide-textMuted mb-4">
+        Navigate through the file explorer on the left to discover different sections:
+      </p>
+      <ul class="text-ide-text list-disc list-inside space-y-1">
+        <li><code class="bg-ide-sidebar px-1 rounded text-ide-string">README.md</code> - You are here</li>
+        <li><code class="bg-ide-sidebar px-1 rounded text-ide-string">about.md</code> - About me</li>
+        <li><code class="bg-ide-sidebar px-1 rounded text-ide-warning">experience.json</code> - Work experience</li>
+        <li><code class="bg-ide-sidebar px-1 rounded text-ide-keyword">skills.ts</code> - Technical skills</li>
+        <li>
+          <code class="bg-ide-sidebar px-1 rounded text-ide-error">education.yaml</code> - Education & certifications
+        </li>
+        <li><code class="bg-ide-sidebar px-1 rounded text-ide-type">contact.tsx</code> - Get in touch</li>
+      </ul>
+      <div class="mt-8 p-4 bg-ide-sidebar rounded border border-ide-border">
+        <p class="text-ide-textMuted text-sm flex items-center gap-2">
+          <span class="inline-block w-2 h-2 bg-ide-success rounded-full animate-pulse"></span>
+          Tip: Try the Konami code for a surprise!
+        </p>
+      </div>
+    </div>
+  </div>
+</IDELayout>
