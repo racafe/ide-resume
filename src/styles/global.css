@@ -228,7 +228,7 @@
   }
 
   .syntax-comment {
-    @apply text-ide-comment;
+    @apply text-ide-comment italic;
   }
 
   .syntax-operator {
@@ -540,5 +540,31 @@
 
   .timeline-footer svg {
     @apply text-ide-accent;
+  }
+
+  /* Code Editor - TypeScript/Code Display */
+  .code-editor {
+    @apply font-code text-code bg-ide-editor max-w-4xl;
+  }
+
+  .code-content {
+    @apply overflow-x-auto;
+  }
+
+  .code-block {
+    @apply m-0 p-0 bg-transparent whitespace-pre;
+  }
+
+  .code-block code {
+    @apply bg-transparent p-0;
+  }
+
+  .code-block .line {
+    @apply block leading-relaxed;
+  }
+
+  .code-block .line-number {
+    @apply inline-block w-10 pr-4 text-right text-ide-lineNumber select-none;
+    min-width: 2.5rem;
   }
 }
