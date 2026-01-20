@@ -225,4 +225,110 @@
   .line-numbers {
     @apply text-ide-lineNumber select-none pr-4 text-right;
   }
+
+  /* VS Code Markdown Preview Styling */
+  .markdown-preview {
+    @apply text-ide-text leading-relaxed;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+  }
+
+  .markdown-preview h1 {
+    @apply text-ide-text text-[28px] font-semibold pb-2 mb-4 border-b border-ide-border;
+  }
+
+  .markdown-preview h2 {
+    @apply text-ide-text text-xl font-semibold pb-2 mb-3 mt-6 border-b border-ide-border;
+  }
+
+  .markdown-preview h3 {
+    @apply text-ide-text text-lg font-semibold mb-3 mt-5;
+  }
+
+  .markdown-preview p {
+    @apply mb-4 leading-relaxed;
+  }
+
+  .markdown-preview a {
+    @apply text-ide-accent hover:underline;
+  }
+
+  .markdown-preview code {
+    @apply font-code text-[13px] px-1.5 py-0.5 rounded bg-ide-sidebarActive text-ide-string;
+  }
+
+  .markdown-preview pre {
+    @apply font-code text-[13px] p-4 rounded bg-ide-sidebar border border-ide-border overflow-x-auto mb-4;
+  }
+
+  .markdown-preview pre code {
+    @apply p-0 bg-transparent;
+  }
+
+  .markdown-preview ul {
+    @apply list-disc list-inside mb-4 space-y-1 pl-2;
+  }
+
+  .markdown-preview ol {
+    @apply list-decimal list-inside mb-4 space-y-1 pl-2;
+  }
+
+  .markdown-preview li {
+    @apply leading-relaxed;
+  }
+
+  .markdown-preview li code {
+    @apply text-ide-accent;
+  }
+
+  .markdown-preview blockquote {
+    @apply border-l-4 border-ide-accent pl-4 py-1 my-4 text-ide-textMuted italic bg-ide-sidebar/50;
+  }
+
+  .markdown-preview hr {
+    @apply border-ide-border my-6;
+  }
+
+  .markdown-preview strong {
+    @apply font-semibold text-ide-textBright;
+  }
+
+  .markdown-preview em {
+    @apply italic;
+  }
+
+  .markdown-preview table {
+    @apply w-full border-collapse mb-4;
+  }
+
+  .markdown-preview th,
+  .markdown-preview td {
+    @apply border border-ide-border px-3 py-2 text-left;
+  }
+
+  .markdown-preview th {
+    @apply bg-ide-sidebar font-semibold;
+  }
+
+  .markdown-preview img {
+    @apply max-w-full rounded my-4;
+  }
+
+  /* File path styling in markdown */
+  .markdown-preview .file-path {
+    @apply inline-flex items-center gap-1.5 bg-ide-sidebar px-2 py-0.5 rounded text-code-sm;
+  }
+
+  /* Tip/Note boxes */
+  .markdown-preview .tip-box {
+    @apply p-4 bg-ide-sidebar rounded border-l-4 border-ide-accent mb-4;
+  }
+
+  .markdown-preview .tip-box-title {
+    @apply flex items-center gap-2 font-semibold text-ide-accent mb-2;
+  }
+
+  .markdown-preview .tip-box-content {
+    @apply text-ide-textMuted text-sm;
+  }
 }
