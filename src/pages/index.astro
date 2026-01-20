@@ -589,6 +589,239 @@ import '@styles/global.css';
       </div>
     </div>
 
+    <!-- rafael.config.js Content - Humorous Configuration -->
+    <div class="file-content" data-content="rafael.config.js">
+      <div class="code-editor">
+        <div class="code-content">
+          <pre
+            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// rafael.config.js - Developer Configuration</span></span>
+<span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// WARNING: Modifying these values may cause unexpected behavior</span></span>
+<span class="line"><span class="line-number"> 3</span></span>
+<span class="line"><span class="line-number"> 4</span><span class="syntax-keyword">module</span>.<span class="syntax-variable">exports</span> = &#123;</span>
+<span class="line"><span class="line-number"> 5</span>  <span class="syntax-variable">name</span>: <span class="syntax-string">"Rafael Carrión"</span>,</span>
+<span class="line"><span class="line-number"> 6</span>  <span class="syntax-variable">location</span>: <span class="syntax-string">"Barcelona"</span>,</span>
+<span class="line"><span class="line-number"> 7</span>  <span class="syntax-variable">timezone</span>: <span class="syntax-string">"Europe/Madrid"</span>,</span>
+<span class="line"><span class="line-number"> 8</span></span>
+<span class="line"><span class="line-number"> 9</span>  <span class="syntax-comment">// Core Settings</span></span>
+<span class="line"><span class="line-number">10</span>  <span class="syntax-variable">coffeeLevel</span>: <span class="syntax-string">"critical"</span>,</span>
+<span class="line"><span class="line-number">11</span>  <span class="syntax-variable">caffeineThreshold</span>: <span class="syntax-number">3</span>, <span class="syntax-comment">// cups before functioning</span></span>
+<span class="line"><span class="line-number">12</span>  <span class="syntax-variable">preferredIDE</span>: <span class="syntax-string">"VS Code"</span>, <span class="syntax-comment">// obviously</span></span>
+<span class="line"><span class="line-number">13</span>  <span class="syntax-variable">darkMode</span>: <span class="syntax-keyword">true</span>, <span class="syntax-comment">// always</span></span>
+<span class="line"><span class="line-number">14</span></span>
+<span class="line"><span class="line-number">15</span>  <span class="syntax-comment">// Debugging Behavior</span></span>
+<span class="line"><span class="line-number">16</span>  <span class="syntax-variable">debugMode</span>: <span class="syntax-keyword">process</span>.<span class="syntax-variable">env</span>.<span class="syntax-variable">NODE_ENV</span> === <span class="syntax-string">"development"</span>,</span>
+<span class="line"><span class="line-number">17</span>  <span class="syntax-variable">rubberDuckEnabled</span>: <span class="syntax-keyword">true</span>,</span>
+<span class="line"><span class="line-number">18</span>  <span class="syntax-variable">stackOverflowTabsOpen</span>: <span class="syntax-number">47</span>,</span>
+<span class="line"><span class="line-number">19</span></span>
+<span class="line"><span class="line-number">20</span>  <span class="syntax-comment">// Work-Life Balance</span></span>
+<span class="line"><span class="line-number">21</span>  <span class="syntax-variable">workHours</span>: &#123;</span>
+<span class="line"><span class="line-number">22</span>    <span class="syntax-variable">start</span>: <span class="syntax-string">"09:00"</span>,</span>
+<span class="line"><span class="line-number">23</span>    <span class="syntax-variable">end</span>: <span class="syntax-string">"18:00"</span>,</span>
+<span class="line"><span class="line-number">24</span>    <span class="syntax-variable">actualEnd</span>: <span class="syntax-string">"whenever the bug is fixed"</span>,</span>
+<span class="line"><span class="line-number">25</span>  &#125;,</span>
+<span class="line"><span class="line-number">26</span></span>
+<span class="line"><span class="line-number">27</span>  <span class="syntax-comment">// Error Handling</span></span>
+<span class="line"><span class="line-number">28</span>  <span class="syntax-variable">onError</span>: (<span class="syntax-variable">err</span>) =&gt; &#123;</span>
+<span class="line"><span class="line-number">29</span>    <span class="syntax-keyword">if</span> (<span class="syntax-variable">err</span>.<span class="syntax-variable">type</span> === <span class="syntax-string">"MERGE_CONFLICT"</span>) &#123;</span>
+<span class="line"><span class="line-number">30</span>      <span class="syntax-keyword">return</span> <span class="syntax-string">"git stash &amp;&amp; cry"</span>;</span>
+<span class="line"><span class="line-number">31</span>    &#125;</span>
+<span class="line"><span class="line-number">32</span>    <span class="syntax-keyword">if</span> (<span class="syntax-variable">err</span>.<span class="syntax-variable">type</span> === <span class="syntax-string">"PRODUCTION_DOWN"</span>) &#123;</span>
+<span class="line"><span class="line-number">33</span>      <span class="syntax-keyword">return</span> <span class="syntax-string">"panic().then(debug)"</span>;</span>
+<span class="line"><span class="line-number">34</span>    &#125;</span>
+<span class="line"><span class="line-number">35</span>    <span class="syntax-keyword">return</span> <span class="syntax-string">"console.log('This should never happen')"</span>;</span>
+<span class="line"><span class="line-number">36</span>  &#125;,</span>
+<span class="line"><span class="line-number">37</span></span>
+<span class="line"><span class="line-number">38</span>  <span class="syntax-comment">// Feature Flags</span></span>
+<span class="line"><span class="line-number">39</span>  <span class="syntax-variable">features</span>: &#123;</span>
+<span class="line"><span class="line-number">40</span>    <span class="syntax-variable">optimism</span>: <span class="syntax-keyword">true</span>,</span>
+<span class="line"><span class="line-number">41</span>    <span class="syntax-variable">imposterSyndrome</span>: <span class="syntax-keyword">true</span>, <span class="syntax-comment">// can't disable</span></span>
+<span class="line"><span class="line-number">42</span>    <span class="syntax-variable">perfectionism</span>: <span class="syntax-keyword">true</span>,</span>
+<span class="line"><span class="line-number">43</span>    <span class="syntax-variable">procrastination</span>: <span class="syntax-string">"enabled_for_side_projects"</span>,</span>
+<span class="line"><span class="line-number">44</span>  &#125;,</span>
+<span class="line"><span class="line-number">45</span></span>
+<span class="line"><span class="line-number">46</span>  <span class="syntax-comment">// Easter Egg</span></span>
+<span class="line"><span class="line-number">47</span>  <span class="syntax-variable">secretHandshake</span>: <span class="syntax-string">"↑ ↑ ↓ ↓ ← → ← → B A"</span>,</span>
+<span class="line"><span class="line-number">48</span>&#125;;</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- konami.md Content - Easter Egg Hint -->
+    <div class="file-content" data-content="konami.md">
+      <div class="markdown-preview max-w-4xl">
+        <h1>You Found a Secret!</h1>
+
+        <blockquote>
+          <p>"The code is strong with this one..."</p>
+        </blockquote>
+
+        <p>
+          Congratulations, curious explorer! You've discovered the hidden <code>.secrets</code> folder. Not many visitors
+          venture this deep into the file tree.
+        </p>
+
+        <h2>The Konami Code</h2>
+
+        <p>
+          There's an old legend among developers. A secret combination passed down through generations of gamers and
+          coders alike:
+        </p>
+
+        <pre><code>↑ ↑ ↓ ↓ ← → ← → B A</code></pre>
+
+        <p>Some say if you enter this sequence on this very page, something magical might happen...</p>
+
+        <div class="tip-box">
+          <div class="tip-box-title">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              >
+              </path>
+            </svg>
+            Hint
+          </div>
+          <div class="tip-box-content">
+            Try using your keyboard arrow keys followed by 'B' and 'A'. Who knows what you might unlock?
+          </div>
+        </div>
+
+        <h2>Why Easter Eggs?</h2>
+
+        <p>
+          Because coding should be fun! Hidden features and secret messages are a time-honored tradition in software
+          development. They're a way for developers to add personality to their work and reward curious users who
+          explore.
+        </p>
+
+        <p>
+          <em>Keep exploring - there might be more secrets hidden in this portfolio...</em>
+        </p>
+      </div>
+    </div>
+
+    <!-- achievements.unlock Content - Discoverable Easter Eggs List -->
+    <div class="file-content" data-content="achievements.unlock">
+      <div class="code-editor">
+        <div class="code-content">
+          <pre
+            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// achievements.unlock - Hidden Features Registry</span></span>
+<span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// Status: CLASSIFIED</span></span>
+<span class="line"><span class="line-number"> 3</span></span>
+<span class="line"><span class="line-number"> 4</span><span class="syntax-type">ACHIEVEMENT_LIST</span> = &#123;</span>
+<span class="line"><span class="line-number"> 5</span></span>
+<span class="line"><span class="line-number"> 6</span>  <span class="syntax-comment">// ══════════════════════════════════════════════</span></span>
+<span class="line"><span class="line-number"> 7</span>  <span class="syntax-comment">//  DISCOVERABLE EASTER EGGS</span></span>
+<span class="line"><span class="line-number"> 8</span>  <span class="syntax-comment">// ══════════════════════════════════════════════</span></span>
+<span class="line"><span class="line-number"> 9</span></span>
+<span class="line"><span class="line-number">10</span>  <span class="syntax-string">"SECRET_HUNTER"</span>: &#123;</span>
+<span class="line"><span class="line-number">11</span>    <span class="syntax-variable">name</span>: <span class="syntax-string">"Secret Hunter"</span>,</span>
+<span class="line"><span class="line-number">12</span>    <span class="syntax-variable">description</span>: <span class="syntax-string">"Found the .secrets folder"</span>,</span>
+<span class="line"><span class="line-number">13</span>    <span class="syntax-variable">status</span>: <span class="syntax-string">"[UNLOCKED]"</span>,</span>
+<span class="line"><span class="line-number">14</span>    <span class="syntax-variable">points</span>: <span class="syntax-number">100</span>,</span>
+<span class="line"><span class="line-number">15</span>  &#125;,</span>
+<span class="line"><span class="line-number">16</span></span>
+<span class="line"><span class="line-number">17</span>  <span class="syntax-string">"KONAMI_MASTER"</span>: &#123;</span>
+<span class="line"><span class="line-number">18</span>    <span class="syntax-variable">name</span>: <span class="syntax-string">"Konami Master"</span>,</span>
+<span class="line"><span class="line-number">19</span>    <span class="syntax-variable">description</span>: <span class="syntax-string">"Entered the legendary code"</span>,</span>
+<span class="line"><span class="line-number">20</span>    <span class="syntax-variable">hint</span>: <span class="syntax-string">"↑ ↑ ↓ ↓ ← → ← → B A"</span>,</span>
+<span class="line"><span class="line-number">21</span>    <span class="syntax-variable">status</span>: <span class="syntax-string">"[LOCKED]"</span>,</span>
+<span class="line"><span class="line-number">22</span>    <span class="syntax-variable">points</span>: <span class="syntax-number">500</span>,</span>
+<span class="line"><span class="line-number">23</span>  &#125;,</span>
+<span class="line"><span class="line-number">24</span></span>
+<span class="line"><span class="line-number">25</span>  <span class="syntax-string">"CONFIG_READER"</span>: &#123;</span>
+<span class="line"><span class="line-number">26</span>    <span class="syntax-variable">name</span>: <span class="syntax-string">"Config Reader"</span>,</span>
+<span class="line"><span class="line-number">27</span>    <span class="syntax-variable">description</span>: <span class="syntax-string">"Read rafael.config.js"</span>,</span>
+<span class="line"><span class="line-number">28</span>    <span class="syntax-variable">status</span>: <span class="syntax-string">"[LOCKED]"</span>,</span>
+<span class="line"><span class="line-number">29</span>    <span class="syntax-variable">points</span>: <span class="syntax-number">50</span>,</span>
+<span class="line"><span class="line-number">30</span>  &#125;,</span>
+<span class="line"><span class="line-number">31</span></span>
+<span class="line"><span class="line-number">32</span>  <span class="syntax-string">"CAREER_ARCHAEOLOGIST"</span>: &#123;</span>
+<span class="line"><span class="line-number">33</span>    <span class="syntax-variable">name</span>: <span class="syntax-string">"Career Archaeologist"</span>,</span>
+<span class="line"><span class="line-number">34</span>    <span class="syntax-variable">description</span>: <span class="syntax-string">"Read the career debug logs"</span>,</span>
+<span class="line"><span class="line-number">35</span>    <span class="syntax-variable">status</span>: <span class="syntax-string">"[LOCKED]"</span>,</span>
+<span class="line"><span class="line-number">36</span>    <span class="syntax-variable">points</span>: <span class="syntax-number">75</span>,</span>
+<span class="line"><span class="line-number">37</span>  &#125;,</span>
+<span class="line"><span class="line-number">38</span></span>
+<span class="line"><span class="line-number">39</span>  <span class="syntax-string">"TAB_HOARDER"</span>: &#123;</span>
+<span class="line"><span class="line-number">40</span>    <span class="syntax-variable">name</span>: <span class="syntax-string">"Tab Hoarder"</span>,</span>
+<span class="line"><span class="line-number">41</span>    <span class="syntax-variable">description</span>: <span class="syntax-string">"Open all files at once"</span>,</span>
+<span class="line"><span class="line-number">42</span>    <span class="syntax-variable">status</span>: <span class="syntax-string">"[LOCKED]"</span>,</span>
+<span class="line"><span class="line-number">43</span>    <span class="syntax-variable">points</span>: <span class="syntax-number">150</span>,</span>
+<span class="line"><span class="line-number">44</span>  &#125;,</span>
+<span class="line"><span class="line-number">45</span></span>
+<span class="line"><span class="line-number">46</span>  <span class="syntax-string">"NIGHT_OWL"</span>: &#123;</span>
+<span class="line"><span class="line-number">47</span>    <span class="syntax-variable">name</span>: <span class="syntax-string">"Night Owl"</span>,</span>
+<span class="line"><span class="line-number">48</span>    <span class="syntax-variable">description</span>: <span class="syntax-string">"Visit the site between 2-4 AM"</span>,</span>
+<span class="line"><span class="line-number">49</span>    <span class="syntax-variable">status</span>: <span class="syntax-string">"[LOCKED]"</span>,</span>
+<span class="line"><span class="line-number">50</span>    <span class="syntax-variable">points</span>: <span class="syntax-number">200</span>,</span>
+<span class="line"><span class="line-number">51</span>  &#125;,</span>
+<span class="line"><span class="line-number">52</span></span>
+<span class="line"><span class="line-number">53</span>  <span class="syntax-comment">// ══════════════════════════════════════════════</span></span>
+<span class="line"><span class="line-number">54</span>  <span class="syntax-comment">//  TOTAL POINTS AVAILABLE: 1075</span></span>
+<span class="line"><span class="line-number">55</span>  <span class="syntax-comment">//  YOUR SCORE: ???</span></span>
+<span class="line"><span class="line-number">56</span>  <span class="syntax-comment">// ══════════════════════════════════════════════</span></span>
+<span class="line"><span class="line-number">57</span></span>
+<span class="line"><span class="line-number">58</span>&#125;;</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- career.log Content - Fun Debug Log of Career Moments -->
+    <div class="file-content" data-content="career.log">
+      <div class="code-editor career-log">
+        <div class="code-content">
+          <pre
+            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// career.log - Debug Output from Life</span></span>
+<span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// Generated by: rafael.exe v29.0</span></span>
+<span class="line"><span class="line-number"> 3</span></span>
+<span class="line"><span class="line-number"> 4</span>[<span class="syntax-number">1995</span>] <span class="syntax-type">INFO</span>  - <span class="syntax-variable">System</span> initialized in Barcelona, Spain</span>
+<span class="line"><span class="line-number"> 5</span>[<span class="syntax-number">2005</span>] <span class="syntax-type">DEBUG</span> - First "Hello World" executed in BASIC</span>
+<span class="line"><span class="line-number"> 6</span>[<span class="syntax-number">2005</span>] <span class="syntax-keyword">WARN</span>  - Infinite loop detected: video games taking priority</span>
+<span class="line"><span class="line-number"> 7</span></span>
+<span class="line"><span class="line-number"> 8</span>[<span class="syntax-number">2010</span>] <span class="syntax-type">INFO</span>  - Discovered HTML/CSS. Building "cool" websites</span>
+<span class="line"><span class="line-number"> 9</span>[<span class="syntax-number">2010</span>] <span class="syntax-keyword">WARN</span>  - Excessive use of &lt;marquee&gt; and &lt;blink&gt; tags detected</span>
+<span class="line"><span class="line-number">10</span>[<span class="syntax-number">2011</span>] <span class="syntax-type">DEBUG</span> - First website deployed. Visitor count: 1 (mom)</span>
+<span class="line"><span class="line-number">11</span></span>
+<span class="line"><span class="line-number">12</span>[<span class="syntax-number">2015</span>] <span class="syntax-type">INFO</span>  - University.start(ComputerScience)</span>
+<span class="line"><span class="line-number">13</span>[<span class="syntax-number">2015</span>] <span class="syntax-type">DEBUG</span> - Sleep.disable() during exam periods</span>
+<span class="line"><span class="line-number">14</span>[<span class="syntax-number">2016</span>] <span class="syntax-error">ERROR</span> - StackOverflowException: Too many recursive study sessions</span>
+<span class="line"><span class="line-number">15</span>[<span class="syntax-number">2017</span>] <span class="syntax-keyword">WARN</span>  - Coffee dependency upgraded to "critical"</span>
+<span class="line"><span class="line-number">16</span></span>
+<span class="line"><span class="line-number">17</span>[<span class="syntax-number">2019</span>] <span class="syntax-type">INFO</span>  - First professional commit pushed</span>
+<span class="line"><span class="line-number">18</span>[<span class="syntax-number">2019</span>] <span class="syntax-type">DEBUG</span> - ImposterSyndrome.activate()</span>
+<span class="line"><span class="line-number">19</span>[<span class="syntax-number">2019</span>] <span class="syntax-type">INFO</span>  - Resolved: "It works on my machine" → Docker adopted</span>
+<span class="line"><span class="line-number">20</span></span>
+<span class="line"><span class="line-number">21</span>[<span class="syntax-number">2020</span>] <span class="syntax-keyword">WARN</span>  - Global pandemic detected. Switching to remote mode...</span>
+<span class="line"><span class="line-number">22</span>[<span class="syntax-number">2020</span>] <span class="syntax-type">INFO</span>  - Home office environment configured</span>
+<span class="line"><span class="line-number">23</span>[<span class="syntax-number">2020</span>] <span class="syntax-type">DEBUG</span> - Pants optional flag enabled for daily standups</span>
+<span class="line"><span class="line-number">24</span></span>
+<span class="line"><span class="line-number">25</span>[<span class="syntax-number">2021</span>] <span class="syntax-type">INFO</span>  - Joined Cruz Roja as technology volunteer</span>
+<span class="line"><span class="line-number">26</span>[<span class="syntax-number">2021</span>] <span class="syntax-type">DEBUG</span> - karma++ (giving back to community)</span>
+<span class="line"><span class="line-number">27</span>[<span class="syntax-number">2022</span>] <span class="syntax-type">INFO</span>  - Successfully helped digitize volunteer operations</span>
+<span class="line"><span class="line-number">28</span></span>
+<span class="line"><span class="line-number">29</span>[<span class="syntax-number">2023</span>] <span class="syntax-type">INFO</span>  - Joined Funditec as Full-Stack Developer</span>
+<span class="line"><span class="line-number">30</span>[<span class="syntax-number">2023</span>] <span class="syntax-type">DEBUG</span> - Tech stack expanded: React, Node.js, TypeScript</span>
+<span class="line"><span class="line-number">31</span>[<span class="syntax-number">2023</span>] <span class="syntax-error">ERROR</span> - Production bug at 5:59 PM on Friday. Again.</span>
+<span class="line"><span class="line-number">32</span>[<span class="syntax-number">2023</span>] <span class="syntax-type">INFO</span>  - Bug fixed. Weekend saved. Barely.</span>
+<span class="line"><span class="line-number">33</span></span>
+<span class="line"><span class="line-number">34</span>[<span class="syntax-number">2024</span>] <span class="syntax-type">INFO</span>  - Completed DevOps with Docker certification</span>
+<span class="line"><span class="line-number">35</span>[<span class="syntax-number">2024</span>] <span class="syntax-type">DEBUG</span> - "LGTM" comments increased by 200%</span>
+<span class="line"><span class="line-number">36</span>[<span class="syntax-number">2024</span>] <span class="syntax-keyword">WARN</span>  - Starting to understand legacy code. Send help.</span>
+<span class="line"><span class="line-number">37</span></span>
+<span class="line"><span class="line-number">38</span>[<span class="syntax-number">2025</span>] <span class="syntax-type">INFO</span>  - Started Cyber Security certification</span>
+<span class="line"><span class="line-number">39</span>[<span class="syntax-number">2025</span>] <span class="syntax-type">DEBUG</span> - Learning OWASP Top 10 (the hard way)</span>
+<span class="line"><span class="line-number">40</span>[<span class="syntax-number">2025</span>] <span class="syntax-type">DEBUG</span> - Now paranoid about every SQL query</span>
+<span class="line"><span class="line-number">41</span></span>
+<span class="line"><span class="line-number">42</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">INFO</span>  - Building this VS Code portfolio</span>
+<span class="line"><span class="line-number">43</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">DEBUG</span> - Meta moment: you're reading logs inside a fake IDE</span>
+<span class="line"><span class="line-number">44</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">INFO</span>  - Career.status = "evolving"</span>
+<span class="line"><span class="line-number">45</span></span>
+<span class="line"><span class="line-number">46</span><span class="syntax-comment">// EOF - More logs coming soon...</span></span></code></pre>
+        </div>
+      </div>
+    </div>
+
     <!-- experience.json Content - Source Control/Timeline Panel -->
     <div class="file-content" data-content="experience.json">
       <div class="timeline-panel max-w-4xl">
@@ -793,6 +1026,8 @@ import '@styles/global.css';
     html: 'HTML',
     css: 'CSS',
     astro: 'Astro',
+    log: 'Log',
+    unlock: 'Unlock File',
   };
 
   // Update status bar based on active file
@@ -914,6 +1149,8 @@ import '@styles/global.css';
       js: 'text-ide-warning',
       yaml: 'text-ide-error',
       txt: 'text-ide-textMuted',
+      log: 'text-ide-string',
+      unlock: 'text-ide-number',
     };
 
     const color = colorMap[ext] || 'text-ide-text';

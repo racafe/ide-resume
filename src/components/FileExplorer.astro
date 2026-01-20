@@ -10,6 +10,7 @@ interface FileItem {
   type: 'file' | 'folder';
   children?: FileItem[];
   expanded?: boolean;
+  dimmed?: boolean;
 }
 
 // File tree structure representing the resume
@@ -34,9 +35,11 @@ const fileTree: FileItem[] = [
     name: '.secrets',
     type: 'folder',
     expanded: false,
+    dimmed: true,
     children: [
-      { name: 'hobbies.txt', type: 'file' },
-      { name: 'fun-facts.md', type: 'file' },
+      { name: 'konami.md', type: 'file' },
+      { name: 'achievements.unlock', type: 'file' },
+      { name: 'career.log', type: 'file' },
     ],
   },
 ];
@@ -60,7 +63,11 @@ const fileTree: FileItem[] = [
       {
         fileTree.map((item) =>
           item.type === 'folder' ? (
-            <div class="folder-container" data-folder={item.name} data-expanded={item.expanded}>
+            <div
+              class={`folder-container ${item.dimmed ? 'dimmed' : ''}`}
+              data-folder={item.name}
+              data-expanded={item.expanded}
+            >
               <button class="file-tree-item folder" aria-expanded={item.expanded} aria-controls={`folder-${item.name}`}>
                 <svg
                   class="chevron w-3 h-3 transition-transform duration-200"
@@ -168,6 +175,12 @@ const fileTree: FileItem[] = [
 
   .filename {
     @apply truncate;
+  }
+
+  /* Dimmed style for gitignored-like files */
+  .folder-container.dimmed .filename,
+  .folder-container.dimmed .folder-icon {
+    @apply opacity-50;
   }
 </style>
 

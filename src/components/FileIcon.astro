@@ -21,6 +21,8 @@ const colorMap: Record<string, string> = {
   js: 'text-ide-warning',
   yaml: 'text-ide-error',
   txt: 'text-ide-textMuted',
+  log: 'text-ide-string',
+  unlock: 'text-ide-number',
 };
 
 const color = colorMap[ext] || 'text-ide-text';
@@ -107,7 +109,31 @@ const color = colorMap[ext] || 'text-ide-text';
 }
 
 {
-  !['md', 'json', 'ts', 'tsx', 'js', 'yaml', 'txt'].includes(ext) && (
+  ext === 'log' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <text x="5" y="17" font-size="5" font-weight="bold" fill="#1e1e1e">
+        LOG
+      </text>
+    </svg>
+  )
+}
+
+{
+  ext === 'unlock' && (
+    <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
+      <text x="8" y="17" font-size="8" font-weight="bold" fill="#1e1e1e">
+        ★
+      </text>
+    </svg>
+  )
+}
+
+{
+  !['md', 'json', 'ts', 'tsx', 'js', 'yaml', 'txt', 'log', 'unlock'].includes(ext) && (
     <svg class={`w-4 h-4 ${color} ${className}`} viewBox="0 0 24 24" fill="currentColor">
       <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
       <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1" />
