@@ -207,6 +207,7 @@
   .editor-area {
     @apply flex-1 flex flex-col;
     background-color: var(--theme-editor) !important;
+    max-width: 100%;
   }
 
   /* Tab bar */
@@ -441,6 +442,9 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
     font-size: var(--editor-font-size);
     color: var(--theme-text);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .markdown-preview h1 {
@@ -462,6 +466,9 @@
 
   .markdown-preview p {
     @apply mb-4 leading-relaxed;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .markdown-preview a {
@@ -581,6 +588,8 @@
   .timeline-panel {
     @apply font-code;
     color: var(--theme-text);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .timeline-header {
@@ -646,10 +655,14 @@
 
   .commit-content {
     @apply flex-1 min-w-0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .commit-header {
     @apply flex items-center gap-2 flex-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .commit-icon {
@@ -664,6 +677,8 @@
   .commit-company {
     @apply font-semibold text-sm;
     color: var(--theme-text);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .commit-separator {
@@ -674,6 +689,8 @@
   .commit-role {
     @apply text-sm;
     color: var(--theme-text-muted);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .commit-meta {
@@ -738,10 +755,14 @@
   .diff-content {
     @apply font-code text-code-sm;
     background-color: var(--theme-editor);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .diff-line {
     @apply px-3 py-0.5 border-l-2 border-transparent;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .diff-line.diff-add {
@@ -773,8 +794,11 @@
   }
 
   pre.diff-json {
-    @apply m-0 p-3 whitespace-pre overflow-x-auto;
+    @apply m-0 p-3 overflow-x-auto;
     background-color: var(--theme-editor);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   pre.diff-json code {
@@ -811,11 +835,44 @@
   }
 
   .code-content {
-    @apply overflow-x-auto;
+    @apply overflow-x-auto relative;
+    /* Ensure horizontal scrollbar is visible when needed */
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-scrollbar) transparent;
+    /* Smooth scrolling for better UX */
+    scroll-behavior: smooth;
+  }
+
+  /* Show scrollbar on hover for better UX */
+  .code-content:hover {
+    scrollbar-color: var(--theme-scrollbar-hover) transparent;
+  }
+
+  /* Webkit scrollbar styling for code content */
+  .code-content::-webkit-scrollbar {
+    @apply h-2;
+  }
+
+  .code-content::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .code-content::-webkit-scrollbar-thumb {
+    background-color: var(--theme-scrollbar);
+    @apply rounded-sm;
+  }
+
+  .code-content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--theme-scrollbar-hover);
   }
 
   .code-block {
-    @apply m-0 p-0 bg-transparent whitespace-pre;
+    @apply m-0 p-0 bg-transparent;
+    /* Preserve whitespace but allow horizontal scroll */
+    white-space: pre;
+    /* Prevent word breaking in code - maintain code readability */
+    word-break: keep-all;
+    overflow-wrap: normal;
   }
 
   .code-block code {
@@ -870,7 +927,7 @@
   }
 
   .tsx-error {
-    @apply text-code-sm font-code ml-[7.5rem] h-5;
+    @apply text-code-sm font-code ml-[7.5rem] h-auto;
     color: var(--theme-error);
   }
 
@@ -908,7 +965,7 @@
   }
 
   .tsx-submit-btn .btn-text {
-    color: var(--theme-function);
+    color: var(--theme-text-bright);
   }
 
   .tsx-submit-btn:hover .btn-text {
@@ -2372,26 +2429,28 @@
 
   .accent-color-swatch.active {
     border-color: var(--theme-text-bright);
-    box-shadow: 0 0 0 2px var(--theme-sidebar), 0 0 0 4px currentColor;
+    box-shadow:
+      0 0 0 2px var(--theme-sidebar),
+      0 0 0 4px currentColor;
   }
 
-  .accent-color-swatch[data-accent="blue"] {
+  .accent-color-swatch[data-accent='blue'] {
     background-color: #007acc;
   }
 
-  .accent-color-swatch[data-accent="green"] {
+  .accent-color-swatch[data-accent='green'] {
     background-color: #16825d;
   }
 
-  .accent-color-swatch[data-accent="purple"] {
+  .accent-color-swatch[data-accent='purple'] {
     background-color: #8b5cf6;
   }
 
-  .accent-color-swatch[data-accent="orange"] {
+  .accent-color-swatch[data-accent='orange'] {
     background-color: #f97316;
   }
 
-  .accent-color-swatch[data-accent="red"] {
+  .accent-color-swatch[data-accent='red'] {
     background-color: #dc2626;
   }
 
@@ -2453,7 +2512,9 @@
     color: var(--theme-text);
     border-color: var(--theme-border);
     background-color: color-mix(in srgb, var(--theme-sidebar) 100%, transparent);
-    transition: background-color 0.15s ease, border-color 0.15s ease;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
   }
 
   .reset-preferences-btn:hover {

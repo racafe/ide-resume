@@ -196,6 +196,7 @@ const repoName = 'racafe-astro';
     const sidebarHeader = sidebar?.querySelector('.sidebar-header');
     const sourceControlBtn = document.querySelector('.activity-bar-icon[title="Source Control"]');
     const explorerBtn = document.querySelector('.activity-bar-icon[title="Explorer"]');
+    const extensionsBtn = document.querySelector('.activity-bar-icon[title="Extensions"]');
 
     const config = window.__gitStatsConfig;
     let statsLoaded = false;
@@ -625,6 +626,7 @@ const repoName = 'racafe-astro';
 
       // Update active states
       explorerBtn?.classList.remove('active');
+      extensionsBtn?.classList.remove('active');
       sourceControlBtn?.classList.add('active');
 
       // Load stats on first open

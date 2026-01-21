@@ -3,9 +3,16 @@ import IDELayout from '@layouts/IDELayout.astro';
 import FileExplorer from '@components/FileExplorer.astro';
 import FileIcon from '@components/FileIcon.astro';
 import '@styles/global.css';
+import {
+  resume,
+  getCurrentPositions,
+  getSkillsByDisplayCategory,
+  formatEducationPeriod,
+  formatDateRange,
+} from '../data/resume';
 ---
 
-<IDELayout title="Rafael Carrión - IDE Resume">
+<IDELayout title={`${resume.contact.name} - IDE Resume`}>
   <!-- Sidebar: File Explorer -->
   <Fragment slot="sidebar">
     <FileExplorer />
@@ -32,9 +39,21 @@ import '@styles/global.css';
         <h1>Welcome to rafaelcarrion.dev</h1>
 
         <p>
-          Hello! I'm <strong>Rafael Carrión</strong>, a Full-Stack Developer based in Barcelona. This portfolio is
-          designed to look and feel like <a href="https://code.visualstudio.com/">VS Code</a> — because if you're going to
-          read about a developer, why not do it in their natural habitat?
+          Hello! I'm <strong>{resume.contact.name}</strong>, a {resume.contact.title} based in
+          {resume.contact.location}. Currently working at <strong>
+            {getCurrentPositions()[0]?.company || 'Noris Network AG'}
+          </strong>{
+            getCurrentPositions().length > 1 ? (
+              <>
+                {' '}
+                and co-owning <strong>{getCurrentPositions()[1]?.company || 'Technit Solutions México'}</strong>
+              </>
+            ) : (
+              ''
+            )
+          }, where I've led the development of 30+ mobile applications. This portfolio is designed to look and feel like
+          <a href="https://code.visualstudio.com/">VS Code</a> — because if you're going to read about a developer, why not
+          do it in their natural habitat?
         </p>
 
         <h2>Quick Start</h2>
@@ -102,42 +121,61 @@ import '@styles/global.css';
         <h1>About Me</h1>
 
         <p>
-          Hi there! I'm <strong>Rafael Carrión</strong>, a <strong>Full-Stack Developer</strong> based in
-          <strong>Barcelona, Spain</strong>. I'm currently working at
-          <a href="https://funditec.es" target="_blank" rel="noopener noreferrer">Funditec</a>, where I build web
-          applications and solve interesting technical challenges every day.
+          Hi there! I'm <strong>{resume.contact.name}</strong>, a <strong>
+            {resume.contact.title}
+          </strong>
+          based in <strong>{resume.contact.location}</strong>. I'm currently working at
+          <a href="https://www.noris.de" target="_blank" rel="noopener noreferrer">
+            {getCurrentPositions()[0]?.company || 'Noris Network AG'}
+          </a> as {getCurrentPositions()[0]?.position || 'Senior Software Engineer'}, and I'm also the co-owner and CTO
+          of <a href="https://technit.com.mx" target="_blank" rel="noopener noreferrer">
+            {getCurrentPositions().length > 1 ? getCurrentPositions()[1]?.company : 'Technit Solutions México'}
+          </a>, where I've led the development of 30+ mobile applications.
         </p>
 
         <h2>What I Do</h2>
 
         <p>
-          I specialize in building modern web applications from the ground up. My work spans the entire stack — from
-          crafting intuitive user interfaces to designing robust backend systems and everything in between.
+          {resume.summary}
         </p>
 
         <ul>
-          <li><strong>Frontend:</strong> React, Vue.js, TypeScript, Tailwind CSS</li>
-          <li><strong>Backend:</strong> Node.js, Python, REST APIs, GraphQL</li>
-          <li><strong>Database:</strong> PostgreSQL, MongoDB, Redis</li>
-          <li><strong>DevOps:</strong> Docker, CI/CD, Cloud Services</li>
+          {
+            resume.skills.map((skillCategory) => (
+              <li>
+                <strong>{skillCategory.category}:</strong> {skillCategory.skills.join(', ')}
+              </li>
+            ))
+          }
         </ul>
 
         <h2>My Approach</h2>
 
         <p>
-          I believe in writing clean, maintainable code that solves real problems. I'm passionate about developer
-          experience, performance optimization, and creating software that people actually enjoy using.
+          I believe in understanding business problems first, then designing software solutions that best meet the
+          project's needs. I focus on how technology can solve business challenges, which frameworks and platforms to
+          use, how applications will scale, and how they will be maintained. I'm passionate about software architecture,
+          system design, and leading development teams to deliver high-quality solutions.
         </p>
 
         <blockquote>
           <p>"The best code is no code at all. The second best is code that's easy to understand and change."</p>
         </blockquote>
 
+        <h2>Key Strengths</h2>
+
+        <p>
+          {
+            resume.personalInterests.find((interest) => interest.category === 'Strengths')?.items.join(', ') ||
+              'Teamwork, active listening & communication, leadership, forward thinking, comfortable working with deadlines, creative problem-solving, adaptability, and thinking outside the box.'
+          }
+        </p>
+
         <h2>Beyond the Code</h2>
 
         <p>
-          When I'm not coding, you'll find me exploring Barcelona's coffee shops, contributing to open-source projects,
-          or tinkering with side projects that may or may not see the light of day.
+          When I'm not coding, you'll find me exploring {resume.contact.location.split(',')[0]}, contributing to
+          open-source projects, or working on new mobile applications and software solutions through Technit.
         </p>
 
         <h2>Let's Connect</h2>
@@ -146,16 +184,23 @@ import '@styles/global.css';
 
         <ul>
           <li>
-            <a href="https://github.com/racafe" target="_blank" rel="noopener noreferrer">GitHub</a> — Check out my open-source
+            <a href={resume.contact.github} target="_blank" rel="noopener noreferrer">GitHub</a> — Check out my open-source
             work
           </li>
           <li>
-            <a href="https://linkedin.com/in/rafaelcarrion" target="_blank" rel="noopener noreferrer">LinkedIn</a> — Professional
-            network
+            <a href={resume.contact.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a> — Professional network
           </li>
           <li>
-            <a href="https://twitter.com/racafe_dev" target="_blank" rel="noopener noreferrer">Twitter/X</a> — Occasional
-            tech thoughts
+            <a href={resume.contact.twitter} target="_blank" rel="noopener noreferrer">Twitter/X</a> — Occasional tech thoughts
+          </li>
+          <li>
+            <a href={resume.contact.bsky} target="_blank" rel="noopener noreferrer">Bluesky</a> — Occasional tech thoughts
+          </li>
+          <li>
+            <a href={resume.contact.xing} target="_blank" rel="noopener noreferrer">Xing</a> — Professional network
+          </li>
+          <li>
+            <a href={resume.contact.instagram} target="_blank" rel="noopener noreferrer">Instagram</a> — Personal life
           </li>
         </ul>
 
@@ -181,81 +226,70 @@ import '@styles/global.css';
       <div class="code-editor">
         <div class="code-content">
           <pre
-            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// skills.ts - Technical Skills & Expertise</span></span>
-<span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// Last updated: 2026</span></span>
-<span class="line"><span class="line-number"> 3</span></span>
-<span class="line"><span class="line-number"> 4</span><span class="syntax-keyword">interface</span> <span class="syntax-type">Developer</span> &#123;</span>
-<span class="line"><span class="line-number"> 5</span>  <span class="syntax-variable">languages</span>: <span class="syntax-type">string</span>[];</span>
-<span class="line"><span class="line-number"> 6</span>  <span class="syntax-variable">frameworks</span>: <span class="syntax-type">string</span>[];</span>
-<span class="line"><span class="line-number"> 7</span>  <span class="syntax-variable">tools</span>: <span class="syntax-type">string</span>[];</span>
-<span class="line"><span class="line-number"> 8</span>  <span class="syntax-variable">security</span>: <span class="syntax-type">string</span>[];</span>
-<span class="line"><span class="line-number"> 9</span>  <span class="syntax-variable">databases</span>: <span class="syntax-type">string</span>[];</span>
-<span class="line"><span class="line-number">10</span>  <span class="syntax-variable">cloud</span>: <span class="syntax-type">string</span>[];</span>
-<span class="line"><span class="line-number">11</span>&#125;</span>
-<span class="line"><span class="line-number">12</span></span>
-<span class="line"><span class="line-number">13</span><span class="syntax-keyword">const</span> <span class="syntax-variable">rafael</span>: <span class="syntax-type">Developer</span> = &#123;</span>
-<span class="line"><span class="line-number">14</span>  <span class="syntax-variable">languages</span>: [</span>
-<span class="line"><span class="line-number">15</span>    <span class="syntax-string">"C#"</span>,</span>
-<span class="line"><span class="line-number">16</span>    <span class="syntax-string">"JavaScript"</span>,</span>
-<span class="line"><span class="line-number">17</span>    <span class="syntax-string">"TypeScript"</span>,</span>
-<span class="line"><span class="line-number">18</span>    <span class="syntax-string">"SQL"</span>,</span>
-<span class="line"><span class="line-number">19</span>    <span class="syntax-string">"Python"</span>,</span>
-<span class="line"><span class="line-number">20</span>    <span class="syntax-string">"HTML/CSS"</span>,</span>
-<span class="line"><span class="line-number">21</span>  ],</span>
-<span class="line"><span class="line-number">22</span></span>
-<span class="line"><span class="line-number">23</span>  <span class="syntax-variable">frameworks</span>: [</span>
-<span class="line"><span class="line-number">24</span>    <span class="syntax-string">".NET"</span>,</span>
-<span class="line"><span class="line-number">25</span>    <span class="syntax-string">"Entity Framework"</span>,</span>
-<span class="line"><span class="line-number">26</span>    <span class="syntax-string">"Astro"</span>,</span>
-<span class="line"><span class="line-number">27</span>    <span class="syntax-string">"React"</span>,</span>
-<span class="line"><span class="line-number">28</span>    <span class="syntax-string">"Node.js"</span>,</span>
-<span class="line"><span class="line-number">29</span>    <span class="syntax-string">"Tailwind CSS"</span>,</span>
-<span class="line"><span class="line-number">30</span>    <span class="syntax-string">"Express"</span>,</span>
-<span class="line"><span class="line-number">31</span>  ],</span>
-<span class="line"><span class="line-number">32</span></span>
-<span class="line"><span class="line-number">33</span>  <span class="syntax-variable">tools</span>: [</span>
-<span class="line"><span class="line-number">34</span>    <span class="syntax-string">"Docker"</span>,</span>
-<span class="line"><span class="line-number">35</span>    <span class="syntax-string">"Git"</span>,</span>
-<span class="line"><span class="line-number">36</span>    <span class="syntax-string">"GitHub Actions"</span>,</span>
-<span class="line"><span class="line-number">37</span>    <span class="syntax-string">"VS Code"</span>,</span>
-<span class="line"><span class="line-number">38</span>    <span class="syntax-string">"Postman"</span>,</span>
-<span class="line"><span class="line-number">39</span>    <span class="syntax-string">"Jira"</span>,</span>
-<span class="line"><span class="line-number">40</span>  ],</span>
-<span class="line"><span class="line-number">41</span></span>
-<span class="line"><span class="line-number">42</span>  <span class="syntax-variable">security</span>: [</span>
-<span class="line"><span class="line-number">43</span>    <span class="syntax-string">"OWASP Top 10"</span>,</span>
-<span class="line"><span class="line-number">44</span>    <span class="syntax-string">"Authentication &amp; Authorization"</span>,</span>
-<span class="line"><span class="line-number">45</span>    <span class="syntax-string">"Input Validation"</span>,</span>
-<span class="line"><span class="line-number">46</span>    <span class="syntax-string">"Secure Coding Practices"</span>,</span>
-<span class="line"><span class="line-number">47</span>    <span class="syntax-string">"API Security"</span>,</span>
-<span class="line"><span class="line-number">48</span>  ],</span>
-<span class="line"><span class="line-number">49</span></span>
-<span class="line"><span class="line-number">50</span>  <span class="syntax-variable">databases</span>: [</span>
-<span class="line"><span class="line-number">51</span>    <span class="syntax-string">"SQL Server"</span>,</span>
-<span class="line"><span class="line-number">52</span>    <span class="syntax-string">"PostgreSQL"</span>,</span>
-<span class="line"><span class="line-number">53</span>    <span class="syntax-string">"MongoDB"</span>,</span>
-<span class="line"><span class="line-number">54</span>    <span class="syntax-string">"Redis"</span>,</span>
-<span class="line"><span class="line-number">55</span>  ],</span>
-<span class="line"><span class="line-number">56</span></span>
-<span class="line"><span class="line-number">57</span>  <span class="syntax-variable">cloud</span>: [</span>
-<span class="line"><span class="line-number">58</span>    <span class="syntax-string">"Azure"</span>,</span>
-<span class="line"><span class="line-number">59</span>    <span class="syntax-string">"AWS"</span>,</span>
-<span class="line"><span class="line-number">60</span>    <span class="syntax-string">"Vercel"</span>,</span>
-<span class="line"><span class="line-number">61</span>  ],</span>
-<span class="line"><span class="line-number">62</span>&#125;;</span>
-<span class="line"><span class="line-number">63</span></span>
-<span class="line"><span class="line-number">64</span><span class="syntax-keyword">export</span> <span class="syntax-keyword">default</span> <span class="syntax-variable">rafael</span>;</span></code></pre>
+            class="code-block"><code set:html={(() => {
+  const skills = getSkillsByDisplayCategory();
+  let lineNum = 1;
+  const line = (content: string) => `<span class="line"><span class="line-number">${String(lineNum++).padStart(2, ' ')}</span>${content}</span>`;
+  
+  return [
+    line('<span class="syntax-comment">// skills.ts - Technical Skills & Expertise</span>'),
+    line('<span class="syntax-comment">// Last updated: 2026</span>'),
+    line(''),
+    line('<span class="syntax-keyword">interface</span> <span class="syntax-type">Developer</span> &#123;'),
+    line('  <span class="syntax-variable">languages</span>: <span class="syntax-type">string</span>[];'),
+    line('  <span class="syntax-variable">frameworks</span>: <span class="syntax-type">string</span>[];'),
+    line('  <span class="syntax-variable">databases</span>: <span class="syntax-type">string</span>[];'),
+    line('  <span class="syntax-variable">os</span>: <span class="syntax-type">string</span>[];'),
+    line('  <span class="syntax-variable">cloud</span>: <span class="syntax-type">string</span>[];'),
+    line('&#125;'),
+    line(''),
+    line(`<span class="syntax-keyword">const</span> <span class="syntax-variable">rafael</span>: <span class="syntax-type">Developer</span> = &#123;`),
+    line('  <span class="syntax-variable">languages</span>: ['),
+    ...skills.languages.map((skill, i) => 
+      line(`    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.languages.length - 1 ? ',' : ''}`)
+    ),
+    line('  ],'),
+    line(''),
+    line('  <span class="syntax-variable">frameworks</span>: ['),
+    ...skills.frameworks.map((skill, i) => 
+      line(`    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.frameworks.length - 1 ? ',' : ''}`)
+    ),
+    line('  ],'),
+    line(''),
+    line('  <span class="syntax-variable">databases</span>: ['),
+    ...skills.databases.map((skill, i) => 
+      line(`    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.databases.length - 1 ? ',' : ''}`)
+    ),
+    line('  ],'),
+    line(''),
+    line('  <span class="syntax-variable">os</span>: ['),
+    ...skills.os.map((skill, i) => 
+      line(`    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.os.length - 1 ? ',' : ''}`)
+    ),
+    line('  ],'),
+    line(''),
+    line('  <span class="syntax-variable">cloud</span>: ['),
+    ...skills.cloud.map((skill, i) => 
+      line(`    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.cloud.length - 1 ? ',' : ''}`)
+    ),
+    line('  ],'),
+    line('&#125;;'),
+    line(''),
+    line('<span class="syntax-keyword">export</span> <span class="syntax-keyword">default</span> <span class="syntax-variable">rafael</span>;'),
+  ].join('\n');
+})()} /></pre>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- contact.tsx Content - Interactive Contact Form as TSX Component -->
-    <div class="file-content" data-content="contact.tsx">
-      <div class="code-editor contact-form-editor" id="contact-editor">
-        <div class="code-content">
-          <pre
-            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// contact.tsx - Get in Touch Component</span></span>
-<span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// Rafael Carrión - Full-Stack Developer</span></span>
+  <!-- contact.tsx Content - Interactive Contact Form as TSX Component -->
+  <div class="file-content" data-content="contact.tsx">
+    <div class="code-editor contact-form-editor" id="contact-editor">
+      <div class="code-content">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// contact.tsx - Get in Touch Component</span></span>
+<span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// {resume.contact.name} - {resume.contact.title}</span></span>
 <span class="line"><span class="line-number"> 3</span></span>
 <span class="line"><span class="line-number"> 4</span><span class="syntax-keyword">import</span> <span class="syntax-variable">React</span>, &#123; <span class="syntax-variable">useState</span> &#125; <span class="syntax-keyword">from</span> <span class="syntax-string">'react'</span>;</span>
 <span class="line"><span class="line-number"> 5</span></span>
@@ -265,106 +299,106 @@ import '@styles/global.css';
 <span class="line"><span class="line-number"> 9</span>&#125;</span>
 <span class="line"><span class="line-number">10</span></span>
 <span class="line"><span class="line-number">11</span><span class="syntax-keyword">export const</span> <span class="syntax-function">ContactForm</span>: <span class="syntax-type">React.FC</span>&lt;<span class="syntax-type">ContactFormProps</span>&gt; = (&#123;</span>
-<span class="line"><span class="line-number">12</span>  <span class="syntax-variable">recipient</span> = <span class="syntax-string">"rafael@rafaelcarrion.dev"</span>,</span>
+<span class="line"><span class="line-number">12</span>  <span class="syntax-variable">recipient</span> = <span class="syntax-string">"{resume.contact.email}"</span>,</span>
 <span class="line"><span class="line-number">13</span>  <span class="syntax-variable">theme</span> = <span class="syntax-string">"dark"</span></span>
 <span class="line"><span class="line-number">14</span>&#125;) =&gt; &#123;</span>
 <span class="line"><span class="line-number">15</span></span>
 <span class="line"><span class="line-number">16</span>  <span class="syntax-keyword">return</span> (</span>
 <span class="line"><span class="line-number">17</span>    &lt;<span class="syntax-type">form</span> <span class="syntax-variable">className</span>=<span class="syntax-string">"contact-form"</span>&gt;</span>
 <span class="line"><span class="line-number">18</span></span></code></pre>
-          <!-- Name Input Field -->
-          <div class="tsx-form-field">
-            <pre
-              class="code-block"><code><span class="line"><span class="line-number">19</span>      &lt;<span class="syntax-type">Input</span></span>
+        <!-- Name Input Field -->
+        <div class="tsx-form-field">
+          <pre
+            class="code-block"><code><span class="line"><span class="line-number">19</span>      &lt;<span class="syntax-type">Input</span></span>
 <span class="line"><span class="line-number">20</span>        <span class="syntax-variable">type</span>=<span class="syntax-string">"text"</span></span>
 <span class="line"><span class="line-number">21</span>        <span class="syntax-variable">name</span>=<span class="syntax-string">"name"</span></span>
 <span class="line"><span class="line-number">22</span>        <span class="syntax-variable">label</span>=<span class="syntax-string">"Your Name"</span></span>
 <span class="line"><span class="line-number">23</span>        <span class="syntax-variable">required</span>=&#123;<span class="syntax-keyword">true</span>&#125;</span>
 <span class="line"><span class="line-number">24</span>        <span class="syntax-variable">value</span>=&#123;</span></code></pre>
-            <input type="text" id="contact-name" name="name" class="tsx-input" placeholder="string" required />
-            <pre
-              class="code-block"><code><span class="line">&#125;</span>
+          <input type="text" id="contact-name" name="name" class="tsx-input" placeholder="string" required />
+          <pre
+            class="code-block"><code><span class="line">&#125;</span>
 <span class="line"><span class="line-number">25</span>      /&gt;</span></code></pre>
-            <div class="tsx-error" id="name-error"></div>
-          </div>
+          <div class="tsx-error" id="name-error"></div>
+        </div>
 
-          <!-- Email Input Field -->
-          <div class="tsx-form-field">
-            <pre
-              class="code-block"><code><span class="line"><span class="line-number">26</span></span>
+        <!-- Email Input Field -->
+        <div class="tsx-form-field">
+          <pre
+            class="code-block"><code><span class="line"><span class="line-number">26</span></span>
 <span class="line"><span class="line-number">27</span>      &lt;<span class="syntax-type">Input</span></span>
 <span class="line"><span class="line-number">28</span>        <span class="syntax-variable">type</span>=<span class="syntax-string">"email"</span></span>
 <span class="line"><span class="line-number">29</span>        <span class="syntax-variable">name</span>=<span class="syntax-string">"email"</span></span>
 <span class="line"><span class="line-number">30</span>        <span class="syntax-variable">label</span>=<span class="syntax-string">"Email Address"</span></span>
 <span class="line"><span class="line-number">31</span>        <span class="syntax-variable">required</span>=&#123;<span class="syntax-keyword">true</span>&#125;</span>
 <span class="line"><span class="line-number">32</span>        <span class="syntax-variable">value</span>=&#123;</span></code></pre>
-            <input type="email" id="contact-email" name="email" class="tsx-input" placeholder="string" required />
-            <pre
-              class="code-block"><code><span class="line">&#125;</span>
+          <input type="email" id="contact-email" name="email" class="tsx-input" placeholder="string" required />
+          <pre
+            class="code-block"><code><span class="line">&#125;</span>
 <span class="line"><span class="line-number">33</span>      /&gt;</span></code></pre>
-            <div class="tsx-error" id="email-error"></div>
-          </div>
+          <div class="tsx-error" id="email-error"></div>
+        </div>
 
-          <!-- Message Textarea Field -->
-          <div class="tsx-form-field">
-            <pre
-              class="code-block"><code><span class="line"><span class="line-number">34</span></span>
+        <!-- Message Textarea Field -->
+        <div class="tsx-form-field">
+          <pre
+            class="code-block"><code><span class="line"><span class="line-number">34</span></span>
 <span class="line"><span class="line-number">35</span>      &lt;<span class="syntax-type">TextArea</span></span>
 <span class="line"><span class="line-number">36</span>        <span class="syntax-variable">name</span>=<span class="syntax-string">"message"</span></span>
 <span class="line"><span class="line-number">37</span>        <span class="syntax-variable">label</span>=<span class="syntax-string">"Message"</span></span>
 <span class="line"><span class="line-number">38</span>        <span class="syntax-variable">rows</span>=&#123;<span class="syntax-number">5</span>&#125;</span>
 <span class="line"><span class="line-number">39</span>        <span class="syntax-variable">required</span>=&#123;<span class="syntax-keyword">true</span>&#125;</span>
 <span class="line"><span class="line-number">40</span>        <span class="syntax-variable">value</span>=&#123;</span></code></pre>
-            <textarea id="contact-message" name="message" class="tsx-textarea" placeholder="string" rows="4" required>
-            </textarea>
-            <pre
-              class="code-block"><code><span class="line">&#125;</span>
+          <textarea id="contact-message" name="message" class="tsx-textarea" placeholder="string" rows="4" required>
+          </textarea>
+          <pre
+            class="code-block"><code><span class="line">&#125;</span>
 <span class="line"><span class="line-number">41</span>      /&gt;</span></code></pre>
-            <div class="tsx-error" id="message-error"></div>
-          </div>
+          <div class="tsx-error" id="message-error"></div>
+        </div>
 
-          <!-- Submit Button as Function Call -->
-          <div class="tsx-form-field tsx-submit-section">
-            <pre
-              class="code-block"><code><span class="line"><span class="line-number">42</span></span>
+        <!-- Submit Button as Function Call -->
+        <div class="tsx-form-field tsx-submit-section">
+          <pre
+            class="code-block"><code><span class="line"><span class="line-number">42</span></span>
 <span class="line"><span class="line-number">43</span>      &lt;<span class="syntax-type">Button</span></span>
 <span class="line"><span class="line-number">44</span>        <span class="syntax-variable">type</span>=<span class="syntax-string">"submit"</span></span>
 <span class="line"><span class="line-number">45</span>        <span class="syntax-variable">variant</span>=<span class="syntax-string">"primary"</span></span>
 <span class="line"><span class="line-number">46</span>        <span class="syntax-variable">onClick</span>=&#123;<span class="syntax-function">handleSubmit</span>&#125;</span>
 <span class="line"><span class="line-number">47</span>      &gt;</span></code></pre>
-            <button type="submit" id="contact-submit" class="tsx-submit-btn">
-              <span class="btn-text">sendMessage()</span>
-              <span class="btn-loading hidden">
-                <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  >
-                  </path>
-                </svg>
-              </span>
-            </button>
-            <pre
-              class="code-block"><code><span class="line"><span class="line-number">48</span>      &lt;/<span class="syntax-type">Button</span>&gt;</span></code></pre>
-          </div>
-
-          <!-- Closing Tags -->
+          <button type="submit" id="contact-submit" class="tsx-submit-btn">
+            <span class="btn-text">sendMessage()</span>
+            <span class="btn-loading hidden">
+              <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                >
+                </path>
+              </svg>
+            </span>
+          </button>
           <pre
-            class="code-block"><code><span class="line"><span class="line-number">49</span></span>
+            class="code-block"><code><span class="line"><span class="line-number">48</span>      &lt;/<span class="syntax-type">Button</span>&gt;</span></code></pre>
+        </div>
+
+        <!-- Closing Tags -->
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number">49</span></span>
 <span class="line"><span class="line-number">50</span>    &lt;/<span class="syntax-type">form</span>&gt;</span>
 <span class="line"><span class="line-number">51</span>  );</span>
 <span class="line"><span class="line-number">52</span>&#125;;</span>
 <span class="line"><span class="line-number">53</span></span>
 <span class="line"><span class="line-number">54</span><span class="syntax-keyword">export default</span> <span class="syntax-function">ContactForm</span>;</span></code></pre>
-        </div>
+      </div>
 
-        <!-- Success State -->
-        <div class="tsx-success hidden" id="contact-success">
-          <pre
-            class="code-block"><code><span class="line"><span class="line-number">56</span><span class="syntax-comment">// ✓ Component rendered successfully</span></span>
-<span class="line"><span class="line-number">57</span><span class="syntax-comment">// Message sent to: rafael@rafaelcarrion.dev</span></span>
+      <!-- Success State -->
+      <div class="tsx-success hidden" id="contact-success">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number">56</span><span class="syntax-comment">// ✓ Component rendered successfully</span></span>
+<span class="line"><span class="line-number">57</span><span class="syntax-comment">// Message sent to: {resume.contact.email}</span></span>
 <span class="line"><span class="line-number">58</span></span>
 <span class="line"><span class="line-number">59</span><span class="syntax-keyword">const</span> <span class="syntax-variable">response</span>: <span class="syntax-type">ApiResponse</span> = &#123;</span>
 <span class="line"><span class="line-number">60</span>  <span class="syntax-variable">status</span>: <span class="syntax-number">200</span>,</span>
@@ -373,110 +407,141 @@ import '@styles/global.css';
 <span class="line"><span class="line-number">63</span>&#125;;</span>
 <span class="line"><span class="line-number">64</span></span>
 <span class="line"><span class="line-number">65</span><span class="syntax-variable">console</span>.<span class="syntax-function">log</span>(<span class="syntax-string">'✓ Email queued for delivery'</span>);</span></code></pre>
-          <button id="contact-reset" class="tsx-reset-btn">
-            <span class="syntax-function">resetForm</span><span class="syntax-punctuation">()</span>
-          </button>
-        </div>
+        <button id="contact-reset" class="tsx-reset-btn">
+          <span class="syntax-function">resetForm</span><span class="syntax-punctuation">()</span>
+        </button>
       </div>
     </div>
+  </div>
 
-    <!-- education.yaml Content - YAML Syntax Highlighted Display -->
-    <div class="file-content" data-content="education.yaml">
-      <div class="code-editor">
-        <div class="code-content">
-          <pre
-            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment"># education.yaml - Education & Certifications</span></span>
-<span class="line"><span class="line-number"> 2</span><span class="syntax-comment"># Rafael Carrión - Full-Stack Developer</span></span>
-<span class="line"><span class="line-number"> 3</span></span>
-<span class="line"><span class="line-number"> 4</span><span class="syntax-keyword">certifications</span><span class="syntax-punctuation">:</span></span>
-<span class="line"><span class="line-number"> 5</span></span>
-<span class="line"><span class="line-number"> 6</span>  <span class="syntax-punctuation">-</span> <span class="syntax-keyword">name</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"Cyber Security Base 2025"</span></span>
-<span class="line"><span class="line-number"> 7</span>    <span class="syntax-keyword">issuer</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"University of Helsinki"</span></span>
-<span class="line"><span class="line-number"> 8</span>    <span class="syntax-keyword">year</span><span class="syntax-punctuation">:</span> <span class="syntax-number">2025</span></span>
-<span class="line"><span class="line-number"> 9</span>    <span class="syntax-keyword">status</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"In Progress"</span></span>
-<span class="line"><span class="line-number">10</span>    <span class="syntax-keyword">topics</span><span class="syntax-punctuation">:</span></span>
-<span class="line"><span class="line-number">11</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Secure Software Development"</span></span>
-<span class="line"><span class="line-number">12</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Web Application Security"</span></span>
-<span class="line"><span class="line-number">13</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Cryptography Fundamentals"</span></span>
-<span class="line"><span class="line-number">14</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"OWASP Top 10 Vulnerabilities"</span></span>
-<span class="line"><span class="line-number">15</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Penetration Testing Basics"</span></span>
-<span class="line"><span class="line-number">16</span>    <span class="syntax-keyword">url</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"https://cybersecuritybase.mooc.fi"</span></span>
-<span class="line"><span class="line-number">17</span></span>
-<span class="line"><span class="line-number">18</span>  <span class="syntax-punctuation">-</span> <span class="syntax-keyword">name</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"DevOps with Docker"</span></span>
-<span class="line"><span class="line-number">19</span>    <span class="syntax-keyword">issuer</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"University of Helsinki"</span></span>
-<span class="line"><span class="line-number">20</span>    <span class="syntax-keyword">year</span><span class="syntax-punctuation">:</span> <span class="syntax-number">2024</span></span>
-<span class="line"><span class="line-number">21</span>    <span class="syntax-keyword">status</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"Completed"</span></span>
-<span class="line"><span class="line-number">22</span>    <span class="syntax-keyword">topics</span><span class="syntax-punctuation">:</span></span>
-<span class="line"><span class="line-number">23</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Docker Fundamentals"</span></span>
-<span class="line"><span class="line-number">24</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Container Orchestration"</span></span>
-<span class="line"><span class="line-number">25</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Docker Compose"</span></span>
-<span class="line"><span class="line-number">26</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"CI/CD Pipelines"</span></span>
-<span class="line"><span class="line-number">27</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Kubernetes Basics"</span></span>
-<span class="line"><span class="line-number">28</span>    <span class="syntax-keyword">url</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"https://devopswithdocker.com"</span></span>
-<span class="line"><span class="line-number">29</span></span>
-<span class="line"><span class="line-number">30</span><span class="syntax-keyword">education</span><span class="syntax-punctuation">:</span></span>
-<span class="line"><span class="line-number">31</span></span>
-<span class="line"><span class="line-number">32</span>  <span class="syntax-punctuation">-</span> <span class="syntax-keyword">degree</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"Computer Science"</span></span>
-<span class="line"><span class="line-number">33</span>    <span class="syntax-keyword">institution</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"Universidad de Barcelona"</span></span>
-<span class="line"><span class="line-number">34</span>    <span class="syntax-keyword">focus</span><span class="syntax-punctuation">:</span></span>
-<span class="line"><span class="line-number">35</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Software Engineering"</span></span>
-<span class="line"><span class="line-number">36</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Web Development"</span></span>
-<span class="line"><span class="line-number">37</span>      <span class="syntax-punctuation">-</span> <span class="syntax-string">"Database Systems"</span></span>
-<span class="line"><span class="line-number">38</span></span>
-<span class="line"><span class="line-number">39</span><span class="syntax-keyword">continuous_learning</span><span class="syntax-punctuation">:</span></span>
-<span class="line"><span class="line-number">40</span>  <span class="syntax-keyword">platforms</span><span class="syntax-punctuation">:</span></span>
-<span class="line"><span class="line-number">41</span>    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Pluralsight"</span></span>
-<span class="line"><span class="line-number">42</span>    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Udemy"</span></span>
-<span class="line"><span class="line-number">43</span>    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Frontend Masters"</span></span>
-<span class="line"><span class="line-number">44</span>  <span class="syntax-keyword">current_focus</span><span class="syntax-punctuation">:</span></span>
-<span class="line"><span class="line-number">45</span>    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Cloud Architecture"</span></span>
-<span class="line"><span class="line-number">46</span>    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Security Best Practices"</span></span>
-<span class="line"><span class="line-number">47</span>    <span class="syntax-punctuation">-</span> <span class="syntax-string">"System Design"</span></span></code></pre>
-        </div>
+  <!-- education.yaml Content - YAML Syntax Highlighted Display -->
+  <div class="file-content" data-content="education.yaml">
+    <div class="code-editor">
+      <div class="code-content">
+        <pre
+          class="code-block"><code set:html={(() => {
+  let lineNum = 1;
+  const line = (content: string) => `<span class="line"><span class="line-number">${String(lineNum++).padStart(2, ' ')}</span>${content}</span>`;
+  
+  const lines = [
+    line('<span class="syntax-comment"># education.yaml - Education & Certifications</span>'),
+    line(`<span class="syntax-comment"># ${resume.contact.name} - ${resume.contact.title}</span>`),
+    line(''),
+    line('<span class="syntax-keyword">certifications</span><span class="syntax-punctuation">:</span>'),
+  ];
+  
+  // Add certifications entries
+  resume.certifications.forEach((cert, index) => {
+    lines.push(line(`  <span class="syntax-punctuation">-</span> <span class="syntax-keyword">name</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${cert.name}"</span>`));
+    lines.push(line(`    <span class="syntax-keyword">issuer</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${cert.issuer}"</span>`));
+    lines.push(line(`    <span class="syntax-keyword">year</span><span class="syntax-punctuation">:</span> <span class="syntax-number">${cert.dateObtained}</span>`));
+    if (index < resume.certifications.length - 1) {
+      lines.push(line(''));
+    }
+  });
+
+
+  lines.push(line(''));
+  // Add education entries
+  lines.push(line('<span class="syntax-keyword">education</span><span class="syntax-punctuation">:</span>'));
+  resume.education.forEach((edu, index) => {
+    const degreeDisplay = edu.degree === 'Master' ? `Master in ${edu.field}` : 
+                          edu.degree === 'Bachelor' ? edu.field : 
+                          edu.field;
+    const period = formatEducationPeriod(edu.graduationDate, edu.degree);
+    
+    lines.push(line(`  <span class="syntax-punctuation">-</span> <span class="syntax-keyword">degree</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${degreeDisplay}"</span>`));
+    lines.push(line(`    <span class="syntax-keyword">institution</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${edu.institution}"</span>`));
+    lines.push(line(`    <span class="syntax-keyword">location</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${edu.location}"</span>`));
+    lines.push(line(`    <span class="syntax-keyword">year</span><span class="syntax-punctuation">:</span> <span class="syntax-number">${edu.graduationDate}</span>`));
+    lines.push(line(`    <span class="syntax-keyword">period</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${period}"</span>`));
+    
+    if (edu.gpa) {
+      lines.push(line(`    <span class="syntax-keyword">gpa</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${edu.gpa}"</span>`));
+    }
+    
+    if (edu.honors && edu.honors.length > 0) {
+      lines.push(line('    <span class="syntax-keyword">honors</span><span class="syntax-punctuation">:</span>'));
+      edu.honors.forEach(honor => {
+        lines.push(line(`      <span class="syntax-punctuation">-</span> <span class="syntax-string">"${honor.replace(/"/g, '&quot;')}"</span>`));
+      });
+    }
+    
+    if (edu.relevantCourses && edu.relevantCourses.length > 0) {
+      lines.push(line('    <span class="syntax-keyword">specializations</span><span class="syntax-punctuation">:</span>'));
+      edu.relevantCourses.forEach(course => {
+        lines.push(line(`      <span class="syntax-punctuation">-</span> <span class="syntax-string">"${course.replace(/"/g, '&quot;')}"</span>`));
+      });
+    }
+    
+    if (edu.degree === 'Certificate') {
+      lines.push(line('    <span class="syntax-keyword">type</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"Language Certificate"</span>'));
+    }
+    
+    if (index < resume.education.length - 1) {
+      lines.push(line(''));
+    }
+  });
+  
+  lines.push(line(''));
+  lines.push(line('<span class="syntax-keyword">continuous_learning</span><span class="syntax-punctuation">:</span>'));
+  lines.push(line('  <span class="syntax-keyword">platforms</span><span class="syntax-punctuation">:</span>'));
+  lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"NOW Learning"</span>'));
+  lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Pluralsight"</span>'));
+  lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Udemy"</span>'));
+  lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Frontend Masters"</span>'));
+  lines.push(line('  <span class="syntax-keyword">current_focus</span><span class="syntax-punctuation">:</span>'));
+  lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Cloud Architecture"</span>'));
+  lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Security Best Practices"</span>'));
+  lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"System Design"</span>'));
+  
+  return lines.join('\n');
+})()} /></pre>
       </div>
     </div>
+  </div>
 
-    <!-- entity-framework-mysql.md Content - Published Article Showcase -->
-    <div class="file-content" data-content="entity-framework-mysql.md">
-      <div class="markdown-preview max-w-4xl">
-        <h1>Entity Framework Core with MySQL</h1>
+  <!-- entity-framework-mysql.md Content - Published Article Showcase -->
+  <div class="file-content" data-content="entity-framework-mysql.md">
+    <div class="markdown-preview max-w-4xl">
+      <h1>Entity Framework Core with MySQL</h1>
 
-        <div class="article-badge">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
-            >
-            </path>
-          </svg>
-          <span>Published Article</span>
-        </div>
+      <div class="article-badge">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
+          >
+          </path>
+        </svg>
+        <span>Published Article</span>
+      </div>
 
-        <p>
-          A comprehensive guide on integrating <strong>Entity Framework Core</strong> with
-          <strong>MySQL</strong> databases. This article covers best practices, configuration, and real-world examples for
-          .NET developers looking to work with MySQL.
-        </p>
+      <p>
+        A comprehensive guide on integrating <strong>Entity Framework Core</strong> with
+        <strong>MySQL</strong> databases. This article covers best practices, configuration, and real-world examples for .NET
+        developers looking to work with MySQL.
+      </p>
 
-        <h2>Overview</h2>
+      <h2>Overview</h2>
 
-        <p>
-          Entity Framework Core is a powerful ORM for .NET applications, but working with MySQL requires specific
-          configuration and considerations. This guide walks through the complete setup process.
-        </p>
+      <p>
+        Entity Framework Core is a powerful ORM for .NET applications, but working with MySQL requires specific
+        configuration and considerations. This guide walks through the complete setup process.
+      </p>
 
-        <h2>Key Topics Covered</h2>
+      <h2>Key Topics Covered</h2>
 
-        <ul>
-          <li><strong>Database Configuration</strong> - Setting up connection strings and DbContext</li>
-          <li><strong>Model Design</strong> - Creating entities with MySQL-compatible data types</li>
-          <li><strong>Migrations</strong> - Managing database schema changes</li>
-          <li><strong>Performance Optimization</strong> - Query optimization and indexing strategies</li>
-          <li><strong>Common Pitfalls</strong> - Avoiding typical issues when using EF Core with MySQL</li>
-        </ul>
+      <ul>
+        <li><strong>Database Configuration</strong> - Setting up connection strings and DbContext</li>
+        <li><strong>Model Design</strong> - Creating entities with MySQL-compatible data types</li>
+        <li><strong>Migrations</strong> - Managing database schema changes</li>
+        <li><strong>Performance Optimization</strong> - Query optimization and indexing strategies</li>
+        <li><strong>Common Pitfalls</strong> - Avoiding typical issues when using EF Core with MySQL</li>
+      </ul>
 
-        <h2>Code Sample</h2>
+      <h2>Code Sample</h2>
 
-        <pre><code><span class="syntax-keyword">public class</span> <span class="syntax-type">ApplicationDbContext</span> : <span class="syntax-type">DbContext</span>
+      <pre><code><span class="syntax-keyword">public class</span> <span class="syntax-type">ApplicationDbContext</span> : <span class="syntax-type">DbContext</span>
 &#123;
     <span class="syntax-keyword">public</span> <span class="syntax-type">DbSet</span>&lt;<span class="syntax-type">Product</span>&gt; <span class="syntax-variable">Products</span> &#123; <span class="syntax-keyword">get</span>; <span class="syntax-keyword">set</span>; &#125;
 
@@ -490,122 +555,118 @@ import '@styles/global.css';
     &#125;
 &#125;</code></pre>
 
-        <h2>Why This Matters</h2>
+      <h2>Why This Matters</h2>
 
-        <p>
-          MySQL remains one of the most popular open-source databases, and understanding how to integrate it with modern
-          .NET applications is a valuable skill. This article bridges the gap between the official documentation and
-          practical implementation.
-        </p>
+      <p>
+        MySQL remains one of the most popular open-source databases, and understanding how to integrate it with modern
+        .NET applications is a valuable skill. This article bridges the gap between the official documentation and
+        practical implementation.
+      </p>
 
-        <div class="tip-box">
-          <div class="tip-box-title">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <line x1="10" y1="14" x2="21" y2="3"></line>
-            </svg>
-            Read the Full Article
-          </div>
-          <div class="tip-box-content">
-            This article was published on my technical blog. The full version includes step-by-step instructions,
-            complete code samples, and troubleshooting tips.
-          </div>
+      <div class="tip-box">
+        <div class="tip-box-title">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          Read the Full Article
+        </div>
+        <div class="tip-box-content">
+          This article was published on my technical blog. The full version includes step-by-step instructions, complete
+          code samples, and troubleshooting tips.
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- other-projects.md Content - Additional Work -->
-    <div class="file-content" data-content="other-projects.md">
-      <div class="markdown-preview max-w-4xl">
-        <h1>Other Projects</h1>
+  <!-- other-projects.md Content - Additional Work -->
+  <div class="file-content" data-content="other-projects.md">
+    <div class="markdown-preview max-w-4xl">
+      <h1>Other Projects</h1>
 
-        <p>
-          A collection of side projects, experiments, and contributions that showcase different aspects of my
-          development work. These projects range from utility tools to learning experiments.
-        </p>
+      <p>
+        A collection of side projects, experiments, and contributions that showcase different aspects of my development
+        work. These projects range from utility tools to learning experiments.
+      </p>
 
-        <h2>rafaelcarrion.dev</h2>
+      <h2>rafaelcarrion.dev</h2>
 
-        <blockquote>
-          <p>This very portfolio you're viewing!</p>
-        </blockquote>
+      <blockquote>
+        <p>This very portfolio you're viewing!</p>
+      </blockquote>
 
-        <p>
-          A VS Code-inspired interactive portfolio built with <strong>Astro</strong> and
-          <strong>Tailwind CSS</strong>. Features include a functional file explorer, tabbed content system, and the
-          iconic Dark+ theme.
-        </p>
+      <p>
+        A VS Code-inspired interactive portfolio built with <strong>Astro</strong> and
+        <strong>Tailwind CSS</strong>. Features include a functional file explorer, tabbed content system, and the
+        iconic Dark+ theme.
+      </p>
 
-        <ul>
-          <li><strong>Stack:</strong> Astro, TypeScript, Tailwind CSS</li>
-          <li><strong>Features:</strong> File explorer, tabs, syntax highlighting, responsive design</li>
-        </ul>
+      <ul>
+        <li><strong>Stack:</strong> Astro, TypeScript, Tailwind CSS</li>
+        <li><strong>Features:</strong> File explorer, tabs, syntax highlighting, responsive design</li>
+      </ul>
 
-        <h2>CLI Tools & Automation</h2>
+      <h2>CLI Tools & Automation</h2>
 
-        <p>Various command-line utilities built for personal productivity and workflow automation:</p>
+      <p>Various command-line utilities built for personal productivity and workflow automation:</p>
 
-        <ul>
-          <li><strong>Git workflow helpers</strong> - Scripts for common Git operations</li>
-          <li><strong>Project scaffolding</strong> - Templates for quick project setup</li>
-          <li><strong>Data processing scripts</strong> - Python tools for ETL tasks</li>
-        </ul>
+      <ul>
+        <li><strong>Git workflow helpers</strong> - Scripts for common Git operations</li>
+        <li><strong>Project scaffolding</strong> - Templates for quick project setup</li>
+        <li><strong>Data processing scripts</strong> - Python tools for ETL tasks</li>
+      </ul>
 
-        <h2>Open Source Contributions</h2>
+      <h2>Open Source Contributions</h2>
 
-        <p>
-          I believe in giving back to the community that has helped me grow as a developer. My contributions include:
-        </p>
+      <p>I believe in giving back to the community that has helped me grow as a developer. My contributions include:</p>
 
-        <ul>
-          <li>Documentation improvements for popular libraries</li>
-          <li>Bug fixes and feature implementations</li>
-          <li>Issue triage and community support</li>
-        </ul>
+      <ul>
+        <li>Documentation improvements for popular libraries</li>
+        <li>Bug fixes and feature implementations</li>
+        <li>Issue triage and community support</li>
+      </ul>
 
-        <h2>Learning Projects</h2>
+      <h2>Learning Projects</h2>
 
-        <p>Projects built specifically to explore new technologies and concepts:</p>
+      <p>Projects built specifically to explore new technologies and concepts:</p>
 
-        <ul>
-          <li><strong>Security labs</strong> - CTF challenges and vulnerability research</li>
-          <li><strong>Cloud infrastructure</strong> - Terraform and Docker experiments</li>
-          <li><strong>API integrations</strong> - Connecting various third-party services</li>
-        </ul>
+      <ul>
+        <li><strong>Security labs</strong> - CTF challenges and vulnerability research</li>
+        <li><strong>Cloud infrastructure</strong> - Terraform and Docker experiments</li>
+        <li><strong>API integrations</strong> - Connecting various third-party services</li>
+      </ul>
 
-        <div class="tip-box">
-          <div class="tip-box-title">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.026 2.747-1.026.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"
-              >
-              </path>
-            </svg>
-            GitHub
-          </div>
-          <div class="tip-box-content">
-            Check out my <a href="https://github.com/racafe" target="_blank" rel="noopener noreferrer">
-              GitHub profile
-            </a>
-            for the latest projects and contributions.
-          </div>
+      <div class="tip-box">
+        <div class="tip-box-title">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.026 2.747-1.026.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+            >
+            </path>
+          </svg>
+          GitHub
+        </div>
+        <div class="tip-box-content">
+          Check out my <a href="https://github.com/racafe" target="_blank" rel="noopener noreferrer">GitHub profile</a>
+          for the latest projects and contributions.
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- rafael.config.js Content - Humorous Configuration -->
-    <div class="file-content" data-content="rafael.config.js">
-      <div class="code-editor">
-        <div class="code-content">
-          <pre
-            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// rafael.config.js - Developer Configuration</span></span>
+  <!-- rafael.config.js Content - Humorous Configuration -->
+  <div class="file-content" data-content="rafael.config.js">
+    <div class="code-editor">
+      <div class="code-content">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// rafael.config.js - Developer Configuration</span></span>
 <span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// WARNING: Modifying these values may cause unexpected behavior</span></span>
 <span class="line"><span class="line-number"> 3</span></span>
 <span class="line"><span class="line-number"> 4</span><span class="syntax-keyword">module</span>.<span class="syntax-variable">exports</span> = &#123;</span>
-<span class="line"><span class="line-number"> 5</span>  <span class="syntax-variable">name</span>: <span class="syntax-string">"Rafael Carrión"</span>,</span>
-<span class="line"><span class="line-number"> 6</span>  <span class="syntax-variable">location</span>: <span class="syntax-string">"Barcelona"</span>,</span>
-<span class="line"><span class="line-number"> 7</span>  <span class="syntax-variable">timezone</span>: <span class="syntax-string">"Europe/Madrid"</span>,</span>
+<span class="line"><span class="line-number"> 5</span>  <span class="syntax-variable">name</span>: <span class="syntax-string">"{resume.contact.name}"</span>,</span>
+<span class="line"><span class="line-number"> 6</span>  <span class="syntax-variable">location</span>: <span class="syntax-string">"{resume.contact.location.split(',')[0]}"</span>,</span>
+<span class="line"><span class="line-number"> 7</span>  <span class="syntax-variable">timezone</span>: <span class="syntax-string">"Europe/Berlin"</span>,</span>
 <span class="line"><span class="line-number"> 8</span></span>
 <span class="line"><span class="line-number"> 9</span>  <span class="syntax-comment">// Core Settings</span></span>
 <span class="line"><span class="line-number">10</span>  <span class="syntax-variable">coffeeLevel</span>: <span class="syntax-string">"critical"</span>,</span>
@@ -647,70 +708,69 @@ import '@styles/global.css';
 <span class="line"><span class="line-number">46</span>  <span class="syntax-comment">// Easter Egg</span></span>
 <span class="line"><span class="line-number">47</span>  <span class="syntax-variable">secretHandshake</span>: <span class="syntax-string">"↑ ↑ ↓ ↓ ← → ← → B A"</span>,</span>
 <span class="line"><span class="line-number">48</span>&#125;;</span></code></pre>
-        </div>
       </div>
     </div>
+  </div>
 
-    <!-- konami.md Content - Easter Egg Hint -->
-    <div class="file-content" data-content="konami.md">
-      <div class="markdown-preview max-w-4xl">
-        <h1>You Found a Secret!</h1>
+  <!-- konami.md Content - Easter Egg Hint -->
+  <div class="file-content" data-content="konami.md">
+    <div class="markdown-preview max-w-4xl">
+      <h1>You Found a Secret!</h1>
 
-        <blockquote>
-          <p>"The code is strong with this one..."</p>
-        </blockquote>
+      <blockquote>
+        <p>"The code is strong with this one..."</p>
+      </blockquote>
 
-        <p>
-          Congratulations, curious explorer! You've discovered the hidden <code>.secrets</code> folder. Not many visitors
-          venture this deep into the file tree.
-        </p>
+      <p>
+        Congratulations, curious explorer! You've discovered the hidden <code>.secrets</code> folder. Not many visitors venture
+        this deep into the file tree.
+      </p>
 
-        <h2>The Konami Code</h2>
+      <h2>The Konami Code</h2>
 
-        <p>
-          There's an old legend among developers. A secret combination passed down through generations of gamers and
-          coders alike:
-        </p>
+      <p>
+        There's an old legend among developers. A secret combination passed down through generations of gamers and
+        coders alike:
+      </p>
 
-        <pre><code>↑ ↑ ↓ ↓ ← → ← → B A</code></pre>
+      <pre><code>↑ ↑ ↓ ↓ ← → ← → B A</code></pre>
 
-        <p>Some say if you enter this sequence on this very page, something magical might happen...</p>
+      <p>Some say if you enter this sequence on this very page, something magical might happen...</p>
 
-        <div class="tip-box">
-          <div class="tip-box-title">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-              >
-              </path>
-            </svg>
-            Hint
-          </div>
-          <div class="tip-box-content">
-            Try using your keyboard arrow keys followed by 'B' and 'A'. Who knows what you might unlock?
-          </div>
+      <div class="tip-box">
+        <div class="tip-box-title">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            >
+            </path>
+          </svg>
+          Hint
         </div>
-
-        <h2>Why Easter Eggs?</h2>
-
-        <p>
-          Because coding should be fun! Hidden features and secret messages are a time-honored tradition in software
-          development. They're a way for developers to add personality to their work and reward curious users who
-          explore.
-        </p>
-
-        <p>
-          <em>Keep exploring - there might be more secrets hidden in this portfolio...</em>
-        </p>
+        <div class="tip-box-content">
+          Try using your keyboard arrow keys followed by 'B' and 'A'. Who knows what you might unlock?
+        </div>
       </div>
-    </div>
 
-    <!-- achievements.unlock Content - Discoverable Easter Eggs List -->
-    <div class="file-content" data-content="achievements.unlock">
-      <div class="code-editor">
-        <div class="code-content">
-          <pre
-            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// achievements.unlock - Hidden Features Registry</span></span>
+      <h2>Why Easter Eggs?</h2>
+
+      <p>
+        Because coding should be fun! Hidden features and secret messages are a time-honored tradition in software
+        development. They're a way for developers to add personality to their work and reward curious users who explore.
+      </p>
+
+      <p>
+        <em>Keep exploring - there might be more secrets hidden in this portfolio...</em>
+      </p>
+    </div>
+  </div>
+
+  <!-- achievements.unlock Content - Discoverable Easter Eggs List -->
+  <div class="file-content" data-content="achievements.unlock">
+    <div class="code-editor">
+      <div class="code-content">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// achievements.unlock - Hidden Features Registry</span></span>
 <span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// Status: CLASSIFIED</span></span>
 <span class="line"><span class="line-number"> 3</span></span>
 <span class="line"><span class="line-number"> 4</span><span class="syntax-type">ACHIEVEMENT_LIST</span> = &#123;</span>
@@ -768,249 +828,157 @@ import '@styles/global.css';
 <span class="line"><span class="line-number">56</span>  <span class="syntax-comment">// ══════════════════════════════════════════════</span></span>
 <span class="line"><span class="line-number">57</span></span>
 <span class="line"><span class="line-number">58</span>&#125;;</span></code></pre>
-        </div>
       </div>
     </div>
+  </div>
 
-    <!-- career.log Content - Fun Debug Log of Career Moments -->
-    <div class="file-content" data-content="career.log">
-      <div class="code-editor career-log">
-        <div class="code-content">
-          <pre
-            class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// career.log - Debug Output from Life</span></span>
+  <!-- career.log Content - Fun Debug Log of Career Moments -->
+  <div class="file-content" data-content="career.log">
+    <div class="code-editor career-log">
+      <div class="code-content">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// career.log - Debug Output from Life</span></span>
 <span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// Generated by: rafael.exe v29.0</span></span>
 <span class="line"><span class="line-number"> 3</span></span>
-<span class="line"><span class="line-number"> 4</span>[<span class="syntax-number">1995</span>] <span class="syntax-type">INFO</span>  - <span class="syntax-variable">System</span> initialized in Barcelona, Spain</span>
-<span class="line"><span class="line-number"> 5</span>[<span class="syntax-number">2005</span>] <span class="syntax-type">DEBUG</span> - First "Hello World" executed in BASIC</span>
-<span class="line"><span class="line-number"> 6</span>[<span class="syntax-number">2005</span>] <span class="syntax-keyword">WARN</span>  - Infinite loop detected: video games taking priority</span>
+<span class="line"><span class="line-number"> 4</span>[<span class="syntax-number">2004</span>] <span class="syntax-type">INFO</span>  - Advanced English for Science at Boston University</span>
+<span class="line"><span class="line-number"> 5</span>[<span class="syntax-number">2005</span>] <span class="syntax-type">INFO</span>  - Started Computer Engineering at Tec de Monterrey</span>
+<span class="line"><span class="line-number"> 6</span>[<span class="syntax-number">2005</span>] <span class="syntax-type">DEBUG</span> - First "Hello World" executed. Coffee dependency initialized</span>
 <span class="line"><span class="line-number"> 7</span></span>
-<span class="line"><span class="line-number"> 8</span>[<span class="syntax-number">2010</span>] <span class="syntax-type">INFO</span>  - Discovered HTML/CSS. Building "cool" websites</span>
-<span class="line"><span class="line-number"> 9</span>[<span class="syntax-number">2010</span>] <span class="syntax-keyword">WARN</span>  - Excessive use of &lt;marquee&gt; and &lt;blink&gt; tags detected</span>
-<span class="line"><span class="line-number">10</span>[<span class="syntax-number">2011</span>] <span class="syntax-type">DEBUG</span> - First website deployed. Visitor count: 1 (mom)</span>
+<span class="line"><span class="line-number"> 8</span>[<span class="syntax-number">2009</span>] <span class="syntax-type">INFO</span>  - Graduated Computer Engineering - Magna Cum Laude (95/100)</span>
+<span class="line"><span class="line-number"> 9</span>[<span class="syntax-number">2009</span>] <span class="syntax-type">DEBUG</span> - Outstanding grade in CENEVAL final global examination</span>
+<span class="line"><span class="line-number">10</span>[<span class="syntax-number">2009</span>] <span class="syntax-type">INFO</span>  - Joined T-Systems Puebla - Developed PMBOK/PMI course on Moodle</span>
 <span class="line"><span class="line-number">11</span></span>
-<span class="line"><span class="line-number">12</span>[<span class="syntax-number">2015</span>] <span class="syntax-type">INFO</span>  - University.start(ComputerScience)</span>
-<span class="line"><span class="line-number">13</span>[<span class="syntax-number">2015</span>] <span class="syntax-type">DEBUG</span> - Sleep.disable() during exam periods</span>
-<span class="line"><span class="line-number">14</span>[<span class="syntax-number">2016</span>] <span class="syntax-error">ERROR</span> - StackOverflowException: Too many recursive study sessions</span>
-<span class="line"><span class="line-number">15</span>[<span class="syntax-number">2017</span>] <span class="syntax-keyword">WARN</span>  - Coffee dependency upgraded to "critical"</span>
+<span class="line"><span class="line-number">12</span>[<span class="syntax-number">2010</span>] <span class="syntax-type">INFO</span>  - Co-founded Technit Solutions México as CTO</span>
+<span class="line"><span class="line-number">13</span>[<span class="syntax-number">2010</span>] <span class="syntax-type">INFO</span>  - Started Master in eCommerce at Tec de Monterrey</span>
+<span class="line"><span class="line-number">14</span>[<span class="syntax-number">2011</span>] <span class="syntax-type">INFO</span>  - Completed Master in eCommerce</span>
+<span class="line"><span class="line-number">15</span>[<span class="syntax-number">2011</span>] <span class="syntax-type">DEBUG</span> - First mobile app launched through Technit</span>
 <span class="line"><span class="line-number">16</span></span>
-<span class="line"><span class="line-number">17</span>[<span class="syntax-number">2019</span>] <span class="syntax-type">INFO</span>  - First professional commit pushed</span>
-<span class="line"><span class="line-number">18</span>[<span class="syntax-number">2019</span>] <span class="syntax-type">DEBUG</span> - ImposterSyndrome.activate()</span>
-<span class="line"><span class="line-number">19</span>[<span class="syntax-number">2019</span>] <span class="syntax-type">INFO</span>  - Resolved: "It works on my machine" → Docker adopted</span>
-<span class="line"><span class="line-number">20</span></span>
-<span class="line"><span class="line-number">21</span>[<span class="syntax-number">2020</span>] <span class="syntax-keyword">WARN</span>  - Global pandemic detected. Switching to remote mode...</span>
-<span class="line"><span class="line-number">22</span>[<span class="syntax-number">2020</span>] <span class="syntax-type">INFO</span>  - Home office environment configured</span>
-<span class="line"><span class="line-number">23</span>[<span class="syntax-number">2020</span>] <span class="syntax-type">DEBUG</span> - Pants optional flag enabled for daily standups</span>
-<span class="line"><span class="line-number">24</span></span>
-<span class="line"><span class="line-number">25</span>[<span class="syntax-number">2021</span>] <span class="syntax-type">INFO</span>  - Joined Cruz Roja as technology volunteer</span>
-<span class="line"><span class="line-number">26</span>[<span class="syntax-number">2021</span>] <span class="syntax-type">DEBUG</span> - karma++ (giving back to community)</span>
-<span class="line"><span class="line-number">27</span>[<span class="syntax-number">2022</span>] <span class="syntax-type">INFO</span>  - Successfully helped digitize volunteer operations</span>
-<span class="line"><span class="line-number">28</span></span>
-<span class="line"><span class="line-number">29</span>[<span class="syntax-number">2023</span>] <span class="syntax-type">INFO</span>  - Joined Funditec as Full-Stack Developer</span>
-<span class="line"><span class="line-number">30</span>[<span class="syntax-number">2023</span>] <span class="syntax-type">DEBUG</span> - Tech stack expanded: React, Node.js, TypeScript</span>
-<span class="line"><span class="line-number">31</span>[<span class="syntax-number">2023</span>] <span class="syntax-error">ERROR</span> - Production bug at 5:59 PM on Friday. Again.</span>
-<span class="line"><span class="line-number">32</span>[<span class="syntax-number">2023</span>] <span class="syntax-type">INFO</span>  - Bug fixed. Weekend saved. Barely.</span>
+<span class="line"><span class="line-number">17</span>[<span class="syntax-number">2018</span>] <span class="syntax-type">INFO</span>  - Joined Schulte &amp; Schmidt GmbH as Solution Architect</span>
+<span class="line"><span class="line-number">18</span>[<span class="syntax-number">2018</span>] <span class="syntax-type">DEBUG</span> - Developed Intranet from zero (MariaDB, SQL Server, Sybase, LDAP)</span>
+<span class="line"><span class="line-number">19</span>[<span class="syntax-number">2019</span>] <span class="syntax-type">INFO</span>  - Deployed real-time dashboards (Docker, Ruby)</span>
+<span class="line"><span class="line-number">20</span>[<span class="syntax-number">2020</span>] <span class="syntax-type">INFO</span>  - Configured Icinga2 monitoring system</span>
+<span class="line"><span class="line-number">21</span>[<span class="syntax-number">2021</span>] <span class="syntax-type">INFO</span>  - Developed iOS/Android apps for administration board</span>
+<span class="line"><span class="line-number">22</span></span>
+<span class="line"><span class="line-number">23</span>[<span class="syntax-number">2021</span>] <span class="syntax-type">INFO</span>  - Joined Noris Network AG as Senior Software Engineer</span>
+<span class="line"><span class="line-number">24</span>[<span class="syntax-number">2021</span>] <span class="syntax-type">DEBUG</span> - Location updated: Nuremberg, Germany</span>
+<span class="line"><span class="syntax-number">25</span>[<span class="syntax-number">2021</span>] <span class="syntax-type">INFO</span>  - Technit: 30+ mobile apps launched milestone reached</span>
+<span class="line"><span class="line-number">26</span></span>
+<span class="line"><span class="line-number">27</span>[<span class="syntax-number">2022</span>] <span class="syntax-type">DEBUG</span> - Balancing dual roles: Noris Network AG + Technit CTO</span>
+<span class="line"><span class="line-number">28</span>[<span class="syntax-number">2023</span>] <span class="syntax-type">INFO</span>  - Continuing solution architecture work at Noris</span>
+<span class="line"><span class="line-number">29</span>[<span class="syntax-number">2024</span>] <span class="syntax-type">DEBUG</span> - Tech stack: JavaScript, TypeScript, React, Angular, Ionic, Laravel</span>
+<span class="line"><span class="line-number">30</span></span>
+<span class="line"><span class="line-number">31</span>[<span class="syntax-number">2025</span>] <span class="syntax-type">INFO</span>  - Technit: Ongoing mobile app development and cloud solutions</span>
+<span class="line"><span class="line-number">32</span>[<span class="syntax-number">2025</span>] <span class="syntax-type">DEBUG</span> - Solution architecture expertise: Monolithic &amp; Microservices</span>
 <span class="line"><span class="line-number">33</span></span>
-<span class="line"><span class="line-number">34</span>[<span class="syntax-number">2024</span>] <span class="syntax-type">INFO</span>  - Completed DevOps with Docker certification</span>
-<span class="line"><span class="line-number">35</span>[<span class="syntax-number">2024</span>] <span class="syntax-type">DEBUG</span> - "LGTM" comments increased by 200%</span>
-<span class="line"><span class="line-number">36</span>[<span class="syntax-number">2024</span>] <span class="syntax-keyword">WARN</span>  - Starting to understand legacy code. Send help.</span>
-<span class="line"><span class="line-number">37</span></span>
-<span class="line"><span class="line-number">38</span>[<span class="syntax-number">2025</span>] <span class="syntax-type">INFO</span>  - Started Cyber Security certification</span>
-<span class="line"><span class="line-number">39</span>[<span class="syntax-number">2025</span>] <span class="syntax-type">DEBUG</span> - Learning OWASP Top 10 (the hard way)</span>
-<span class="line"><span class="line-number">40</span>[<span class="syntax-number">2025</span>] <span class="syntax-type">DEBUG</span> - Now paranoid about every SQL query</span>
-<span class="line"><span class="line-number">41</span></span>
-<span class="line"><span class="line-number">42</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">INFO</span>  - Building this VS Code portfolio</span>
-<span class="line"><span class="line-number">43</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">DEBUG</span> - Meta moment: you're reading logs inside a fake IDE</span>
-<span class="line"><span class="line-number">44</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">INFO</span>  - Career.status = "evolving"</span>
+<span class="line"><span class="line-number">34</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">INFO</span>  - Building this VS Code portfolio</span>
+<span class="line"><span class="line-number">35</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">DEBUG</span> - Meta moment: you're reading logs inside a fake IDE</span>
+<span class="line"><span class="line-number">36</span>[<span class="syntax-number">2026</span>] <span class="syntax-type">INFO</span>  - Career.status = "evolving" | Location: Nuremberg, Germany</span>
 <span class="line"><span class="line-number">45</span></span>
 <span class="line"><span class="line-number">46</span><span class="syntax-comment">// EOF - More logs coming soon...</span></span></code></pre>
-        </div>
       </div>
     </div>
+  </div>
 
-    <!-- experience.json Content - Source Control/Timeline Panel -->
-    <div class="file-content" data-content="experience.json">
-      <div class="timeline-panel max-w-4xl">
-        <!-- Panel Header -->
-        <div class="timeline-header">
-          <div class="timeline-header-title">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M12 3v6m0 6v6"></path>
-            </svg>
-            <span>TIMELINE</span>
-          </div>
-          <span class="timeline-header-count">2 entries</span>
-        </div>
-
-        <!-- Timeline Entries -->
-        <div class="timeline-entries">
-          <!-- Funditec Entry -->
-          <div class="timeline-entry" data-entry="funditec" data-expanded="true">
-            <button class="timeline-commit" aria-expanded="true">
-              <div class="commit-graph">
-                <div class="commit-line"></div>
-                <div class="commit-dot"></div>
-                <div class="commit-line-bottom"></div>
-              </div>
-              <div class="commit-content">
-                <div class="commit-header">
-                  <svg class="commit-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="4"></circle>
-                  </svg>
-                  <span class="commit-company">Funditec</span>
-                  <span class="commit-separator">•</span>
-                  <span class="commit-role">Full-Stack Developer</span>
-                </div>
-                <div class="commit-meta">
-                  <span class="commit-date">Feb 2023 - Present</span>
-                  <span class="commit-hash">#HEAD</span>
-                </div>
-              </div>
-              <svg
-                class="commit-chevron w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M9 18l6-6-6-6"></path>
-              </svg>
-            </button>
-            <div class="commit-details">
-              <div class="diff-section">
-                <div class="diff-header">
-                  <span class="diff-file">responsibilities.diff</span>
-                  <span class="diff-stats">
-                    <span class="diff-additions">+8</span>
-                  </span>
-                </div>
-                <div class="diff-content">
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Developing and maintaining web applications using React, Node.js, and
-                    TypeScript
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Building RESTful APIs and microservices architecture
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Implementing CI/CD pipelines and DevOps practices
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Collaborating with cross-functional teams on product features
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Code reviews and mentoring junior developers
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Database design and optimization (PostgreSQL, MongoDB)
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Performance optimization and technical debt reduction
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Participating in agile ceremonies and sprint planning
-                  </div>
-                </div>
-              </div>
-              <div class="diff-section">
-                <div class="diff-header">
-                  <span class="diff-file">tech-stack.json</span>
-                </div>
-                <pre
-                  class="diff-content diff-json"><code><span class="syntax-punctuation">&#123;</span>
-  <span class="syntax-property">"frontend"</span><span class="syntax-punctuation">:</span> <span class="syntax-bracket">[</span><span class="syntax-string">"React"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"TypeScript"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"Tailwind"</span><span class="syntax-bracket">]</span><span class="syntax-punctuation">,</span>
-  <span class="syntax-property">"backend"</span><span class="syntax-punctuation">:</span> <span class="syntax-bracket">[</span><span class="syntax-string">"Node.js"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"Express"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"Python"</span><span class="syntax-bracket">]</span><span class="syntax-punctuation">,</span>
-  <span class="syntax-property">"database"</span><span class="syntax-punctuation">:</span> <span class="syntax-bracket">[</span><span class="syntax-string">"PostgreSQL"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"MongoDB"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"Redis"</span><span class="syntax-bracket">]</span><span class="syntax-punctuation">,</span>
-  <span class="syntax-property">"devops"</span><span class="syntax-punctuation">:</span> <span class="syntax-bracket">[</span><span class="syntax-string">"Docker"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"GitHub Actions"</span><span class="syntax-punctuation">,</span> <span class="syntax-string">"AWS"</span><span class="syntax-bracket">]</span>
-<span class="syntax-punctuation">&#125;</span></code></pre>
-              </div>
-            </div>
-          </div>
-
-          <!-- Cruz Roja Entry -->
-          <div class="timeline-entry" data-entry="cruzroja">
-            <button class="timeline-commit" aria-expanded="false">
-              <div class="commit-graph">
-                <div class="commit-line"></div>
-                <div class="commit-dot volunteer"></div>
-                <div class="commit-line-bottom faded"></div>
-              </div>
-              <div class="commit-content">
-                <div class="commit-header">
-                  <svg class="commit-icon volunteer w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                    >
-                    </path>
-                  </svg>
-                  <span class="commit-company">Cruz Roja Española</span>
-                  <span class="commit-separator">•</span>
-                  <span class="commit-role">Technology Volunteer</span>
-                </div>
-                <div class="commit-meta">
-                  <span class="commit-date">Sep 2021 - Jan 2023</span>
-                  <span class="commit-hash">#a1b2c3d</span>
-                </div>
-              </div>
-              <svg
-                class="commit-chevron w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M9 18l6-6-6-6"></path>
-              </svg>
-            </button>
-            <div class="commit-details">
-              <div class="diff-section">
-                <div class="diff-header">
-                  <span class="diff-file">contributions.diff</span>
-                  <span class="diff-stats">
-                    <span class="diff-additions">+5</span>
-                  </span>
-                </div>
-                <div class="diff-content">
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Developed internal tools to streamline volunteer coordination
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Built data visualization dashboards for humanitarian aid tracking
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Provided technical support and training to staff members
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Maintained and improved legacy systems
-                  </div>
-                  <div class="diff-line diff-add">
-                    <span class="diff-prefix">+</span> Collaborated on digital transformation initiatives
-                  </div>
-                </div>
-              </div>
-              <div class="diff-section">
-                <div class="diff-header">
-                  <span class="diff-file">impact.json</span>
-                </div>
-                <pre
-                  class="diff-content diff-json"><code><span class="syntax-punctuation">&#123;</span>
-  <span class="syntax-property">"type"</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"volunteer"</span><span class="syntax-punctuation">,</span>
-  <span class="syntax-property">"focus"</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"technology &amp; digital transformation"</span><span class="syntax-punctuation">,</span>
-  <span class="syntax-property">"learning"</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"nonprofit tech challenges &amp; social impact"</span>
-<span class="syntax-punctuation">&#125;</span></code></pre>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Timeline Footer -->
-        <div class="timeline-footer">
+  <!-- experience.json Content - Source Control/Timeline Panel -->
+  <div class="file-content" data-content="experience.json">
+    <div class="timeline-panel max-w-4xl">
+      <!-- Panel Header -->
+      <div class="timeline-header">
+        <div class="timeline-header-title">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 6v6l4 2"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 3v6m0 6v6"></path>
           </svg>
-          <span>Career journey continues...</span>
+          <span>TIMELINE</span>
         </div>
+        <span class="timeline-header-count">{resume.workExperience.length} entries</span>
+      </div>
+
+      <!-- Timeline Entries -->
+      <div class="timeline-entries">
+        {
+          resume.workExperience.map((exp, index) => {
+            const entryId = exp.company.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            const isFirst = index === 0;
+            const isLast = index === resume.workExperience.length - 1;
+            const dateRange = formatDateRange(exp.startDate, exp.endDate);
+            const hash = ['HEAD', 'b2c3d4e', 'c3d4e5f', 'd4e5f6a'][index] || `#${entryId}`;
+
+            return (
+              <div class="timeline-entry" data-entry={entryId} data-expanded={isFirst ? 'true' : 'false'}>
+                <button class="timeline-commit" aria-expanded={isFirst ? 'true' : 'false'}>
+                  <div class="commit-graph">
+                    <div class="commit-line" />
+                    <div class="commit-dot" />
+                    <div class={`commit-line-bottom ${isLast ? 'faded' : ''}`} />
+                  </div>
+                  <div class="commit-content">
+                    <div class="commit-header">
+                      <svg class="commit-icon w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="4" />
+                      </svg>
+                      <span class="commit-company">{exp.company}</span>
+                      <span class="commit-separator">•</span>
+                      <span class="commit-role">{exp.position}</span>
+                    </div>
+                    <div class="commit-meta">
+                      <span class="commit-date">{dateRange}</span>
+                      <span class="commit-hash">{hash}</span>
+                    </div>
+                  </div>
+                  <svg
+                    class="commit-chevron w-4 h-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </button>
+                <div class="commit-details">
+                  <div class="diff-section">
+                    <div class="diff-header">
+                      <span class="diff-file">responsibilities.diff</span>
+                      <span class="diff-stats">
+                        <span class="diff-additions">+{exp.highlights.length}</span>
+                      </span>
+                    </div>
+                    <div class="diff-content">
+                      {exp.highlights.map((highlight) => (
+                        <div class="diff-line diff-add">
+                          <span class="diff-prefix">+</span> {highlight}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {exp.technologies && exp.technologies.length > 0 && (
+                    <div class="diff-section">
+                      <div class="diff-header">
+                        <span class="diff-file">tech-stack.json</span>
+                      </div>
+                      <pre class="diff-content diff-json">
+                        <code>{`
+{
+  "technologies": [${exp.technologies.map((t: string) => `"${t}"`).join(', ')}]
+}`}</code>
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+
+      <!-- Timeline Footer -->
+      <div class="timeline-footer">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 6v6l4 2"></path>
+        </svg>
+        <span>Career journey continues...</span>
       </div>
     </div>
   </div>
