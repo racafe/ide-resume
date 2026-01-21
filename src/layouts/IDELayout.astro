@@ -77,6 +77,16 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
     <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#1e1e1e" />
 
+    <!-- Prevent flash of wrong theme by loading theme preference early -->
+    <script is:inline>
+      (function() {
+        const savedTheme = localStorage.getItem('ide-color-theme');
+        if (savedTheme && savedTheme !== 'dark-plus') {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      })();
+    </script>
+
     <!-- Structured Data / JSON-LD -->
     <script
       type="application/ld+json"

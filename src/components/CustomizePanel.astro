@@ -34,8 +34,8 @@
             <span class="customize-setting-desc">Specifies the color theme used in the workbench</span>
           </div>
           <select id="color-theme-select" class="customize-select">
-            <option value="dark-plus" selected>Dark+ (default)</option>
-            <option value="dark-modern">Dark Modern</option>
+            <option value="dark-plus">Dark+ (default)</option>
+            <option value="light">Light</option>
             <option value="monokai">Monokai</option>
           </select>
         </div>
@@ -142,6 +142,33 @@
     const extensionsBtn = document.querySelector('.activity-bar-icon[title="Extensions"]');
     const explorerBtn = document.querySelector('.activity-bar-icon[title="Explorer"]');
     const sourceControlBtn = document.querySelector('.activity-bar-icon[title="Source Control"]');
+
+    // Color theme select
+    const colorThemeSelect = document.getElementById('color-theme-select') as HTMLSelectElement;
+
+    // Load saved theme from localStorage
+    const savedTheme = localStorage.getItem('ide-color-theme') || 'dark-plus';
+    if (colorThemeSelect) {
+      colorThemeSelect.value = savedTheme;
+    }
+    applyTheme(savedTheme);
+
+    // Handle theme changes
+    colorThemeSelect?.addEventListener('change', (e) => {
+      const target = e.target as HTMLSelectElement;
+      const theme = target.value;
+      applyTheme(theme);
+      localStorage.setItem('ide-color-theme', theme);
+    });
+
+    function applyTheme(theme: string): void {
+      // Remove any existing theme data attribute (for dark-plus, use no attribute)
+      if (theme === 'dark-plus') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    }
 
     // Font size select
     const fontSizeSelect = document.getElementById('font-size-select') as HTMLSelectElement;

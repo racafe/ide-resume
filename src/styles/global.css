@@ -4,9 +4,123 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===================================
+   THEME CSS CUSTOM PROPERTIES
+   =================================== */
+
+/* Dark+ Theme (Default) */
+:root {
+  --theme-bg: #1e1e1e;
+  --theme-sidebar: #252526;
+  --theme-sidebar-hover: #2a2d2e;
+  --theme-sidebar-active: #37373d;
+  --theme-tab: #2d2d2d;
+  --theme-tab-active: #1e1e1e;
+  --theme-tab-border: #252526;
+  --theme-editor: #1e1e1e;
+  --theme-status-bar: #007acc;
+  --theme-status-bar-hover: #1f8ad2;
+  --theme-activity-bar: #333333;
+  --theme-border: #3c3c3c;
+  --theme-text: #cccccc;
+  --theme-text-muted: #808080;
+  --theme-text-bright: #ffffff;
+  --theme-accent: #007acc;
+  --theme-accent-hover: #1f8ad2;
+  --theme-success: #4ec9b0;
+  --theme-warning: #dcdcaa;
+  --theme-error: #f14c4c;
+  --theme-line-number: #858585;
+  --theme-selection: #264f78;
+  --theme-comment: #6a9955;
+  --theme-keyword: #569cd6;
+  --theme-string: #ce9178;
+  --theme-number: #b5cea8;
+  --theme-type: #4ec9b0;
+  --theme-function: #dcdcaa;
+  --theme-variable: #9cdcfe;
+  --theme-operator: #d4d4d4;
+  --theme-scrollbar: #37373d;
+  --theme-scrollbar-hover: #808080;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --theme-bg: #ffffff;
+  --theme-sidebar: #f3f3f3;
+  --theme-sidebar-hover: #e8e8e8;
+  --theme-sidebar-active: #d4d4d4;
+  --theme-tab: #ececec;
+  --theme-tab-active: #ffffff;
+  --theme-tab-border: #f3f3f3;
+  --theme-editor: #ffffff;
+  --theme-status-bar: #007acc;
+  --theme-status-bar-hover: #1f8ad2;
+  --theme-activity-bar: #2c2c2c;
+  --theme-border: #e5e5e5;
+  --theme-text: #333333;
+  --theme-text-muted: #6e7681;
+  --theme-text-bright: #000000;
+  --theme-accent: #0066b8;
+  --theme-accent-hover: #005a9e;
+  --theme-success: #16825d;
+  --theme-warning: #795e26;
+  --theme-error: #c72e2e;
+  --theme-line-number: #6e7681;
+  --theme-selection: #add6ff;
+  --theme-comment: #008000;
+  --theme-keyword: #0000ff;
+  --theme-string: #a31515;
+  --theme-number: #098658;
+  --theme-type: #267f99;
+  --theme-function: #795e26;
+  --theme-variable: #001080;
+  --theme-operator: #333333;
+  --theme-scrollbar: #c1c1c1;
+  --theme-scrollbar-hover: #929292;
+}
+
+/* Monokai Theme */
+[data-theme="monokai"] {
+  --theme-bg: #272822;
+  --theme-sidebar: #1e1f1c;
+  --theme-sidebar-hover: #3e3d32;
+  --theme-sidebar-active: #49483e;
+  --theme-tab: #2d2e27;
+  --theme-tab-active: #272822;
+  --theme-tab-border: #1e1f1c;
+  --theme-editor: #272822;
+  --theme-status-bar: #75715e;
+  --theme-status-bar-hover: #8c8978;
+  --theme-activity-bar: #1e1f1c;
+  --theme-border: #3e3d32;
+  --theme-text: #f8f8f2;
+  --theme-text-muted: #75715e;
+  --theme-text-bright: #ffffff;
+  --theme-accent: #a6e22e;
+  --theme-accent-hover: #b8f332;
+  --theme-success: #a6e22e;
+  --theme-warning: #e6db74;
+  --theme-error: #f92672;
+  --theme-line-number: #75715e;
+  --theme-selection: #49483e;
+  --theme-comment: #75715e;
+  --theme-keyword: #f92672;
+  --theme-string: #e6db74;
+  --theme-number: #ae81ff;
+  --theme-type: #66d9ef;
+  --theme-function: #a6e22e;
+  --theme-variable: #fd971f;
+  --theme-operator: #f8f8f2;
+  --theme-scrollbar: #49483e;
+  --theme-scrollbar-hover: #75715e;
+}
+
 @layer base {
   html {
-    @apply bg-ide-bg text-ide-text font-sans antialiased;
+    @apply font-sans antialiased;
+    background-color: var(--theme-bg);
+    color: var(--theme-text);
   }
 
   body {
@@ -23,11 +137,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-ide-sidebarActive rounded-sm;
+    background-color: var(--theme-scrollbar);
+    @apply rounded-sm;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-ide-textMuted;
+    background-color: var(--theme-scrollbar-hover);
   }
 
   ::-webkit-scrollbar-corner {
@@ -36,7 +151,7 @@
 
   /* Selection color */
   ::selection {
-    @apply bg-ide-selection;
+    background-color: var(--theme-selection);
   }
 }
 
@@ -313,7 +428,8 @@
   }
 
   .markdown-preview blockquote {
-    @apply border-l-4 border-ide-accent pl-4 py-1 my-4 text-ide-textMuted italic bg-ide-sidebar/50;
+    @apply border-l-4 border-ide-accent pl-4 py-1 my-4 text-ide-textMuted italic;
+    background-color: color-mix(in srgb, var(--theme-sidebar) 50%, transparent);
   }
 
   .markdown-preview hr {
@@ -365,7 +481,8 @@
 
   /* Article/Publication Badge */
   .markdown-preview .article-badge {
-    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ide-accent/20 text-ide-accent text-sm font-medium mb-4;
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-ide-accent text-sm font-medium mb-4;
+    background-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
   }
 
   .markdown-preview .article-badge svg {
@@ -515,11 +632,13 @@
   }
 
   .diff-line.diff-add {
-    @apply bg-ide-string/10 border-l-ide-string text-ide-text;
+    @apply border-l-ide-string text-ide-text;
+    background-color: color-mix(in srgb, var(--theme-string) 10%, transparent);
   }
 
   .diff-line.diff-remove {
-    @apply bg-ide-error/10 border-l-ide-error text-ide-text;
+    @apply border-l-ide-error text-ide-text;
+    background-color: color-mix(in srgb, var(--theme-error) 10%, transparent);
   }
 
   .diff-prefix {
@@ -661,7 +780,9 @@
 
   /* Success State */
   .tsx-success {
-    @apply mt-4 p-4 bg-ide-string/10 border border-ide-string/30 rounded;
+    @apply mt-4 p-4 rounded;
+    background-color: color-mix(in srgb, var(--theme-string) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--theme-string) 30%, transparent);
   }
 
   .tsx-success .code-block {
@@ -932,7 +1053,8 @@
   }
 
   .game-overlay {
-    @apply absolute inset-0 flex items-center justify-center bg-ide-bg/90;
+    @apply absolute inset-0 flex items-center justify-center;
+    background-color: color-mix(in srgb, var(--theme-bg) 90%, transparent);
   }
 
   .game-overlay.hidden {
@@ -1007,11 +1129,13 @@
   }
 
   .achievement-toast-icon {
-    @apply w-10 h-10 flex items-center justify-center rounded-lg bg-ide-accent/20 text-ide-accent flex-shrink-0;
+    @apply w-10 h-10 flex items-center justify-center rounded-lg text-ide-accent flex-shrink-0;
+    background-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
   }
 
   .achievement-toast-icon.all-complete {
-    @apply bg-ide-warning/20 text-ide-warning;
+    @apply text-ide-warning;
+    background-color: color-mix(in srgb, var(--theme-warning) 20%, transparent);
   }
 
   .achievement-toast-content {
@@ -1165,11 +1289,13 @@
   }
 
   .chat-message-avatar {
-    @apply w-8 h-8 rounded-full bg-ide-accent/20 text-ide-accent flex items-center justify-center flex-shrink-0;
+    @apply w-8 h-8 rounded-full text-ide-accent flex items-center justify-center flex-shrink-0;
+    background-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
   }
 
   .chat-message-user .chat-message-avatar {
-    @apply bg-ide-statusBar/20 text-ide-statusBar;
+    @apply text-ide-statusBar;
+    background-color: color-mix(in srgb, var(--theme-status-bar) 20%, transparent);
   }
 
   .chat-message-content {
@@ -1185,7 +1311,9 @@
   }
 
   .chat-message-error .chat-message-content p {
-    @apply bg-ide-error/20 text-ide-error border border-ide-error/30;
+    @apply text-ide-error;
+    background-color: color-mix(in srgb, var(--theme-error) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--theme-error) 30%, transparent);
   }
 
   /* Error actions (retry button and email link) */
@@ -1195,8 +1323,12 @@
 
   .chat-error-retry {
     @apply text-xs px-3 py-1.5 rounded bg-ide-accent text-white font-medium;
-    @apply hover:bg-ide-accent/80 transition-colors cursor-pointer;
+    @apply transition-colors cursor-pointer;
     @apply focus:outline-none focus:ring-2 focus:ring-ide-accent focus:ring-offset-2 focus:ring-offset-ide-sidebar;
+  }
+
+  .chat-error-retry:hover {
+    background-color: color-mix(in srgb, var(--theme-accent) 80%, transparent);
   }
 
   .chat-error-email {
@@ -1453,7 +1585,8 @@
 
   /* Search highlight */
   .search-highlight {
-    @apply bg-ide-accent/30 text-ide-accent rounded-sm px-0.5;
+    @apply text-ide-accent rounded-sm px-0.5;
+    background-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
   }
 
   /* Empty state */
