@@ -1497,6 +1497,168 @@
     }
   }
 
+  /* ===================================
+     GIT STATS PANEL (SOURCE CONTROL)
+     =================================== */
+
+  /* Git stats panel container */
+  .git-stats-panel {
+    @apply flex flex-col h-full;
+  }
+
+  .git-stats-panel.hidden {
+    display: none;
+  }
+
+  /* Panel header */
+  .git-stats-header {
+    @apply flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-wider text-ide-textMuted font-medium;
+  }
+
+  .git-stats-header-icon {
+    @apply text-ide-text;
+  }
+
+  /* Content area */
+  .git-stats-content {
+    @apply flex-1 overflow-auto py-1;
+  }
+
+  /* Sections */
+  .git-stats-section {
+    @apply border-b border-ide-border;
+  }
+
+  .git-stats-section:last-child {
+    @apply border-b-0;
+  }
+
+  .git-stats-section-header {
+    @apply flex items-center gap-2 px-4 py-2 text-xs text-ide-text cursor-pointer;
+    @apply hover:bg-ide-sidebarHover transition-colors;
+  }
+
+  .git-stats-section-header svg {
+    @apply text-ide-textMuted;
+  }
+
+  .git-stats-section-content {
+    @apply px-4 pb-3;
+  }
+
+  /* Repository link */
+  .git-stats-repo-link {
+    @apply flex items-center gap-2 px-2 py-1.5 rounded text-sm text-ide-accent;
+    @apply hover:bg-ide-sidebarHover transition-colors;
+  }
+
+  .git-stats-repo-link svg:first-child {
+    @apply text-ide-warning;
+  }
+
+  .git-stats-external-icon {
+    @apply text-ide-textMuted ml-auto opacity-0;
+    transition: opacity 0.15s ease;
+  }
+
+  .git-stats-repo-link:hover .git-stats-external-icon {
+    @apply opacity-100;
+  }
+
+  /* Stats grid */
+  .git-stats-grid {
+    @apply grid grid-cols-2 gap-2;
+  }
+
+  .git-stats-item {
+    @apply flex items-center gap-2 px-2 py-1.5 rounded bg-ide-sidebarActive;
+  }
+
+  .git-stats-value {
+    @apply text-ide-text font-semibold text-sm;
+  }
+
+  .git-stats-label {
+    @apply text-ide-textMuted text-xs;
+  }
+
+  /* Languages */
+  .git-stats-language-bar {
+    @apply flex h-2 rounded overflow-hidden mb-2;
+  }
+
+  .git-stats-language-segment {
+    @apply h-full;
+    min-width: 4px;
+  }
+
+  .git-stats-language-list {
+    @apply flex flex-col gap-1;
+  }
+
+  .git-stats-language-item {
+    @apply flex items-center gap-2 text-xs;
+  }
+
+  .git-stats-language-dot {
+    @apply w-2 h-2 rounded-full flex-shrink-0;
+  }
+
+  .git-stats-language-name {
+    @apply text-ide-text;
+  }
+
+  .git-stats-language-pct {
+    @apply text-ide-textMuted ml-auto;
+  }
+
+  /* Commits */
+  .git-stats-commit {
+    @apply py-2 border-b border-ide-border;
+  }
+
+  .git-stats-commit:last-child {
+    @apply border-b-0;
+  }
+
+  .git-stats-commit-header {
+    @apply flex items-center justify-between mb-1;
+  }
+
+  .git-stats-commit-sha {
+    @apply text-xs text-ide-accent font-code;
+  }
+
+  .git-stats-commit-date {
+    @apply text-xs text-ide-textMuted;
+  }
+
+  .git-stats-commit-message {
+    @apply text-xs text-ide-text leading-relaxed;
+  }
+
+  /* Loading and error states */
+  .git-stats-loading,
+  .git-stats-error {
+    @apply py-2 text-xs;
+  }
+
+  /* Footer */
+  .git-stats-footer {
+    @apply px-4 py-2 text-xs border-t border-ide-border;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 767px) {
+    .git-stats-item {
+      @apply py-2;
+    }
+
+    .git-stats-commit-message {
+      @apply text-sm;
+    }
+  }
+
   /* Search result highlight animation */
   .search-result-highlight {
     animation: search-highlight 2s ease-out;

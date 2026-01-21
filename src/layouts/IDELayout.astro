@@ -2,6 +2,7 @@
 import ChatToggle from '@components/ChatToggle.astro';
 import ChatPanel from '@components/ChatPanel.astro';
 import SearchPanel from '@components/SearchPanel.astro';
+import GitStatsPanel from '@components/GitStatsPanel.astro';
 
 interface Props {
   title?: string;
@@ -203,13 +204,15 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
           </button>
         </aside>
 
-        <!-- Sidebar (File Explorer) -->
+        <!-- Sidebar (File Explorer / Source Control) -->
         <aside class="sidebar" id="sidebar">
           <div class="sidebar-header">Explorer</div>
           <div class="file-tree" id="file-tree">
             <!-- File tree will be populated by components or JavaScript -->
             <slot name="sidebar" />
           </div>
+          <!-- Git Stats Panel (shown when Source Control is active) -->
+          <GitStatsPanel />
         </aside>
 
         <!-- Editor Area -->

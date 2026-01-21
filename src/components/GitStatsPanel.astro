@@ -1,0 +1,445 @@
+---
+/**
+ * GitStatsPanel.astro - GitHub statistics sidebar panel
+ * Replaces the file explorer when Source Control icon is clicked
+ * Shows repository stats fetched from GitHub
+ */
+
+// GitHub stats to display (hardcoded for static site)
+const githubUsername = 'racafe';
+const repoName = 'racafe-astro';
+---
+
+<!-- Git Stats Panel (replaces sidebar content when active) -->
+<div id="git-stats-panel" class="git-stats-panel hidden">
+  <div class="git-stats-header">
+    <svg class="git-stats-header-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <path
+        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+      >
+      </path>
+    </svg>
+    <span>Source Control</span>
+  </div>
+
+  <div class="git-stats-content">
+    <!-- Repository Info -->
+    <div class="git-stats-section">
+      <div class="git-stats-section-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+        <span>Repository</span>
+      </div>
+      <div class="git-stats-section-content">
+        <a
+          href={`https://github.com/${githubUsername}/${repoName}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="git-stats-repo-link"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path
+              d="M3 7V17C3 18.1 3.9 19 5 19H19C20.1 19 21 18.1 21 17V9C21 7.9 20.1 7 19 7H11L9 5H5C3.9 5 3 5.9 3 7Z"
+            >
+            </path>
+          </svg>
+          <span>{githubUsername}/{repoName}</span>
+          <svg
+            class="git-stats-external-icon"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="git-stats-section">
+      <div class="git-stats-section-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+        <span>Statistics</span>
+      </div>
+      <div class="git-stats-section-content">
+        <div class="git-stats-grid" id="git-stats-grid">
+          <!-- Stats will be populated by JavaScript -->
+          <div class="git-stats-loading">
+            <span class="syntax-comment">// Loading stats...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Languages Section -->
+    <div class="git-stats-section">
+      <div class="git-stats-section-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+        <span>Languages</span>
+      </div>
+      <div class="git-stats-section-content">
+        <div class="git-stats-languages" id="git-stats-languages">
+          <div class="git-stats-loading">
+            <span class="syntax-comment">// Loading languages...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="git-stats-section">
+      <div class="git-stats-section-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+        <span>Recent Commits</span>
+      </div>
+      <div class="git-stats-section-content">
+        <div class="git-stats-commits" id="git-stats-commits">
+          <div class="git-stats-loading">
+            <span class="syntax-comment">// Loading commits...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="git-stats-footer">
+    <span class="syntax-comment">// Powered by GitHub API</span>
+  </div>
+</div>
+
+<script define:vars={{ githubUsername, repoName }}>
+  window.__gitStatsConfig = { githubUsername, repoName };
+</script>
+
+<script>
+  interface GitStatsConfig {
+    githubUsername: string;
+    repoName: string;
+  }
+
+  interface RepoStats {
+    stars: number;
+    forks: number;
+    watchers: number;
+    openIssues: number;
+  }
+
+  interface Language {
+    name: string;
+    percentage: number;
+    color: string;
+  }
+
+  interface Commit {
+    sha: string;
+    message: string;
+    date: string;
+    author: string;
+  }
+
+  declare global {
+    interface Window {
+      __gitStatsConfig: GitStatsConfig;
+      openGitStatsPanel?: () => void;
+      closeGitStatsPanel?: () => void;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const gitStatsPanel = document.getElementById('git-stats-panel');
+    const sidebar = document.getElementById('sidebar');
+    const fileTree = document.getElementById('file-tree');
+    const sidebarHeader = sidebar?.querySelector('.sidebar-header');
+    const sourceControlBtn = document.querySelector('.activity-bar-icon[title="Source Control"]');
+    const explorerBtn = document.querySelector('.activity-bar-icon[title="Explorer"]');
+
+    const config = window.__gitStatsConfig;
+    let statsLoaded = false;
+
+    // Language colors (GitHub-style)
+    const languageColors: Record<string, string> = {
+      'TypeScript': '#3178c6',
+      'JavaScript': '#f1e05a',
+      'Astro': '#ff5a03',
+      'CSS': '#563d7c',
+      'HTML': '#e34c26',
+      'SCSS': '#c6538c',
+      'JSON': '#292929',
+      'Markdown': '#083fa1',
+      'Shell': '#89e051',
+    };
+
+    // Fetch repository stats
+    async function fetchRepoStats(): Promise<RepoStats | null> {
+      try {
+        const response = await fetch(`https://api.github.com/repos/${config.githubUsername}/${config.repoName}`);
+        if (!response.ok) throw new Error('Failed to fetch repo stats');
+        const data = await response.json();
+        return {
+          stars: data.stargazers_count,
+          forks: data.forks_count,
+          watchers: data.watchers_count,
+          openIssues: data.open_issues_count,
+        };
+      } catch (error) {
+        console.error('Error fetching repo stats:', error);
+        return null;
+      }
+    }
+
+    // Fetch languages
+    async function fetchLanguages(): Promise<Language[]> {
+      try {
+        const response = await fetch(
+          `https://api.github.com/repos/${config.githubUsername}/${config.repoName}/languages`
+        );
+        if (!response.ok) throw new Error('Failed to fetch languages');
+        const data = await response.json();
+
+        const total = Object.values(data as Record<string, number>).reduce((a, b) => a + b, 0);
+        const languages: Language[] = Object.entries(data as Record<string, number>)
+          .map(([name, bytes]) => ({
+            name,
+            percentage: Math.round((bytes / total) * 100),
+            color: languageColors[name] || '#8b949e',
+          }))
+          .filter((lang) => lang.percentage > 0)
+          .slice(0, 5);
+
+        return languages;
+      } catch (error) {
+        console.error('Error fetching languages:', error);
+        return [];
+      }
+    }
+
+    // Fetch recent commits
+    async function fetchRecentCommits(): Promise<Commit[]> {
+      try {
+        const response = await fetch(
+          `https://api.github.com/repos/${config.githubUsername}/${config.repoName}/commits?per_page=5`
+        );
+        if (!response.ok) throw new Error('Failed to fetch commits');
+        const data = await response.json();
+
+        return data.map(
+          (commit: { sha: string; commit: { message: string; author: { date: string; name: string } } }) => ({
+            sha: commit.sha.substring(0, 7),
+            message:
+              commit.commit.message.split('\n')[0].substring(0, 50) + (commit.commit.message.length > 50 ? '...' : ''),
+            date: new Date(commit.commit.author.date).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+            }),
+            author: commit.commit.author.name,
+          })
+        );
+      } catch (error) {
+        console.error('Error fetching commits:', error);
+        return [];
+      }
+    }
+
+    // Render stats
+    function renderStats(stats: RepoStats | null): void {
+      const grid = document.getElementById('git-stats-grid');
+      if (!grid) return;
+
+      if (!stats) {
+        grid.innerHTML = `<div class="git-stats-error"><span class="syntax-comment">// Unable to load stats</span></div>`;
+        return;
+      }
+
+      grid.innerHTML = `
+        <div class="git-stats-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-ide-warning">
+            <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
+          </svg>
+          <span class="git-stats-value">${stats.stars}</span>
+          <span class="git-stats-label">Stars</span>
+        </div>
+        <div class="git-stats-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-ide-accent">
+            <circle cx="12" cy="6" r="3"></circle>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="18" r="3"></circle>
+            <path d="M12 9V12M12 12L6 15M12 12L18 15"></path>
+          </svg>
+          <span class="git-stats-value">${stats.forks}</span>
+          <span class="git-stats-label">Forks</span>
+        </div>
+        <div class="git-stats-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-ide-string">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span class="git-stats-value">${stats.watchers}</span>
+          <span class="git-stats-label">Watchers</span>
+        </div>
+        <div class="git-stats-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-ide-error">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span class="git-stats-value">${stats.openIssues}</span>
+          <span class="git-stats-label">Issues</span>
+        </div>
+      `;
+    }
+
+    // Render languages
+    function renderLanguages(languages: Language[]): void {
+      const container = document.getElementById('git-stats-languages');
+      if (!container) return;
+
+      if (languages.length === 0) {
+        container.innerHTML = `<div class="git-stats-error"><span class="syntax-comment">// No language data</span></div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="git-stats-language-bar">
+          ${languages
+            .map(
+              (lang) => `
+            <div
+              class="git-stats-language-segment"
+              style="width: ${lang.percentage}%; background-color: ${lang.color};"
+              title="${lang.name}: ${lang.percentage}%"
+            ></div>
+          `
+            )
+            .join('')}
+        </div>
+        <div class="git-stats-language-list">
+          ${languages
+            .map(
+              (lang) => `
+            <div class="git-stats-language-item">
+              <span class="git-stats-language-dot" style="background-color: ${lang.color};"></span>
+              <span class="git-stats-language-name">${lang.name}</span>
+              <span class="git-stats-language-pct">${lang.percentage}%</span>
+            </div>
+          `
+            )
+            .join('')}
+        </div>
+      `;
+    }
+
+    // Render commits
+    function renderCommits(commits: Commit[]): void {
+      const container = document.getElementById('git-stats-commits');
+      if (!container) return;
+
+      if (commits.length === 0) {
+        container.innerHTML = `<div class="git-stats-error"><span class="syntax-comment">// No recent commits</span></div>`;
+        return;
+      }
+
+      container.innerHTML = commits
+        .map(
+          (commit) => `
+        <div class="git-stats-commit">
+          <div class="git-stats-commit-header">
+            <span class="git-stats-commit-sha">${commit.sha}</span>
+            <span class="git-stats-commit-date">${commit.date}</span>
+          </div>
+          <div class="git-stats-commit-message">${escapeHtml(commit.message)}</div>
+        </div>
+      `
+        )
+        .join('');
+    }
+
+    // Escape HTML for safe rendering
+    function escapeHtml(text: string): string {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Load all stats
+    async function loadStats(): Promise<void> {
+      if (statsLoaded) return;
+      statsLoaded = true;
+
+      const [stats, languages, commits] = await Promise.all([fetchRepoStats(), fetchLanguages(), fetchRecentCommits()]);
+
+      renderStats(stats);
+      renderLanguages(languages);
+      renderCommits(commits);
+    }
+
+    // Open git stats panel
+    function openGitStatsPanel(): void {
+      // Hide file tree, show git stats
+      fileTree?.classList.add('hidden');
+      gitStatsPanel?.classList.remove('hidden');
+
+      // Update sidebar header
+      if (sidebarHeader) {
+        sidebarHeader.textContent = 'Source Control';
+      }
+
+      // Update active states
+      explorerBtn?.classList.remove('active');
+      sourceControlBtn?.classList.add('active');
+
+      // Load stats on first open
+      loadStats();
+    }
+
+    // Close git stats panel (show file explorer)
+    function closeGitStatsPanel(): void {
+      // Show file tree, hide git stats
+      fileTree?.classList.remove('hidden');
+      gitStatsPanel?.classList.add('hidden');
+
+      // Update sidebar header
+      if (sidebarHeader) {
+        sidebarHeader.textContent = 'Explorer';
+      }
+
+      // Update active states
+      sourceControlBtn?.classList.remove('active');
+      explorerBtn?.classList.add('active');
+    }
+
+    // Event: Source Control button click
+    sourceControlBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isActive = sourceControlBtn.classList.contains('active');
+      if (isActive) {
+        closeGitStatsPanel();
+      } else {
+        openGitStatsPanel();
+      }
+    });
+
+    // Event: Explorer button click (to close git panel)
+    explorerBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeGitStatsPanel();
+    });
+
+    // Expose functions globally
+    window.openGitStatsPanel = openGitStatsPanel;
+    window.closeGitStatsPanel = closeGitStatsPanel;
+  });
+</script>
