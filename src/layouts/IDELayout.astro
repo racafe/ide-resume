@@ -3,6 +3,7 @@ import ChatToggle from '@components/ChatToggle.astro';
 import ChatPanel from '@components/ChatPanel.astro';
 import SearchPanel from '@components/SearchPanel.astro';
 import GitStatsPanel from '@components/GitStatsPanel.astro';
+import CustomizePanel from '@components/CustomizePanel.astro';
 
 interface Props {
   title?: string;
@@ -213,6 +214,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
           </div>
           <!-- Git Stats Panel (shown when Source Control is active) -->
           <GitStatsPanel />
+          <!-- Customize Panel (shown when Extensions is active) -->
+          <CustomizePanel />
         </aside>
 
         <!-- Editor Area -->

@@ -1759,6 +1759,146 @@
     height: 8px;
   }
 
+  /* ===================================
+     CUSTOMIZE PANEL (EXTENSIONS)
+     =================================== */
+
+  /* Customize panel container */
+  .customize-panel {
+    @apply flex flex-col h-full;
+  }
+
+  .customize-panel.hidden {
+    display: none;
+  }
+
+  /* Panel header */
+  .customize-header {
+    @apply flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-wider text-ide-textMuted font-medium;
+  }
+
+  .customize-header-icon {
+    @apply text-ide-text;
+  }
+
+  /* Content area */
+  .customize-content {
+    @apply flex-1 overflow-auto py-1;
+  }
+
+  /* Sections */
+  .customize-section {
+    @apply border-b border-ide-border;
+  }
+
+  .customize-section:last-child {
+    @apply border-b-0;
+  }
+
+  .customize-section-header {
+    @apply flex items-center gap-2 px-4 py-2 text-xs text-ide-text cursor-pointer;
+    @apply hover:bg-ide-sidebarHover transition-colors;
+  }
+
+  .customize-section-header svg {
+    @apply text-ide-textMuted;
+  }
+
+  .customize-section-content {
+    @apply px-4 pb-3;
+  }
+
+  /* Settings */
+  .customize-setting {
+    @apply py-2;
+  }
+
+  .customize-setting:first-child {
+    @apply pt-0;
+  }
+
+  .customize-setting-label {
+    @apply flex flex-col gap-0.5 mb-2;
+  }
+
+  .customize-setting-name {
+    @apply text-ide-text text-sm font-medium;
+  }
+
+  .customize-setting-desc {
+    @apply text-ide-textMuted text-xs leading-relaxed;
+  }
+
+  .customize-select {
+    @apply w-full bg-ide-sidebarActive border border-ide-border rounded px-2 py-1.5 text-sm text-ide-text;
+    @apply focus:outline-none focus:border-ide-accent focus:ring-1 focus:ring-ide-accent;
+    @apply cursor-pointer;
+  }
+
+  .customize-select option {
+    @apply bg-ide-sidebar text-ide-text;
+  }
+
+  /* About section */
+  .customize-about {
+    @apply flex flex-col gap-2;
+  }
+
+  .customize-about-item {
+    @apply flex items-center justify-between text-xs;
+  }
+
+  .customize-about-label {
+    @apply text-ide-textMuted;
+  }
+
+  .customize-about-value {
+    @apply text-ide-text font-code;
+  }
+
+  /* Links section */
+  .customize-links {
+    @apply flex flex-col gap-1;
+  }
+
+  .customize-link {
+    @apply flex items-center gap-2 px-2 py-1.5 rounded text-sm text-ide-text;
+    @apply hover:bg-ide-sidebarHover transition-colors no-underline;
+  }
+
+  .customize-link svg:first-child {
+    @apply text-ide-textMuted flex-shrink-0;
+  }
+
+  .customize-link-external {
+    @apply text-ide-textMuted ml-auto opacity-0;
+    transition: opacity 0.15s ease;
+  }
+
+  .customize-link:hover .customize-link-external {
+    @apply opacity-100;
+  }
+
+  /* Footer */
+  .customize-footer {
+    @apply px-4 py-2 text-xs border-t border-ide-border;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 767px) {
+    .customize-setting-name {
+      @apply text-sm;
+    }
+
+    .customize-select {
+      @apply py-2;
+    }
+
+    .customize-link {
+      @apply py-2;
+    }
+  }
+
   /* Search result highlight animation */
   .search-result-highlight {
     animation: search-highlight 2s ease-out;
