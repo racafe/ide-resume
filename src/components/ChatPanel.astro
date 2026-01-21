@@ -275,24 +275,16 @@
       sessionStorage.setItem('chat-session-id', sessionId);
     }
 
-    // Handle form submission
-    chatForm?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const message = chatInput.value.trim();
-      if (!message) return;
-
+    // Send message function for reuse (initial send and retry)
+    async function sendChatMessage(message: string, isRetry = false): Promise<void> {
       // Hide starter questions on first interaction
-      hideStarterQuestions();
+      if (!isRetry) {
+        hideStarterQuestions();
 
-      // Add user message to chat UI and history
-      renderMessage(message, 'user');
-      addToHistory('user', message);
-
-      // Clear input
-      chatInput.value = '';
-      chatInput.style.height = 'auto';
-      chatSubmit.disabled = true;
+        // Add user message to chat UI and history
+        renderMessage(message, 'user');
+        addToHistory('user', message);
+      }
 
       // Show typing indicator
       const typingId = showTypingIndicator();
@@ -318,33 +310,101 @@
         // Remove typing indicator
         removeTypingIndicator(typingId);
 
+        const data = await response.json();
+
         if (!response.ok) {
-          if (response.status === 429) {
-            renderMessage("I'm getting a lot of questions right now. Please try again in a moment.", 'assistant', true);
-          } else {
-            renderMessage("Sorry, I couldn't process your request. Please try again.", 'assistant', true);
+          // Handle error with structured error info
+          const errorType = data.errorType || 'unknown';
+          const retryable = data.retryable !== false;
+          const errorMessage = data.error || 'Something went wrong. Please try again.';
+
+          // Provide user-friendly messages based on error type
+          let displayMessage = errorMessage;
+          if (errorType === 'rate_limit') {
+            displayMessage = "I'm getting a lot of questions right now. Please wait a moment and try again.";
+          } else if (errorType === 'network') {
+            displayMessage = 'Unable to reach the AI service. Please check your internet connection and try again.';
+          } else if (errorType === 'api_error') {
+            displayMessage =
+              "I'm having trouble generating a response right now. Please try again, or feel free to contact Rafael directly.";
           }
+
+          renderMessage(displayMessage, 'assistant', true, {
+            errorType,
+            retryable,
+            retryCallback: retryable ? () => sendChatMessage(message, true) : undefined,
+          });
           return;
         }
 
-        const data = await response.json();
         renderMessage(data.response, 'assistant');
         addToHistory('model', data.response);
       } catch {
         removeTypingIndicator(typingId);
-        renderMessage('Sorry, something went wrong. Please try again later.', 'assistant', true);
+
+        // Network error (fetch failed completely)
+        renderMessage(
+          'Unable to connect. Please check your internet connection and try again, or contact Rafael directly.',
+          'assistant',
+          true,
+          {
+            errorType: 'network',
+            retryable: true,
+            retryCallback: () => sendChatMessage(message, true),
+          }
+        );
       }
+    }
+
+    // Handle form submission
+    chatForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      // Clear input
+      chatInput.value = '';
+      chatInput.style.height = 'auto';
+      chatSubmit.disabled = true;
+
+      await sendChatMessage(message);
     });
 
     // ========================================================================
     // UI Helpers
     // ========================================================================
 
-    function renderMessage(content: string, role: 'user' | 'assistant', isError = false) {
+    interface ErrorOptions {
+      errorType?: 'rate_limit' | 'validation' | 'api_error' | 'network' | 'unknown';
+      retryable?: boolean;
+      retryCallback?: () => void;
+    }
+
+    function renderMessage(content: string, role: 'user' | 'assistant', isError = false, errorOptions?: ErrorOptions) {
       const messageDiv = document.createElement('div');
       messageDiv.className = `chat-message chat-message-${role}${isError ? ' chat-message-error' : ''}`;
 
       if (role === 'assistant') {
+        let errorActions = '';
+
+        if (isError && errorOptions) {
+          // Build error-specific actions
+          const retryButton =
+            errorOptions.retryable && errorOptions.retryCallback
+              ? `<button class="chat-error-retry" aria-label="Retry sending message">Try Again</button>`
+              : '';
+
+          const emailLink =
+            errorOptions.errorType === 'api_error' || errorOptions.errorType === 'network'
+              ? `<a href="mailto:rafael.carrion.work@gmail.com?subject=Chat%20Issue%20Report" class="chat-error-email">Contact Rafael directly</a>`
+              : '';
+
+          if (retryButton || emailLink) {
+            errorActions = `<div class="chat-error-actions">${retryButton}${emailLink}</div>`;
+          }
+        }
+
         messageDiv.innerHTML = `
           <div class="chat-message-avatar">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -353,8 +413,19 @@
           </div>
           <div class="chat-message-content">
             <p>${escapeHtml(content)}</p>
+            ${errorActions}
           </div>
         `;
+
+        // Attach retry event listener if applicable
+        if (isError && errorOptions?.retryable && errorOptions?.retryCallback) {
+          const retryBtn = messageDiv.querySelector('.chat-error-retry');
+          retryBtn?.addEventListener('click', () => {
+            // Remove error message on retry
+            messageDiv.remove();
+            errorOptions.retryCallback?.();
+          });
+        }
       } else {
         messageDiv.innerHTML = `
           <div class="chat-message-content">

@@ -1171,6 +1171,23 @@
     @apply bg-ide-error/20 text-ide-error border border-ide-error/30;
   }
 
+  /* Error actions (retry button and email link) */
+  .chat-error-actions {
+    @apply flex flex-wrap gap-2 mt-2;
+  }
+
+  .chat-error-retry {
+    @apply text-xs px-3 py-1.5 rounded bg-ide-accent text-white font-medium;
+    @apply hover:bg-ide-accent/80 transition-colors cursor-pointer;
+    @apply focus:outline-none focus:ring-2 focus:ring-ide-accent focus:ring-offset-2 focus:ring-offset-ide-sidebar;
+  }
+
+  .chat-error-email {
+    @apply text-xs px-3 py-1.5 rounded bg-ide-sidebarActive text-ide-textMuted;
+    @apply border border-ide-border hover:border-ide-accent hover:text-ide-accent;
+    @apply transition-colors cursor-pointer no-underline;
+  }
+
   /* Suggestion chips */
   .chat-suggestions-label {
     @apply text-ide-textMuted text-xs mt-2 mb-1 bg-transparent px-0;

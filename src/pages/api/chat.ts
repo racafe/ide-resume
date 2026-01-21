@@ -21,8 +21,12 @@ interface ChatResponse {
   error?: never;
 }
 
+type ErrorType = 'rate_limit' | 'validation' | 'api_error' | 'network' | 'unknown';
+
 interface ChatErrorResponse {
   error: string;
+  errorType: ErrorType;
+  retryable: boolean;
   response?: never;
 }
 
@@ -201,9 +205,12 @@ export const POST: APIRoute = async ({ request }) => {
 
   const rateLimitResult = checkRateLimit(sessionId, clientIp);
   if (!rateLimitResult.allowed) {
+    console.warn(`Rate limit exceeded for session: ${sessionId}, IP: ${clientIp}`);
     return new Response(
       JSON.stringify({
         error: getRateLimitMessage(),
+        errorType: 'rate_limit',
+        retryable: true,
       } satisfies ChatErrorResponse),
       {
         status: 429,
@@ -218,6 +225,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         error: 'Content-Type must be application/json',
+        errorType: 'validation',
+        retryable: false,
       } satisfies ChatErrorResponse),
       {
         status: 415,
@@ -234,6 +243,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         error: 'Invalid JSON in request body',
+        errorType: 'validation',
+        retryable: false,
       } satisfies ChatErrorResponse),
       {
         status: 400,
@@ -248,6 +259,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         error: validation.error,
+        errorType: 'validation',
+        retryable: false,
       } satisfies ChatErrorResponse),
       {
         status: 400,
@@ -272,13 +285,46 @@ export const POST: APIRoute = async ({ request }) => {
       }
     );
   } catch (error) {
-    // Log error server-side for debugging (never expose to client)
-    console.error('Gemini API error:', error);
+    // Detailed server-side logging for debugging
+    const timestamp = new Date().toISOString();
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
 
-    // Return generic error to client
+    console.error(`[${timestamp}] Chat API Error:`, {
+      sessionId,
+      clientIp,
+      messageLength: message.length,
+      historyLength: history?.length ?? 0,
+      error: errorMessage,
+      stack: errorStack,
+    });
+
+    // Determine error type for client
+    let errorType: ErrorType = 'api_error';
+    let retryable = true;
+    let userMessage = 'Failed to generate response. Please try again.';
+
+    // Check for specific error patterns
+    if (errorMessage.includes('fetch') || errorMessage.includes('network')) {
+      errorType = 'network';
+      userMessage = 'Unable to connect to AI service. Please check your connection and try again.';
+    } else if (errorMessage.includes('timeout') || errorMessage.includes('ETIMEDOUT')) {
+      errorType = 'network';
+      userMessage = 'Request timed out. Please try again.';
+    } else if (errorMessage.includes('quota') || errorMessage.includes('limit')) {
+      errorType = 'rate_limit';
+      userMessage = 'AI service is temporarily unavailable. Please try again later.';
+    } else if (errorMessage.includes('invalid') || errorMessage.includes('malformed')) {
+      errorType = 'validation';
+      retryable = false;
+      userMessage = 'There was an issue with your request. Please try a different message.';
+    }
+
     return new Response(
       JSON.stringify({
-        error: 'Failed to generate response. Please try again.',
+        error: userMessage,
+        errorType,
+        retryable,
       } satisfies ChatErrorResponse),
       {
         status: 500,
