@@ -14,6 +14,7 @@ interface SearchItem {
   file: string;
   searchText: string;
   icon: string;
+  target?: string; // Text to find and highlight within the file content
 }
 
 const searchIndex: SearchItem[] = [];
@@ -60,12 +61,18 @@ resume.skills.forEach((category) => {
       file: 'skills.ts',
       searchText: `${skill} ${category.category}`.toLowerCase(),
       icon: 'typescript',
+      target: skill, // The skill text to find in the code
     });
   });
 });
 
 // Add work experience
 resume.workExperience.forEach((exp) => {
+  // Create entry identifier from company name (lowercase, no spaces)
+  const entryId = exp.company
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[^a-z0-9]/g, '');
   // Add job entry
   searchIndex.push({
     type: 'experience',
@@ -75,6 +82,7 @@ resume.workExperience.forEach((exp) => {
     searchText:
       `${exp.position} ${exp.company} ${exp.location} ${exp.highlights.join(' ')} ${(exp.technologies || []).join(' ')}`.toLowerCase(),
     icon: 'json',
+    target: `entry:${entryId}`, // data-entry attribute value
   });
   // Add company as searchable
   searchIndex.push({
@@ -84,6 +92,7 @@ resume.workExperience.forEach((exp) => {
     file: 'experience.json',
     searchText: `${exp.company} ${exp.position}`.toLowerCase(),
     icon: 'json',
+    target: `entry:${entryId}`, // data-entry attribute value
   });
 });
 
@@ -96,6 +105,7 @@ resume.education.forEach((edu) => {
     file: 'education.yaml',
     searchText: `${edu.degree} ${edu.field} ${edu.institution} ${(edu.relevantCourses || []).join(' ')}`.toLowerCase(),
     icon: 'yaml',
+    target: edu.degree, // Text to find in the YAML
   });
   searchIndex.push({
     type: 'education',
@@ -104,6 +114,7 @@ resume.education.forEach((edu) => {
     file: 'education.yaml',
     searchText: `${edu.institution} ${edu.degree} ${edu.field}`.toLowerCase(),
     icon: 'yaml',
+    target: edu.institution, // Text to find in the YAML
   });
 });
 
@@ -116,6 +127,7 @@ resume.certifications.forEach((cert) => {
     file: 'education.yaml',
     searchText: `${cert.name} ${cert.issuer}`.toLowerCase(),
     icon: 'yaml',
+    target: cert.name, // Text to find in the YAML
   });
 });
 
@@ -129,6 +141,7 @@ resume.projects.forEach((proj) => {
     searchText:
       `${proj.name} ${proj.description} ${proj.technologies.join(' ')} ${proj.highlights.join(' ')}`.toLowerCase(),
     icon: 'markdown',
+    target: proj.name, // Text to find in the README
   });
 });
 
@@ -185,6 +198,7 @@ const searchIndexJson = JSON.stringify(searchIndex);
     file: string;
     searchText: string;
     icon: string;
+    target?: string;
   }
 
   declare global {
@@ -317,6 +331,7 @@ const searchIndexJson = JSON.stringify(searchIndex);
           <button
             class="search-panel-result ${index === selectedIndex ? 'selected' : ''}"
             data-file="${item.file}"
+            data-target="${item.target || ''}"
             role="option"
             aria-selected="${index === selectedIndex}"
           >
@@ -334,8 +349,9 @@ const searchIndexJson = JSON.stringify(searchIndex);
       resultButtons.forEach((button, index) => {
         button.addEventListener('click', () => {
           const fileName = button.getAttribute('data-file');
+          const target = button.getAttribute('data-target');
           if (fileName) {
-            openFile(fileName);
+            openFile(fileName, target || undefined);
           }
         });
         button.addEventListener('mouseenter', () => {
@@ -364,8 +380,8 @@ const searchIndexJson = JSON.stringify(searchIndex);
       });
     }
 
-    // Open file and close search panel
-    function openFile(fileName: string): void {
+    // Open file and close search panel, optionally scroll to and highlight target
+    function openFile(fileName: string, target?: string): void {
       // Find and click the corresponding file in the file tree
       const fileTreeItem = document.querySelector(`.file-tree-item[data-file="${fileName}"]`) as HTMLElement;
       if (fileTreeItem) {
@@ -374,6 +390,82 @@ const searchIndexJson = JSON.stringify(searchIndex);
         window.dispatchEvent(new CustomEvent('file-open'));
       }
       closeSearchPanel();
+
+      // If there's a target to scroll to, do it after a short delay to allow tab content to render
+      if (target) {
+        setTimeout(() => {
+          scrollToAndHighlight(fileName, target);
+        }, 100);
+      }
+    }
+
+    // Scroll to and highlight the target element within the file content
+    function scrollToAndHighlight(fileName: string, target: string): void {
+      const fileContent = document.querySelector(`[data-content="${fileName}"]`);
+      if (!fileContent) return;
+
+      let targetElement: Element | null = null;
+
+      // Handle experience entries with data-entry attribute
+      if (target.startsWith('entry:')) {
+        const entryId = target.replace('entry:', '');
+        targetElement = fileContent.querySelector(`[data-entry="${entryId}"]`);
+        if (targetElement) {
+          // Expand the timeline entry if it's collapsed
+          const commitButton = targetElement.querySelector('.timeline-commit') as HTMLElement;
+          if (commitButton && commitButton.getAttribute('aria-expanded') === 'false') {
+            commitButton.click();
+          }
+        }
+      } else {
+        // For text content, search for the target text in syntax-string spans or text content
+        targetElement = findTextInContent(fileContent, target);
+      }
+
+      if (targetElement) {
+        // Scroll the target into view
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Add highlight animation
+        targetElement.classList.add('search-result-highlight');
+        setTimeout(() => {
+          targetElement?.classList.remove('search-result-highlight');
+        }, 2000);
+      }
+    }
+
+    // Find an element containing the target text
+    function findTextInContent(container: Element, targetText: string): Element | null {
+      // First, try to find in syntax-string spans (for code files like skills.ts)
+      const syntaxStrings = container.querySelectorAll('.syntax-string');
+      for (const span of syntaxStrings) {
+        if (span.textContent?.includes(targetText)) {
+          // Return the parent .line element for better highlighting
+          const lineElement = span.closest('.line');
+          return lineElement || span;
+        }
+      }
+
+      // Try to find in any element with matching text content
+      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
+      let node: Node | null;
+      while ((node = walker.nextNode())) {
+        if (node.textContent?.includes(targetText)) {
+          // Return the closest meaningful parent element
+          const parent = node.parentElement;
+          if (parent) {
+            // For YAML/code, try to get the line element
+            const lineElement = parent.closest('.line');
+            if (lineElement) return lineElement;
+            // For markdown, try to get a semantic element
+            const semanticElement = parent.closest('h1, h2, h3, h4, li, p, code, strong');
+            if (semanticElement) return semanticElement;
+            return parent;
+          }
+        }
+      }
+
+      return null;
     }
 
     // Open search panel
@@ -467,8 +559,9 @@ const searchIndexJson = JSON.stringify(searchIndex);
           e.preventDefault();
           const selectedResult = results?.[selectedIndex] as HTMLElement;
           const fileName = selectedResult?.getAttribute('data-file');
+          const targetAttr = selectedResult?.getAttribute('data-target');
           if (fileName) {
-            openFile(fileName);
+            openFile(fileName, targetAttr || undefined);
           }
           break;
         case 'Escape':
