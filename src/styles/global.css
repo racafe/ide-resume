@@ -1122,6 +1122,11 @@
     @apply text-ide-accent;
   }
 
+  .chat-panel-actions {
+    @apply flex items-center gap-1;
+  }
+
+  .chat-panel-clear,
   .chat-panel-close {
     @apply w-7 h-7 flex items-center justify-center text-ide-textMuted rounded;
     @apply hover:text-ide-text hover:bg-ide-sidebarActive transition-colors;

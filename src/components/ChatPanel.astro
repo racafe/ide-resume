@@ -21,11 +21,18 @@
       </svg>
       <span>Ask AI about Rafael</span>
     </div>
-    <button id="chat-panel-close" class="chat-panel-close" aria-label="Close chat panel" title="Close (Esc)">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M18 6L6 18M6 6L18 18"></path>
-      </svg>
-    </button>
+    <div class="chat-panel-actions">
+      <button id="chat-clear" class="chat-panel-clear" aria-label="Clear chat history" title="Clear chat">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      </button>
+      <button id="chat-panel-close" class="chat-panel-close" aria-label="Close chat panel" title="Close (Esc)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6L18 18"></path>
+        </svg>
+      </button>
+    </div>
   </header>
 
   <!-- Chat Messages Area -->
@@ -93,9 +100,86 @@
     const chatMessages = document.getElementById('chat-messages');
     const suggestions = document.querySelectorAll('.chat-suggestion');
     const welcomeMessage = document.getElementById('chat-welcome');
+    const clearButton = document.getElementById('chat-clear');
+
+    // ========================================================================
+    // Conversation History Management
+    // ========================================================================
+
+    interface ChatMessage {
+      role: 'user' | 'model';
+      parts: { text: string }[];
+    }
+
+    const STORAGE_KEY = 'chat-history';
+    const MAX_HISTORY_LENGTH = 40; // Keep last 40 messages (20 exchanges)
+    const MAX_TOTAL_CHARS = 16000; // ~4000 tokens estimate for context management
+
+    // Load conversation history from sessionStorage
+    function loadHistory(): ChatMessage[] {
+      try {
+        const stored = sessionStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          return JSON.parse(stored) as ChatMessage[];
+        }
+      } catch {
+        // Invalid JSON, start fresh
+        sessionStorage.removeItem(STORAGE_KEY);
+      }
+      return [];
+    }
+
+    // Save conversation history to sessionStorage
+    function saveHistory(history: ChatMessage[]): void {
+      try {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+      } catch {
+        // Storage full - trim old messages and try again
+        const trimmed = trimHistory(history.slice(Math.floor(history.length / 2)));
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+      }
+    }
+
+    // Trim history to stay within limits
+    function trimHistory(history: ChatMessage[]): ChatMessage[] {
+      // Trim by message count
+      let trimmed = history.slice(-MAX_HISTORY_LENGTH);
+
+      // Trim by total character count to manage context window
+      let totalChars = trimmed.reduce((sum, msg) => sum + msg.parts[0].text.length, 0);
+
+      while (totalChars > MAX_TOTAL_CHARS && trimmed.length > 2) {
+        // Remove oldest pair (user + model)
+        trimmed = trimmed.slice(2);
+        totalChars = trimmed.reduce((sum, msg) => sum + msg.parts[0].text.length, 0);
+      }
+
+      return trimmed;
+    }
+
+    // Add message to history
+    function addToHistory(role: 'user' | 'model', text: string): void {
+      const history = loadHistory();
+      history.push({ role, parts: [{ text }] });
+      saveHistory(trimHistory(history));
+    }
+
+    // Clear conversation history
+    function clearHistory(): void {
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
+
+    // Get history formatted for API
+    function getHistoryForApi(): ChatMessage[] {
+      return loadHistory();
+    }
+
+    // ========================================================================
+    // UI State Management
+    // ========================================================================
 
     // Track if user has interacted (for hiding starter questions)
-    let hasInteracted = false;
+    let hasInteracted = loadHistory().length > 0;
 
     // Hide starter questions after first interaction
     function hideStarterQuestions() {
@@ -104,6 +188,48 @@
         welcomeMessage.classList.add('chat-welcome-hidden');
       }
     }
+
+    // Restore previous conversation on load
+    function restoreConversation(): void {
+      const history = loadHistory();
+
+      if (history.length > 0) {
+        // Hide welcome message since we have history
+        hideStarterQuestions();
+
+        // Render all previous messages
+        history.forEach((msg) => {
+          const role = msg.role === 'user' ? 'user' : 'assistant';
+          renderMessage(msg.parts[0].text, role);
+        });
+
+        // Scroll to bottom after rendering
+        scrollToBottom();
+      }
+    }
+
+    // Reset chat to initial state
+    function resetChat(): void {
+      // Clear history
+      clearHistory();
+
+      // Remove all messages except welcome
+      if (chatMessages) {
+        const messages = chatMessages.querySelectorAll('.chat-message:not(#chat-welcome)');
+        messages.forEach((msg) => msg.remove());
+      }
+
+      // Show welcome message again
+      if (welcomeMessage) {
+        welcomeMessage.classList.remove('chat-welcome-hidden');
+      }
+
+      hasInteracted = false;
+    }
+
+    // ========================================================================
+    // Event Handlers
+    // ========================================================================
 
     // Auto-resize textarea
     chatInput?.addEventListener('input', () => {
@@ -137,7 +263,12 @@
       });
     });
 
-    // Session ID for chat continuity
+    // Handle clear chat button
+    clearButton?.addEventListener('click', () => {
+      resetChat();
+    });
+
+    // Session ID for rate limiting
     let sessionId = sessionStorage.getItem('chat-session-id');
     if (!sessionId) {
       sessionId = crypto.randomUUID();
@@ -154,8 +285,9 @@
       // Hide starter questions on first interaction
       hideStarterQuestions();
 
-      // Add user message to chat
-      addMessage(message, 'user');
+      // Add user message to chat UI and history
+      renderMessage(message, 'user');
+      addToHistory('user', message);
 
       // Clear input
       chatInput.value = '';
@@ -166,13 +298,21 @@
       const typingId = showTypingIndicator();
 
       try {
+        // Get conversation history for context
+        const history = getHistoryForApi();
+        // Remove the last message (current user message) since we send it separately
+        const historyWithoutCurrent = history.slice(0, -1);
+
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'X-Session-ID': sessionId || '',
           },
-          body: JSON.stringify({ message }),
+          body: JSON.stringify({
+            message,
+            history: historyWithoutCurrent,
+          }),
         });
 
         // Remove typing indicator
@@ -180,22 +320,27 @@
 
         if (!response.ok) {
           if (response.status === 429) {
-            addMessage("I'm getting a lot of questions right now. Please try again in a moment.", 'assistant', true);
+            renderMessage("I'm getting a lot of questions right now. Please try again in a moment.", 'assistant', true);
           } else {
-            addMessage("Sorry, I couldn't process your request. Please try again.", 'assistant', true);
+            renderMessage("Sorry, I couldn't process your request. Please try again.", 'assistant', true);
           }
           return;
         }
 
         const data = await response.json();
-        addMessage(data.response, 'assistant');
+        renderMessage(data.response, 'assistant');
+        addToHistory('model', data.response);
       } catch {
         removeTypingIndicator(typingId);
-        addMessage('Sorry, something went wrong. Please try again later.', 'assistant', true);
+        renderMessage('Sorry, something went wrong. Please try again later.', 'assistant', true);
       }
     });
 
-    function addMessage(content: string, role: 'user' | 'assistant', isError = false) {
+    // ========================================================================
+    // UI Helpers
+    // ========================================================================
+
+    function renderMessage(content: string, role: 'user' | 'assistant', isError = false) {
       const messageDiv = document.createElement('div');
       messageDiv.className = `chat-message chat-message-${role}${isError ? ' chat-message-error' : ''}`;
 
@@ -262,5 +407,12 @@
       div.textContent = text;
       return div.innerHTML;
     }
+
+    // ========================================================================
+    // Initialize
+    // ========================================================================
+
+    // Restore conversation from session storage on page load
+    restoreConversation();
   });
 </script>
