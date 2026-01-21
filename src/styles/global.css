@@ -1180,6 +1180,24 @@
     @apply hover:bg-ide-sidebarHover hover:border-ide-accent transition-colors cursor-pointer;
   }
 
+  /* Welcome message with starter questions - hide after first interaction */
+  #chat-welcome {
+    transition:
+      opacity 0.3s ease-out,
+      max-height 0.3s ease-out,
+      margin 0.3s ease-out,
+      padding 0.3s ease-out;
+    overflow: hidden;
+  }
+
+  #chat-welcome.chat-welcome-hidden {
+    opacity: 0;
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }
+
   /* Typing indicator */
   .chat-typing-dots {
     @apply flex gap-1 px-3 py-3;

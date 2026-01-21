@@ -30,8 +30,8 @@
 
   <!-- Chat Messages Area -->
   <div id="chat-messages" class="chat-messages">
-    <!-- Welcome Message -->
-    <div class="chat-message chat-message-assistant">
+    <!-- Welcome Message with Starter Questions -->
+    <div id="chat-welcome" class="chat-message chat-message-assistant">
       <div class="chat-message-avatar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path
@@ -55,6 +55,9 @@
           </button>
           <button class="chat-suggestion" data-question="What is Rafael currently working on?">
             What is he currently working on?
+          </button>
+          <button class="chat-suggestion" data-question="What projects has Rafael built?">
+            What projects has he built?
           </button>
         </div>
       </div>
@@ -89,6 +92,18 @@
     const chatSubmit = document.getElementById('chat-submit') as HTMLButtonElement;
     const chatMessages = document.getElementById('chat-messages');
     const suggestions = document.querySelectorAll('.chat-suggestion');
+    const welcomeMessage = document.getElementById('chat-welcome');
+
+    // Track if user has interacted (for hiding starter questions)
+    let hasInteracted = false;
+
+    // Hide starter questions after first interaction
+    function hideStarterQuestions() {
+      if (!hasInteracted && welcomeMessage) {
+        hasInteracted = true;
+        welcomeMessage.classList.add('chat-welcome-hidden');
+      }
+    }
 
     // Auto-resize textarea
     chatInput?.addEventListener('input', () => {
@@ -135,6 +150,9 @@
 
       const message = chatInput.value.trim();
       if (!message) return;
+
+      // Hide starter questions on first interaction
+      hideStarterQuestions();
 
       // Add user message to chat
       addMessage(message, 'user');
