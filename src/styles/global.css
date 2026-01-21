@@ -1659,6 +1659,90 @@
     }
   }
 
+  /* Contribution Graph */
+  .contribution-graph {
+    @apply flex flex-col gap-2;
+  }
+
+  .contribution-total {
+    @apply flex items-baseline gap-1.5 mb-1;
+  }
+
+  .contribution-count {
+    @apply text-ide-text font-semibold text-lg;
+  }
+
+  .contribution-label {
+    @apply text-ide-textMuted text-xs;
+  }
+
+  .contribution-months {
+    @apply flex text-[10px] text-ide-textMuted;
+    gap: 0;
+    margin-left: 2px;
+  }
+
+  .contribution-month {
+    @apply flex-1 text-center;
+    min-width: 24px;
+  }
+
+  .contribution-grid {
+    @apply flex gap-[2px];
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .contribution-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .contribution-week {
+    @apply flex flex-col gap-[2px];
+  }
+
+  .contribution-day {
+    @apply rounded-sm;
+    width: 8px;
+    height: 8px;
+    background-color: var(--contribution-level-0);
+  }
+
+  /* GitHub-style contribution levels (green shades) */
+  .contribution-day.level-0 {
+    @apply bg-ide-sidebarActive;
+  }
+
+  .contribution-day.level-1 {
+    background-color: #0e4429;
+  }
+
+  .contribution-day.level-2 {
+    background-color: #006d32;
+  }
+
+  .contribution-day.level-3 {
+    background-color: #26a641;
+  }
+
+  .contribution-day.level-4 {
+    background-color: #39d353;
+  }
+
+  .contribution-legend {
+    @apply flex items-center gap-1 mt-1 text-[10px] text-ide-textMuted;
+    justify-content: flex-end;
+  }
+
+  .contribution-legend-label {
+    @apply px-1;
+  }
+
+  .contribution-legend .contribution-day {
+    width: 8px;
+    height: 8px;
+  }
+
   /* Search result highlight animation */
   .search-result-highlight {
     animation: search-highlight 2s ease-out;

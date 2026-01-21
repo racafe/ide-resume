@@ -97,6 +97,23 @@ const repoName = 'racafe-astro';
       </div>
     </div>
 
+    <!-- Contribution Graph Section -->
+    <div class="git-stats-section">
+      <div class="git-stats-section-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+        <span>Contributions</span>
+      </div>
+      <div class="git-stats-section-content">
+        <div class="git-stats-contributions" id="git-stats-contributions">
+          <div class="git-stats-loading">
+            <span class="syntax-comment">// Loading contributions...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Recent Activity Section -->
     <div class="git-stats-section">
       <div class="git-stats-section-header">
@@ -149,6 +166,17 @@ const repoName = 'racafe-astro';
     message: string;
     date: string;
     author: string;
+  }
+
+  interface ContributionDay {
+    date: string;
+    count: number;
+    level: 0 | 1 | 2 | 3 | 4;
+  }
+
+  interface ContributionData {
+    totalContributions: number;
+    weeks: ContributionDay[][];
   }
 
   declare global {
@@ -374,15 +402,157 @@ const repoName = 'racafe-astro';
       return div.innerHTML;
     }
 
+    // Generate contribution data from commits (simulated since GitHub doesn't expose this via REST API)
+    async function fetchContributions(): Promise<ContributionData> {
+      try {
+        // Fetch commits from the past year to build contribution data
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        const since = oneYearAgo.toISOString();
+
+        const response = await fetch(
+          `https://api.github.com/repos/${config.githubUsername}/${config.repoName}/commits?since=${since}&per_page=100`
+        );
+        if (!response.ok) throw new Error('Failed to fetch contribution data');
+        const commits = await response.json();
+
+        // Build a map of date -> commit count
+        const contributionMap: Record<string, number> = {};
+        commits.forEach((commit: { commit: { author: { date: string } } }) => {
+          const date = commit.commit.author.date.split('T')[0];
+          contributionMap[date] = (contributionMap[date] || 0) + 1;
+        });
+
+        // Generate weeks array (last 26 weeks for compact display in sidebar)
+        const weeks: ContributionDay[][] = [];
+        const today = new Date();
+        const startDate = new Date(today);
+        startDate.setDate(startDate.getDate() - (26 * 7) + (7 - today.getDay()));
+
+        let currentDate = new Date(startDate);
+        let currentWeek: ContributionDay[] = [];
+
+        // Find max contributions for scaling
+        const maxContributions = Math.max(1, ...Object.values(contributionMap));
+
+        while (currentDate <= today) {
+          const dateStr = currentDate.toISOString().split('T')[0];
+          const count = contributionMap[dateStr] || 0;
+
+          // Calculate contribution level (0-4) based on count
+          let level: 0 | 1 | 2 | 3 | 4 = 0;
+          if (count > 0) {
+            const ratio = count / maxContributions;
+            if (ratio > 0.75) level = 4;
+            else if (ratio > 0.5) level = 3;
+            else if (ratio > 0.25) level = 2;
+            else level = 1;
+          }
+
+          currentWeek.push({ date: dateStr, count, level });
+
+          // Start new week on Sunday
+          if (currentDate.getDay() === 6 || currentDate.getTime() === today.getTime()) {
+            weeks.push(currentWeek);
+            currentWeek = [];
+          }
+
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // Add any remaining days
+        if (currentWeek.length > 0) {
+          weeks.push(currentWeek);
+        }
+
+        const totalContributions = commits.length;
+        return { totalContributions, weeks };
+      } catch (error) {
+        console.error('Error fetching contributions:', error);
+        return { totalContributions: 0, weeks: [] };
+      }
+    }
+
+    // Render contribution graph
+    function renderContributions(data: ContributionData): void {
+      const container = document.getElementById('git-stats-contributions');
+      if (!container) return;
+
+      if (data.weeks.length === 0) {
+        container.innerHTML = `<div class="git-stats-error"><span class="syntax-comment">// No contribution data</span></div>`;
+        return;
+      }
+
+      const monthLabels = getMonthLabels(data.weeks);
+
+      container.innerHTML = `
+        <div class="contribution-graph">
+          <div class="contribution-total">
+            <span class="contribution-count">${data.totalContributions}</span>
+            <span class="contribution-label">contributions in the last 6 months</span>
+          </div>
+          <div class="contribution-months">
+            ${monthLabels.map((m) => `<span class="contribution-month">${m}</span>`).join('')}
+          </div>
+          <div class="contribution-grid">
+            ${data.weeks
+              .map(
+                (week) => `
+              <div class="contribution-week">
+                ${week.map((day) => `<div class="contribution-day level-${day.level}" title="${day.date}: ${day.count} contribution${day.count !== 1 ? 's' : ''}"></div>`).join('')}
+              </div>
+            `
+              )
+              .join('')}
+          </div>
+          <div class="contribution-legend">
+            <span class="contribution-legend-label">Less</span>
+            <div class="contribution-day level-0"></div>
+            <div class="contribution-day level-1"></div>
+            <div class="contribution-day level-2"></div>
+            <div class="contribution-day level-3"></div>
+            <div class="contribution-day level-4"></div>
+            <span class="contribution-legend-label">More</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Get month labels for the contribution graph
+    function getMonthLabels(weeks: ContributionDay[][]): string[] {
+      const months: string[] = [];
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      let lastMonth = -1;
+
+      weeks.forEach((week) => {
+        if (week.length > 0) {
+          const date = new Date(week[0].date);
+          const month = date.getMonth();
+          if (month !== lastMonth) {
+            months.push(monthNames[month]);
+            lastMonth = month;
+          }
+        }
+      });
+
+      return months;
+    }
+
     // Load all stats
     async function loadStats(): Promise<void> {
       if (statsLoaded) return;
       statsLoaded = true;
 
-      const [stats, languages, commits] = await Promise.all([fetchRepoStats(), fetchLanguages(), fetchRecentCommits()]);
+      const [stats, languages, commits, contributions] = await Promise.all([
+        fetchRepoStats(),
+        fetchLanguages(),
+        fetchRecentCommits(),
+        fetchContributions(),
+      ]);
 
       renderStats(stats);
       renderLanguages(languages);
+      renderContributions(contributions);
       renderCommits(commits);
     }
 
