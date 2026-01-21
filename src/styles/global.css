@@ -42,10 +42,13 @@
   --theme-operator: #d4d4d4;
   --theme-scrollbar: #37373d;
   --theme-scrollbar-hover: #808080;
+
+  /* Editor font size (adjustable via Customize panel) */
+  --editor-font-size: 14px;
 }
 
 /* Light Theme */
-[data-theme="light"] {
+[data-theme='light'] {
   --theme-bg: #ffffff;
   --theme-sidebar: #f3f3f3;
   --theme-sidebar-hover: #e8e8e8;
@@ -81,7 +84,7 @@
 }
 
 /* Monokai Theme */
-[data-theme="monokai"] {
+[data-theme='monokai'] {
   --theme-bg: #272822;
   --theme-sidebar: #1e1f1c;
   --theme-sidebar-hover: #3e3d32;
@@ -246,7 +249,9 @@
 
   /* Editor content */
   .editor-content {
-    @apply flex-1 overflow-auto p-4 font-code text-code;
+    @apply flex-1 overflow-auto p-4 font-code;
+    font-size: var(--editor-font-size);
+    line-height: 1.5;
   }
 
   /* Editor content area for multiple file contents */
@@ -1970,6 +1975,57 @@
 
   .customize-select option {
     @apply bg-ide-sidebar text-ide-text;
+  }
+
+  /* Font size control */
+  .font-size-control {
+    @apply flex items-center gap-2;
+  }
+
+  .font-size-btn {
+    @apply flex items-center justify-center w-6 h-6 rounded;
+    @apply bg-ide-sidebarActive border border-ide-border text-ide-text;
+    @apply hover:bg-ide-sidebarHover hover:border-ide-textMuted transition-colors;
+    @apply focus:outline-none focus:border-ide-accent;
+    @apply cursor-pointer;
+  }
+
+  .font-size-btn:active {
+    @apply bg-ide-sidebar;
+  }
+
+  .font-size-slider {
+    @apply flex-1 h-1 rounded-full appearance-none cursor-pointer;
+    background: var(--theme-border);
+  }
+
+  .font-size-slider::-webkit-slider-thumb {
+    @apply w-3 h-3 rounded-full cursor-pointer;
+    -webkit-appearance: none;
+    background: var(--theme-accent);
+    border: none;
+  }
+
+  .font-size-slider::-moz-range-thumb {
+    @apply w-3 h-3 rounded-full cursor-pointer;
+    background: var(--theme-accent);
+    border: none;
+  }
+
+  .font-size-slider::-webkit-slider-thumb:hover {
+    background: var(--theme-accent-hover);
+  }
+
+  .font-size-slider::-moz-range-thumb:hover {
+    background: var(--theme-accent-hover);
+  }
+
+  .font-size-slider:focus {
+    @apply outline-none;
+  }
+
+  .font-size-value {
+    @apply text-xs text-ide-text font-code w-10 text-right;
   }
 
   /* About section */

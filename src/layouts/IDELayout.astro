@@ -77,12 +77,16 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
     <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#1e1e1e" />
 
-    <!-- Prevent flash of wrong theme by loading theme preference early -->
+    <!-- Prevent flash of wrong theme/font-size by loading preferences early -->
     <script is:inline>
-      (function() {
+      (function () {
         const savedTheme = localStorage.getItem('ide-color-theme');
         if (savedTheme && savedTheme !== 'dark-plus') {
           document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        const savedFontSize = localStorage.getItem('ide-font-size');
+        if (savedFontSize) {
+          document.documentElement.style.setProperty('--editor-font-size', savedFontSize + 'px');
         }
       })();
     </script>
