@@ -5,6 +5,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { sendMessage, type GeminiMessage } from '../../lib/gemini';
+import { checkRateLimit, getRateLimitMessage } from '../../lib/rate-limiter';
 
 // ============================================================================
 // Types
@@ -158,7 +159,59 @@ function validateRequest(body: unknown): { valid: true; data: ChatRequest } | { 
 // API Route Handler
 // ============================================================================
 
+/**
+ * Extracts client IP from request headers
+ * Handles common proxy headers (X-Forwarded-For, X-Real-IP)
+ */
+function getClientIp(request: Request): string {
+  // Check X-Forwarded-For first (most common with proxies/load balancers)
+  const forwardedFor = request.headers.get('X-Forwarded-For');
+  if (forwardedFor) {
+    // Take the first IP in the chain (original client)
+    return forwardedFor.split(',')[0].trim();
+  }
+
+  // Check X-Real-IP (Nginx)
+  const realIp = request.headers.get('X-Real-IP');
+  if (realIp) {
+    return realIp.trim();
+  }
+
+  // Fallback to a generic identifier
+  return 'unknown';
+}
+
+/**
+ * Extracts or generates session ID from request
+ * Uses X-Session-ID header if provided by client
+ */
+function getSessionId(request: Request): string {
+  const sessionId = request.headers.get('X-Session-ID');
+  if (sessionId && sessionId.length > 0 && sessionId.length <= 128) {
+    return sessionId;
+  }
+  // Fallback: use IP-based session (less ideal but functional)
+  return `ip-session-${getClientIp(request)}`;
+}
+
 export const POST: APIRoute = async ({ request }) => {
+  // Rate limiting - check before processing request
+  const clientIp = getClientIp(request);
+  const sessionId = getSessionId(request);
+
+  const rateLimitResult = checkRateLimit(sessionId, clientIp);
+  if (!rateLimitResult.allowed) {
+    return new Response(
+      JSON.stringify({
+        error: getRateLimitMessage(),
+      } satisfies ChatErrorResponse),
+      {
+        status: 429,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
   // Verify content type
   const contentType = request.headers.get('Content-Type');
   if (!contentType?.includes('application/json')) {
