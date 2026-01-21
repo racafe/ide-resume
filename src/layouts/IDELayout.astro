@@ -1,4 +1,7 @@
 ---
+import ChatToggle from '@components/ChatToggle.astro';
+import ChatPanel from '@components/ChatPanel.astro';
+
 interface Props {
   title?: string;
   description?: string;
@@ -197,6 +200,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
               <rect x="13" y="13" width="8" height="8" rx="1"></rect>
             </svg>
           </button>
+          <!-- Chat Toggle (desktop) -->
+          <ChatToggle />
         </aside>
 
         <!-- Sidebar (File Explorer) -->
@@ -539,5 +544,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 
     <!-- Achievement Toast Container -->
     <div id="achievement-toast-container" class="achievement-toast-container"></div>
+
+    <!-- Chat Panel -->
+    <ChatPanel />
   </body>
 </html>

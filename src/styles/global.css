@@ -41,7 +41,6 @@
 }
 
 @layer components {
-
   /* IDE Layout container */
   .ide-container {
     @apply h-screen w-screen flex flex-col overflow-hidden;
@@ -220,7 +219,6 @@
 }
 
 @layer utilities {
-
   /* Code syntax highlighting helpers */
   .syntax-keyword {
     @apply text-ide-keyword;
@@ -706,7 +704,6 @@
 
   /* Mobile breakpoint: < 768px */
   @media (max-width: 767px) {
-
     /* Show mobile header */
     .mobile-header {
       @apply flex items-center justify-between h-12 px-3 bg-ide-sidebar border-b border-ide-border z-50;
@@ -861,7 +858,6 @@
 
   /* Tablet breakpoint: 768px - 1023px */
   @media (min-width: 768px) and (max-width: 1023px) {
-
     /* Narrower sidebar on tablet */
     .sidebar {
       @apply w-48;
@@ -1062,6 +1058,225 @@
 
     .achievement-toast {
       max-width: 100%;
+    }
+  }
+
+  /* ===================================
+     CHAT PANEL & TOGGLE
+     =================================== */
+
+  /* Desktop toggle - hidden by default, shown in activity bar */
+  .chat-toggle-desktop {
+    @apply mt-auto mb-2;
+  }
+
+  /* Mobile FAB - floating action button */
+  .chat-toggle-mobile {
+    @apply fixed bottom-6 right-6 w-14 h-14 rounded-full bg-ide-statusBar text-white shadow-lg z-50;
+    @apply flex items-center justify-center;
+    @apply hover:bg-ide-statusBarHover active:scale-95 transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-ide-accent focus:ring-offset-2 focus:ring-offset-ide-bg;
+  }
+
+  /* Hide mobile FAB on desktop */
+  @media (min-width: 768px) {
+    .chat-toggle-mobile {
+      @apply hidden;
+    }
+  }
+
+  /* Chat overlay (for clicking outside to close) */
+  .chat-overlay {
+    @apply fixed inset-0 bg-black/40 z-[90] opacity-0 pointer-events-none;
+    transition: opacity 0.3s ease;
+    will-change: opacity;
+  }
+
+  .chat-overlay.visible {
+    @apply opacity-100 pointer-events-auto;
+  }
+
+  /* Chat panel - slides in from right */
+  .chat-panel {
+    @apply fixed top-0 right-0 h-full w-[400px] max-w-full bg-ide-sidebar border-l border-ide-border z-[100];
+    @apply flex flex-col;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  .chat-panel.open {
+    transform: translateX(0);
+  }
+
+  /* Panel header */
+  .chat-panel-header {
+    @apply flex items-center justify-between px-4 py-3 bg-ide-activityBar border-b border-ide-border;
+  }
+
+  .chat-panel-title {
+    @apply flex items-center gap-2 text-ide-text font-code text-sm font-medium;
+  }
+
+  .chat-panel-title svg {
+    @apply text-ide-accent;
+  }
+
+  .chat-panel-close {
+    @apply w-7 h-7 flex items-center justify-center text-ide-textMuted rounded;
+    @apply hover:text-ide-text hover:bg-ide-sidebarActive transition-colors;
+    @apply focus:outline-none focus:ring-2 focus:ring-ide-accent;
+  }
+
+  /* Messages area */
+  .chat-messages {
+    @apply flex-1 overflow-y-auto p-4 space-y-4;
+  }
+
+  /* Individual message */
+  .chat-message {
+    @apply flex gap-3;
+  }
+
+  .chat-message-user {
+    @apply flex-row-reverse;
+  }
+
+  .chat-message-avatar {
+    @apply w-8 h-8 rounded-full bg-ide-accent/20 text-ide-accent flex items-center justify-center flex-shrink-0;
+  }
+
+  .chat-message-user .chat-message-avatar {
+    @apply bg-ide-statusBar/20 text-ide-statusBar;
+  }
+
+  .chat-message-content {
+    @apply max-w-[85%] text-sm text-ide-text leading-relaxed;
+  }
+
+  .chat-message-content p {
+    @apply bg-ide-sidebarActive rounded-lg px-3 py-2 mb-1;
+  }
+
+  .chat-message-user .chat-message-content p {
+    @apply bg-ide-statusBar text-white;
+  }
+
+  .chat-message-error .chat-message-content p {
+    @apply bg-ide-error/20 text-ide-error border border-ide-error/30;
+  }
+
+  /* Suggestion chips */
+  .chat-suggestions-label {
+    @apply text-ide-textMuted text-xs mt-2 mb-1 bg-transparent px-0;
+  }
+
+  .chat-suggestions {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .chat-suggestion {
+    @apply text-xs px-3 py-1.5 rounded-full bg-ide-sidebarActive text-ide-accent border border-ide-border;
+    @apply hover:bg-ide-sidebarHover hover:border-ide-accent transition-colors cursor-pointer;
+  }
+
+  /* Typing indicator */
+  .chat-typing-dots {
+    @apply flex gap-1 px-3 py-3;
+  }
+
+  .chat-typing-dots span {
+    @apply w-2 h-2 rounded-full bg-ide-textMuted;
+    animation: typingBounce 1.4s infinite ease-in-out both;
+  }
+
+  .chat-typing-dots span:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .chat-typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .chat-typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes typingBounce {
+    0%,
+    80%,
+    100% {
+      transform: scale(0.6);
+      opacity: 0.5;
+    }
+    40% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Input area */
+  .chat-input-area {
+    @apply p-4 border-t border-ide-border bg-ide-activityBar;
+  }
+
+  .chat-input-container {
+    @apply flex items-end gap-2 bg-ide-sidebarActive rounded-lg border border-ide-border;
+    @apply focus-within:border-ide-accent focus-within:ring-1 focus-within:ring-ide-accent;
+  }
+
+  .chat-input {
+    @apply flex-1 bg-transparent text-ide-text text-sm px-3 py-2 resize-none;
+    @apply focus:outline-none;
+    @apply placeholder:text-ide-textMuted;
+    min-height: 40px;
+    max-height: 120px;
+  }
+
+  .chat-submit {
+    @apply w-10 h-10 flex items-center justify-center text-ide-accent rounded-r-lg;
+    @apply hover:bg-ide-sidebarHover transition-colors;
+    @apply disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent;
+  }
+
+  .chat-disclaimer {
+    @apply text-[10px] text-ide-textMuted text-center mt-2;
+  }
+
+  /* Prevent body scroll when chat is open */
+  body.chat-panel-open {
+    @apply overflow-hidden;
+  }
+
+  /* Mobile adjustments for chat panel */
+  @media (max-width: 767px) {
+    .chat-panel {
+      @apply w-full;
+    }
+
+    .chat-toggle-mobile {
+      @apply bottom-4 right-4 w-12 h-12;
+    }
+
+    /* Hide mobile FAB when chat is open */
+    body.chat-panel-open .chat-toggle-mobile {
+      @apply hidden;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .chat-panel {
+      transition: none;
+    }
+
+    .chat-overlay {
+      transition: none;
+    }
+
+    .chat-typing-dots span {
+      animation: none;
+      opacity: 0.5;
     }
   }
 }

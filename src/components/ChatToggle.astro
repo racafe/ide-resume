@@ -1,0 +1,105 @@
+---
+/**
+ * ChatToggle.astro - Toggle button for the chat panel
+ * Desktop: Appears in the activity bar
+ * Mobile: Floating action button (bottom-right, thumb-reachable)
+ */
+---
+
+<!-- Desktop Toggle Button (activity bar) -->
+<button
+  class="chat-toggle-desktop activity-bar-icon"
+  id="chat-toggle-desktop"
+  title="Ask AI about Rafael"
+  aria-label="Open chat with AI assistant"
+  aria-expanded="false"
+  aria-controls="chat-panel"
+>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path
+      d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+    >
+    </path>
+  </svg>
+</button>
+
+<!-- Mobile Floating Action Button -->
+<button
+  class="chat-toggle-mobile"
+  id="chat-toggle-mobile"
+  aria-label="Open chat with AI assistant"
+  aria-expanded="false"
+  aria-controls="chat-panel"
+>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path
+      d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+    >
+    </path>
+  </svg>
+</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const desktopToggle = document.getElementById('chat-toggle-desktop');
+    const mobileToggle = document.getElementById('chat-toggle-mobile');
+    const chatPanel = document.getElementById('chat-panel');
+    const chatOverlay = document.getElementById('chat-overlay');
+
+    function toggleChatPanel() {
+      const isOpen = chatPanel?.classList.contains('open');
+
+      if (isOpen) {
+        closeChatPanel();
+      } else {
+        openChatPanel();
+      }
+    }
+
+    function openChatPanel() {
+      chatPanel?.classList.add('open');
+      chatOverlay?.classList.add('visible');
+      desktopToggle?.setAttribute('aria-expanded', 'true');
+      mobileToggle?.setAttribute('aria-expanded', 'true');
+      desktopToggle?.classList.add('active');
+      document.body.classList.add('chat-panel-open');
+
+      // Focus the chat input when opening
+      setTimeout(() => {
+        const chatInput = document.getElementById('chat-input');
+        chatInput?.focus();
+      }, 300);
+    }
+
+    function closeChatPanel() {
+      chatPanel?.classList.remove('open');
+      chatOverlay?.classList.remove('visible');
+      desktopToggle?.setAttribute('aria-expanded', 'false');
+      mobileToggle?.setAttribute('aria-expanded', 'false');
+      desktopToggle?.classList.remove('active');
+      document.body.classList.remove('chat-panel-open');
+    }
+
+    // Toggle on button clicks
+    desktopToggle?.addEventListener('click', toggleChatPanel);
+    mobileToggle?.addEventListener('click', toggleChatPanel);
+
+    // Close on overlay click
+    chatOverlay?.addEventListener('click', closeChatPanel);
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && chatPanel?.classList.contains('open')) {
+        closeChatPanel();
+      }
+    });
+
+    // Close button inside panel
+    const closeBtn = document.getElementById('chat-panel-close');
+    closeBtn?.addEventListener('click', closeChatPanel);
+
+    // Expose functions globally for external use
+    (window as Window & { openChatPanel?: () => void; closeChatPanel?: () => void }).openChatPanel = openChatPanel;
+    (window as Window & { openChatPanel?: () => void; closeChatPanel?: () => void }).closeChatPanel = closeChatPanel;
+  });
+</script>

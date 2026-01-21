@@ -1,0 +1,248 @@
+---
+/**
+ * ChatPanel.astro - Slide-in chat panel (VS Code style)
+ * Slides in from the right side with smooth 60fps animation
+ */
+---
+
+<!-- Overlay for clicking outside to close -->
+<div id="chat-overlay" class="chat-overlay" aria-hidden="true"></div>
+
+<!-- Chat Panel -->
+<aside id="chat-panel" class="chat-panel" role="dialog" aria-label="Chat with AI assistant" aria-modal="true">
+  <!-- Panel Header -->
+  <header class="chat-panel-header">
+    <div class="chat-panel-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path
+          d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+        >
+        </path>
+      </svg>
+      <span>Ask AI about Rafael</span>
+    </div>
+    <button id="chat-panel-close" class="chat-panel-close" aria-label="Close chat panel" title="Close (Esc)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6L18 18"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Chat Messages Area -->
+  <div id="chat-messages" class="chat-messages">
+    <!-- Welcome Message -->
+    <div class="chat-message chat-message-assistant">
+      <div class="chat-message-avatar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+          >
+          </path>
+        </svg>
+      </div>
+      <div class="chat-message-content">
+        <p>
+          Hi! I'm an AI assistant that can answer questions about Rafael's experience, skills, and background. Feel free
+          to ask me anything!
+        </p>
+        <p class="chat-suggestions-label">Try asking:</p>
+        <div class="chat-suggestions">
+          <button class="chat-suggestion" data-question="What technologies does Rafael work with?">
+            What technologies does Rafael work with?
+          </button>
+          <button class="chat-suggestion" data-question="Tell me about Rafael's experience">
+            Tell me about his experience
+          </button>
+          <button class="chat-suggestion" data-question="What is Rafael currently working on?">
+            What is he currently working on?
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Input Area -->
+  <form id="chat-form" class="chat-input-area">
+    <div class="chat-input-container">
+      <textarea
+        id="chat-input"
+        class="chat-input"
+        placeholder="Ask about Rafael's skills, experience, or background..."
+        rows="1"
+        aria-label="Type your message"
+      >
+      </textarea>
+      <button type="submit" id="chat-submit" class="chat-submit" aria-label="Send message" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"></path>
+        </svg>
+      </button>
+    </div>
+    <p class="chat-disclaimer">AI responses are generated and may not be 100% accurate.</p>
+  </form>
+</aside>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const chatForm = document.getElementById('chat-form') as HTMLFormElement;
+    const chatInput = document.getElementById('chat-input') as HTMLTextAreaElement;
+    const chatSubmit = document.getElementById('chat-submit') as HTMLButtonElement;
+    const chatMessages = document.getElementById('chat-messages');
+    const suggestions = document.querySelectorAll('.chat-suggestion');
+
+    // Auto-resize textarea
+    chatInput?.addEventListener('input', () => {
+      chatInput.style.height = 'auto';
+      chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+
+      // Enable/disable submit button
+      const hasContent = chatInput.value.trim().length > 0;
+      chatSubmit.disabled = !hasContent;
+    });
+
+    // Handle Enter key (submit on Enter, new line on Shift+Enter)
+    chatInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (chatInput.value.trim()) {
+          chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+      }
+    });
+
+    // Handle suggestion clicks
+    suggestions.forEach((suggestion) => {
+      suggestion.addEventListener('click', () => {
+        const question = suggestion.getAttribute('data-question');
+        if (question && chatInput) {
+          chatInput.value = question;
+          chatInput.dispatchEvent(new Event('input'));
+          chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+      });
+    });
+
+    // Session ID for chat continuity
+    let sessionId = sessionStorage.getItem('chat-session-id');
+    if (!sessionId) {
+      sessionId = crypto.randomUUID();
+      sessionStorage.setItem('chat-session-id', sessionId);
+    }
+
+    // Handle form submission
+    chatForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      // Add user message to chat
+      addMessage(message, 'user');
+
+      // Clear input
+      chatInput.value = '';
+      chatInput.style.height = 'auto';
+      chatSubmit.disabled = true;
+
+      // Show typing indicator
+      const typingId = showTypingIndicator();
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Session-ID': sessionId || '',
+          },
+          body: JSON.stringify({ message }),
+        });
+
+        // Remove typing indicator
+        removeTypingIndicator(typingId);
+
+        if (!response.ok) {
+          if (response.status === 429) {
+            addMessage("I'm getting a lot of questions right now. Please try again in a moment.", 'assistant', true);
+          } else {
+            addMessage("Sorry, I couldn't process your request. Please try again.", 'assistant', true);
+          }
+          return;
+        }
+
+        const data = await response.json();
+        addMessage(data.response, 'assistant');
+      } catch {
+        removeTypingIndicator(typingId);
+        addMessage('Sorry, something went wrong. Please try again later.', 'assistant', true);
+      }
+    });
+
+    function addMessage(content: string, role: 'user' | 'assistant', isError = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chat-message chat-message-${role}${isError ? ' chat-message-error' : ''}`;
+
+      if (role === 'assistant') {
+        messageDiv.innerHTML = `
+          <div class="chat-message-avatar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path>
+            </svg>
+          </div>
+          <div class="chat-message-content">
+            <p>${escapeHtml(content)}</p>
+          </div>
+        `;
+      } else {
+        messageDiv.innerHTML = `
+          <div class="chat-message-content">
+            <p>${escapeHtml(content)}</p>
+          </div>
+        `;
+      }
+
+      chatMessages?.appendChild(messageDiv);
+      scrollToBottom();
+    }
+
+    function showTypingIndicator(): string {
+      const id = 'typing-' + Date.now();
+      const typingDiv = document.createElement('div');
+      typingDiv.id = id;
+      typingDiv.className = 'chat-message chat-message-assistant chat-typing';
+      typingDiv.innerHTML = `
+        <div class="chat-message-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path>
+          </svg>
+        </div>
+        <div class="chat-message-content">
+          <div class="chat-typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      `;
+      chatMessages?.appendChild(typingDiv);
+      scrollToBottom();
+      return id;
+    }
+
+    function removeTypingIndicator(id: string) {
+      const typingDiv = document.getElementById(id);
+      typingDiv?.remove();
+    }
+
+    function scrollToBottom() {
+      if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+
+    function escapeHtml(text: string): string {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  });
+</script>
