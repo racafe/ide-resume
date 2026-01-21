@@ -1613,11 +1613,19 @@
   }
 
   /* Commits */
-  .git-stats-commit {
-    @apply py-2 border-b border-ide-border;
+  .git-stats-commit-link {
+    @apply block no-underline;
   }
 
-  .git-stats-commit:last-child {
+  .git-stats-commit {
+    @apply py-2 px-2 -mx-2 border-b border-ide-border rounded transition-colors;
+  }
+
+  .git-stats-commit-link:hover .git-stats-commit {
+    @apply bg-ide-sidebar;
+  }
+
+  .git-stats-commit-link:last-child .git-stats-commit {
     @apply border-b-0;
   }
 
@@ -1625,8 +1633,12 @@
     @apply flex items-center justify-between mb-1;
   }
 
+  .git-stats-commit-repo {
+    @apply text-xs text-ide-type font-code font-medium;
+  }
+
   .git-stats-commit-sha {
-    @apply text-xs text-ide-accent font-code;
+    @apply text-xs text-ide-accent font-code opacity-70;
   }
 
   .git-stats-commit-date {
@@ -1634,7 +1646,11 @@
   }
 
   .git-stats-commit-message {
-    @apply text-xs text-ide-text leading-relaxed;
+    @apply text-xs text-ide-text leading-relaxed mb-1;
+  }
+
+  .git-stats-commit-footer {
+    @apply flex items-center gap-2;
   }
 
   /* Loading and error states */
