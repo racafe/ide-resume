@@ -480,10 +480,64 @@
     }
 
     // ========================================================================
+    // Mobile Keyboard Handling
+    // ========================================================================
+
+    // Handle virtual keyboard on mobile devices
+    // This ensures the input field stays visible when the keyboard is open
+    function setupMobileKeyboardHandling(): void {
+      const chatPanel = document.getElementById('chat-panel');
+      const chatInputArea = document.querySelector('.chat-input-area') as HTMLElement;
+
+      // Use visualViewport API for better keyboard detection (supported on modern mobile browsers)
+      const viewport = window.visualViewport;
+      if (viewport) {
+        let initialHeight = viewport.height;
+
+        viewport.addEventListener('resize', () => {
+          // Keyboard is likely open if viewport height decreased significantly
+          const keyboardOpen = viewport.height < initialHeight * 0.75;
+
+          if (chatPanel?.classList.contains('open')) {
+            if (keyboardOpen) {
+              chatPanel.classList.add('keyboard-open');
+              // Scroll input into view
+              chatInputArea?.scrollIntoView({ block: 'end', behavior: 'smooth' });
+            } else {
+              chatPanel.classList.remove('keyboard-open');
+            }
+          }
+        });
+
+        // Update initial height when panel opens (handles orientation changes)
+        const observer = new MutationObserver(() => {
+          if (chatPanel?.classList.contains('open')) {
+            initialHeight = viewport.height;
+          }
+        });
+
+        if (chatPanel) {
+          observer.observe(chatPanel, { attributes: true, attributeFilter: ['class'] });
+        }
+      }
+
+      // Fallback: scroll input into view on focus for older browsers
+      chatInput?.addEventListener('focus', () => {
+        // Small delay to let keyboard animation complete
+        setTimeout(() => {
+          chatInput.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }, 300);
+      });
+    }
+
+    // ========================================================================
     // Initialize
     // ========================================================================
 
     // Restore conversation from session storage on page load
     restoreConversation();
+
+    // Setup mobile keyboard handling
+    setupMobileKeyboardHandling();
   });
 </script>

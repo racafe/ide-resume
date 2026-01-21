@@ -1295,12 +1295,48 @@
     }
 
     .chat-toggle-mobile {
-      @apply bottom-4 right-4 w-12 h-12;
+      @apply bottom-4 right-4 w-14 h-14;
     }
 
     /* Hide mobile FAB when chat is open */
     body.chat-panel-open .chat-toggle-mobile {
       @apply hidden;
+    }
+
+    /* Touch-friendly input area */
+    .chat-input-container {
+      @apply min-h-[48px];
+    }
+
+    .chat-input {
+      min-height: 48px;
+      @apply text-base; /* 16px prevents iOS zoom on focus */
+    }
+
+    .chat-submit {
+      @apply w-12 h-12;
+    }
+
+    /* Touch-friendly suggestion buttons */
+    .chat-suggestion {
+      @apply py-2.5 px-4 text-sm;
+    }
+
+    /* Touch-friendly panel buttons */
+    .chat-panel-clear,
+    .chat-panel-close {
+      @apply w-10 h-10;
+    }
+
+    /* Error action buttons - larger touch targets */
+    .chat-error-retry,
+    .chat-error-email {
+      @apply py-2.5 px-4;
+    }
+
+    /* Keyboard-aware input positioning */
+    .chat-panel.keyboard-open .chat-input-area {
+      padding-bottom: env(safe-area-inset-bottom, 16px);
     }
   }
 
