@@ -200,8 +200,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
               <rect x="13" y="13" width="8" height="8" rx="1"></rect>
             </svg>
           </button>
-          <!-- Chat Toggle (desktop) -->
-          <ChatToggle />
         </aside>
 
         <!-- Sidebar (File Explorer) -->
@@ -544,6 +542,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 
     <!-- Achievement Toast Container -->
     <div id="achievement-toast-container" class="achievement-toast-container"></div>
+
+    <!-- Chat Toggle (rendered outside activity bar so mobile FAB is visible) -->
+    <ChatToggle />
 
     <!-- Chat Panel -->
     <ChatPanel />

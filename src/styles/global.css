@@ -1065,14 +1065,31 @@
      CHAT PANEL & TOGGLE
      =================================== */
 
-  /* Desktop toggle - hidden by default, shown in activity bar */
+  /* Desktop toggle - positioned at bottom of activity bar area */
   .chat-toggle-desktop {
-    @apply mt-auto mb-2;
+    @apply fixed left-0 w-12 h-12 flex items-center justify-center;
+    @apply text-ide-textMuted hover:text-ide-text cursor-pointer transition-colors;
+    @apply hidden;
+    /* Hidden on mobile by default */
+    bottom: calc(22px + 8px);
+    /* Above status bar (22px) + margin */
+    z-index: 40;
+  }
+
+  /* Show desktop toggle only on desktop screens */
+  @media (min-width: 768px) {
+    .chat-toggle-desktop {
+      @apply flex;
+    }
+  }
+
+  .chat-toggle-desktop.active {
+    @apply text-ide-text;
   }
 
   /* Mobile FAB - floating action button */
   .chat-toggle-mobile {
-    @apply fixed bottom-6 right-6 w-14 h-14 rounded-full bg-ide-statusBar text-white shadow-lg z-50;
+    @apply fixed bottom-10 right-4 w-14 h-14 rounded-full bg-ide-statusBar text-white shadow-lg z-50;
     @apply flex items-center justify-center;
     @apply hover:bg-ide-statusBarHover active:scale-95 transition-all duration-200;
     @apply focus:outline-none focus:ring-2 focus:ring-ide-accent focus:ring-offset-2 focus:ring-offset-ide-bg;
@@ -1249,6 +1266,7 @@
       transform: scale(0.6);
       opacity: 0.5;
     }
+
     40% {
       transform: scale(1);
       opacity: 1;
@@ -1269,7 +1287,7 @@
     @apply flex-1 bg-transparent text-ide-text text-sm px-3 py-2 resize-none;
     @apply focus:outline-none;
     @apply placeholder:text-ide-textMuted;
-    min-height: 40px;
+    min-height: 58px;
     max-height: 120px;
   }
 
@@ -1294,10 +1312,6 @@
       @apply w-full;
     }
 
-    .chat-toggle-mobile {
-      @apply bottom-4 right-4 w-14 h-14;
-    }
-
     /* Hide mobile FAB when chat is open */
     body.chat-panel-open .chat-toggle-mobile {
       @apply hidden;
@@ -1305,12 +1319,13 @@
 
     /* Touch-friendly input area */
     .chat-input-container {
-      @apply min-h-[48px];
+      @apply min-h-[58px];
     }
 
     .chat-input {
-      min-height: 48px;
-      @apply text-base; /* 16px prevents iOS zoom on focus */
+      min-height: 58px;
+      @apply text-base;
+      /* 16px prevents iOS zoom on focus */
     }
 
     .chat-submit {
