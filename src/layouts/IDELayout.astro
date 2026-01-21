@@ -1,6 +1,7 @@
 ---
 import ChatToggle from '@components/ChatToggle.astro';
 import ChatPanel from '@components/ChatPanel.astro';
+import SearchPanel from '@components/SearchPanel.astro';
 
 interface Props {
   title?: string;
@@ -548,5 +549,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 
     <!-- Chat Panel -->
     <ChatPanel />
+
+    <!-- Search Panel (Quick Open) -->
+    <SearchPanel />
   </body>
 </html>

@@ -1370,4 +1370,125 @@
       opacity: 0.5;
     }
   }
+
+  /* ===================================
+     SEARCH PANEL (QUICK OPEN)
+     =================================== */
+
+  /* Search overlay (for clicking outside to close) */
+  .search-overlay {
+    @apply fixed inset-0 bg-black/40 z-[90] opacity-0 pointer-events-none;
+    transition: opacity 0.15s ease;
+    will-change: opacity;
+  }
+
+  .search-overlay.visible {
+    @apply opacity-100 pointer-events-auto;
+  }
+
+  /* Search panel - VS Code Quick Open style dropdown */
+  .search-panel {
+    @apply fixed top-[10%] left-1/2 -translate-x-1/2 w-[600px] max-w-[90vw] bg-ide-sidebar rounded-md border border-ide-border shadow-2xl z-[100];
+    @apply opacity-0 pointer-events-none scale-95;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+    will-change: opacity, transform;
+  }
+
+  .search-panel.open {
+    @apply opacity-100 pointer-events-auto scale-100;
+  }
+
+  /* Search input wrapper */
+  .search-panel-input-wrapper {
+    @apply flex items-center gap-2 px-3 py-2 border-b border-ide-border;
+  }
+
+  .search-panel-icon {
+    @apply text-ide-textMuted flex-shrink-0;
+  }
+
+  .search-panel-input {
+    @apply flex-1 bg-transparent text-ide-text text-sm font-code;
+    @apply focus:outline-none;
+    @apply placeholder:text-ide-textMuted;
+  }
+
+  .search-panel-shortcut {
+    @apply text-xs text-ide-textMuted font-code px-1.5 py-0.5 bg-ide-sidebarActive rounded;
+  }
+
+  /* Search results */
+  .search-panel-results {
+    @apply max-h-[50vh] overflow-y-auto;
+  }
+
+  .search-panel-result {
+    @apply flex items-center gap-3 w-full px-3 py-2 text-left;
+    @apply hover:bg-ide-sidebarHover cursor-pointer transition-colors;
+    @apply focus:outline-none focus:bg-ide-sidebarHover;
+  }
+
+  .search-panel-result.selected {
+    @apply bg-ide-sidebarActive;
+  }
+
+  .search-panel-result-icon {
+    @apply flex-shrink-0;
+  }
+
+  .search-panel-result-name {
+    @apply text-ide-text text-sm font-code;
+  }
+
+  .search-panel-result-desc {
+    @apply text-ide-textMuted text-xs ml-auto;
+  }
+
+  /* Search highlight */
+  .search-highlight {
+    @apply bg-ide-accent/30 text-ide-accent rounded-sm px-0.5;
+  }
+
+  /* Empty state */
+  .search-panel-empty {
+    @apply flex items-center justify-center py-8 text-sm;
+  }
+
+  /* Prevent body scroll when search is open */
+  body.search-panel-open {
+    @apply overflow-hidden;
+  }
+
+  /* Mobile adjustments for search panel */
+  @media (max-width: 767px) {
+    .search-panel {
+      @apply top-0 left-0 right-0 translate-x-0 w-full max-w-full rounded-none;
+    }
+
+    .search-panel-results {
+      @apply max-h-[70vh];
+    }
+
+    .search-panel-result {
+      @apply py-3;
+    }
+
+    .search-panel-shortcut {
+      @apply hidden;
+    }
+  }
+
+  /* Reduced motion support for search panel */
+  @media (prefers-reduced-motion: reduce) {
+    .search-panel {
+      transition: opacity 0.1s ease;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .search-overlay {
+      transition: opacity 0.1s ease;
+    }
+  }
 }
