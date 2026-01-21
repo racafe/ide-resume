@@ -1,11 +1,8 @@
 /* Google Fonts are loaded via <link> in the layout for better performance */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* ===================================
    THEME CSS CUSTOM PROPERTIES
+   Must be defined before Tailwind to ensure variables are available
    =================================== */
 
 /* Dark+ Theme (Default) */
@@ -52,7 +49,7 @@
 }
 
 /* Light Theme */
-[data-theme='light'] {
+:root[data-theme='light'] {
   --theme-bg: #ffffff;
   --theme-sidebar: #f3f3f3;
   --theme-sidebar-hover: #e8e8e8;
@@ -63,7 +60,7 @@
   --theme-editor: #ffffff;
   --theme-status-bar: var(--accent-color, #007acc);
   --theme-status-bar-hover: var(--accent-hover, #1f8ad2);
-  --theme-activity-bar: #2c2c2c;
+  --theme-activity-bar: #f3f3f3;
   --theme-border: #e5e5e5;
   --theme-text: #333333;
   --theme-text-muted: #6e7681;
@@ -88,7 +85,7 @@
 }
 
 /* Monokai Theme */
-[data-theme='monokai'] {
+:root[data-theme='monokai'] {
   --theme-bg: #272822;
   --theme-sidebar: #1e1f1c;
   --theme-sidebar-hover: #3e3d32;
@@ -122,6 +119,10 @@
   --theme-scrollbar: #49483e;
   --theme-scrollbar-hover: #75715e;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   html {
@@ -163,6 +164,7 @@
 }
 
 @layer components {
+
   /* IDE Layout container */
   .ide-container {
     @apply h-screen w-screen flex flex-col overflow-hidden;
@@ -170,34 +172,48 @@
 
   /* Activity bar (leftmost icon strip) */
   .activity-bar {
-    @apply w-12 bg-ide-activityBar flex flex-col items-center py-1;
+    @apply w-12 flex flex-col items-center py-1;
+    background-color: var(--theme-activity-bar) !important;
   }
 
   .activity-bar-icon {
-    @apply w-12 h-12 flex items-center justify-center text-ide-textMuted hover:text-ide-text cursor-pointer transition-colors;
+    @apply w-12 h-12 flex items-center justify-center cursor-pointer transition-colors;
+    color: var(--theme-text-muted);
+  }
+
+  .activity-bar-icon:hover {
+    color: var(--theme-text);
   }
 
   .activity-bar-icon.active {
-    @apply text-ide-text border-l-2 border-ide-text;
+    @apply border-l-2;
+    color: var(--theme-text);
+    border-color: var(--theme-text);
   }
 
   /* Sidebar */
   .sidebar {
-    @apply w-60 bg-ide-sidebar flex flex-col border-r border-ide-border;
+    @apply w-60 flex flex-col border-r;
+    background-color: var(--theme-sidebar) !important;
+    border-color: var(--theme-border);
   }
 
   .sidebar-header {
-    @apply px-4 py-2 text-[11px] uppercase tracking-wider text-ide-textMuted font-medium;
+    @apply px-4 py-2 text-[11px] uppercase tracking-wider font-medium;
+    color: var(--theme-text-muted);
   }
 
   /* Editor area */
   .editor-area {
-    @apply flex-1 flex flex-col bg-ide-editor;
+    @apply flex-1 flex flex-col;
+    background-color: var(--theme-editor) !important;
   }
 
   /* Tab bar */
   .tab-bar {
-    @apply flex bg-ide-tab border-b border-ide-border overflow-x-auto relative;
+    @apply flex border-b overflow-x-auto relative;
+    background-color: var(--theme-tab);
+    border-color: var(--theme-border);
     scrollbar-width: none;
     /* Firefox */
     -ms-overflow-style: none;
@@ -224,27 +240,46 @@
   }
 
   .tab-scroll-indicator-left {
-    @apply left-0 bg-gradient-to-r from-ide-tab to-transparent;
+    @apply left-0;
+    background: linear-gradient(to right, var(--theme-tab), transparent);
   }
 
   .tab-scroll-indicator-right {
-    @apply right-0 bg-gradient-to-l from-ide-tab to-transparent;
+    @apply right-0;
+    background: linear-gradient(to left, var(--theme-tab), transparent);
   }
 
   .tab-scroll-indicator svg {
-    @apply text-ide-textMuted hover:text-ide-text transition-colors;
+    @apply transition-colors;
+    color: var(--theme-text-muted);
+  }
+
+  .tab-scroll-indicator svg:hover {
+    color: var(--theme-text);
   }
 
   .tab {
-    @apply flex items-center gap-2 px-3 py-1.5 text-code-sm text-ide-textMuted bg-ide-tab border-r border-ide-border cursor-pointer hover:bg-ide-sidebarHover transition-colors min-w-0;
+    @apply flex items-center gap-2 px-3 py-1.5 text-code-sm border-r cursor-pointer transition-colors min-w-0;
+    color: var(--theme-text-muted);
+    background-color: var(--theme-tab);
+    border-color: var(--theme-border);
+  }
+
+  .tab:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .tab.active {
-    @apply bg-ide-tabActive text-ide-text;
+    background-color: var(--theme-tab-active);
+    color: var(--theme-text);
   }
 
   .tab-close {
-    @apply w-4 h-4 flex items-center justify-center rounded hover:bg-ide-sidebarActive opacity-0 transition-opacity;
+    @apply w-4 h-4 flex items-center justify-center rounded opacity-0 transition-opacity;
+  }
+
+  .tab-close:hover {
+    background-color: var(--theme-sidebar-active);
   }
 
   .tab:hover .tab-close {
@@ -253,14 +288,14 @@
 
   /* Editor content */
   .editor-content {
-    @apply flex-1 overflow-auto p-4 font-code;
+    @apply flex-1 overflow-auto font-code;
     font-size: var(--editor-font-size);
     line-height: 1.5;
   }
 
   /* Editor content area for multiple file contents */
   .editor-content-area {
-    @apply flex-1 overflow-auto p-4;
+    @apply flex-1 overflow-auto;
   }
 
   /* File content visibility */
@@ -274,11 +309,16 @@
 
   /* Status bar */
   .status-bar {
-    @apply h-[22px] bg-ide-statusBar flex items-center justify-between px-2 text-[12px] text-white;
+    @apply h-[22px] flex items-center justify-between px-2 text-[12px] text-white;
+    background-color: var(--theme-status-bar);
   }
 
   .status-bar-item {
-    @apply flex items-center gap-1 px-2 hover:bg-ide-statusBarHover cursor-pointer transition-colors;
+    @apply flex items-center gap-1 px-2 cursor-pointer transition-colors;
+  }
+
+  .status-bar-item:hover {
+    background-color: var(--theme-status-bar-hover);
   }
 
   /* File tree */
@@ -287,42 +327,52 @@
   }
 
   .file-tree-item {
-    @apply flex items-center gap-1.5 px-4 py-0.5 text-code-sm text-ide-text cursor-pointer hover:bg-ide-sidebarHover transition-colors;
+    @apply flex items-center gap-1.5 px-4 py-0.5 text-code-sm cursor-pointer transition-colors;
+    color: var(--theme-text);
+  }
+
+  .file-tree-item:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .file-tree-item.active {
-    @apply bg-ide-sidebarActive;
+    background-color: var(--theme-sidebar-active);
   }
 
   .folder-icon {
-    @apply text-ide-warning;
+    color: var(--theme-warning);
   }
 
   .file-icon {
-    @apply text-ide-accent;
+    color: var(--theme-accent);
   }
 
   /* Loading screen - optimized for fast rendering */
   .loading-screen {
-    @apply fixed inset-0 bg-ide-bg flex flex-col items-center justify-center z-50;
+    @apply fixed inset-0 flex flex-col items-center justify-center z-50;
+    background-color: var(--theme-bg);
     will-change: opacity;
     contain: layout style paint;
   }
 
   .loading-logo {
-    @apply text-6xl text-ide-accent mb-8;
+    @apply text-6xl mb-8;
+    color: var(--theme-accent);
   }
 
   .loading-text {
-    @apply text-ide-text text-lg mb-4 font-code;
+    @apply text-lg mb-4 font-code;
+    color: var(--theme-text);
   }
 
   .loading-bar-container {
-    @apply w-64 h-1 bg-ide-sidebarActive rounded-full overflow-hidden;
+    @apply w-64 h-1 rounded-full overflow-hidden;
+    background-color: var(--theme-sidebar-active);
   }
 
   .loading-bar {
-    @apply h-full bg-ide-accent animate-loading-bar;
+    @apply h-full animate-loading-bar;
+    background-color: var(--theme-accent);
   }
 
   /* Respect reduced motion preferences */
@@ -338,66 +388,76 @@
   }
 
   .loading-status {
-    @apply text-ide-textMuted text-sm mt-4 font-code;
+    @apply text-sm mt-4 font-code;
+    color: var(--theme-text-muted);
   }
 }
 
 @layer utilities {
+
   /* Code syntax highlighting helpers */
   .syntax-keyword {
-    @apply text-ide-keyword;
+    color: var(--theme-keyword);
   }
 
   .syntax-string {
-    @apply text-ide-string;
+    color: var(--theme-string);
   }
 
   .syntax-number {
-    @apply text-ide-number;
+    color: var(--theme-number);
   }
 
   .syntax-type {
-    @apply text-ide-type;
+    color: var(--theme-type);
   }
 
   .syntax-function {
-    @apply text-ide-function;
+    color: var(--theme-function);
   }
 
   .syntax-variable {
-    @apply text-ide-variable;
+    color: var(--theme-variable);
   }
 
   .syntax-comment {
-    @apply text-ide-comment italic;
+    @apply italic;
+    color: var(--theme-comment);
   }
 
   .syntax-operator {
-    @apply text-ide-operator;
+    color: var(--theme-operator);
   }
 
   /* Line numbers */
   .line-numbers {
-    @apply text-ide-lineNumber select-none pr-4 text-right;
+    @apply select-none pr-4 text-right;
+    color: var(--theme-line-number);
   }
 
   /* VS Code Markdown Preview Styling */
   .markdown-preview {
-    @apply text-ide-text leading-relaxed;
+    @apply leading-relaxed p-6;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: var(--editor-font-size);
+    color: var(--theme-text);
   }
 
   .markdown-preview h1 {
-    @apply text-ide-text text-[28px] font-semibold pb-2 mb-4 border-b border-ide-border;
+    @apply text-[28px] font-semibold pb-2 mb-4 border-b;
+    color: var(--theme-text);
+    border-color: var(--theme-border);
   }
 
   .markdown-preview h2 {
-    @apply text-ide-text text-xl font-semibold pb-2 mb-3 mt-6 border-b border-ide-border;
+    @apply text-xl font-semibold pb-2 mb-3 mt-6 border-b;
+    color: var(--theme-text);
+    border-color: var(--theme-border);
   }
 
   .markdown-preview h3 {
-    @apply text-ide-text text-lg font-semibold mb-3 mt-5;
+    @apply text-lg font-semibold mb-3 mt-5;
+    color: var(--theme-text);
   }
 
   .markdown-preview p {
@@ -405,15 +465,22 @@
   }
 
   .markdown-preview a {
-    @apply text-ide-accent hover:underline;
+    @apply hover:underline;
+    color: var(--theme-accent);
   }
 
   .markdown-preview code {
-    @apply font-code text-[13px] px-1.5 py-0.5 rounded bg-ide-sidebarActive text-ide-string;
+    @apply font-code px-1.5 py-0.5 rounded;
+    font-size: calc(var(--editor-font-size) - 1px);
+    background-color: var(--theme-sidebar-active);
+    color: var(--theme-string);
   }
 
   .markdown-preview pre {
-    @apply font-code text-[13px] p-4 rounded bg-ide-sidebar border border-ide-border overflow-x-auto mb-4;
+    @apply font-code p-4 rounded border overflow-x-auto mb-4;
+    font-size: calc(var(--editor-font-size) - 1px);
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-border);
   }
 
   .markdown-preview pre code {
@@ -433,20 +500,24 @@
   }
 
   .markdown-preview li code {
-    @apply text-ide-accent;
+    color: var(--theme-accent);
   }
 
   .markdown-preview blockquote {
-    @apply border-l-4 border-ide-accent pl-4 py-1 my-4 text-ide-textMuted italic;
+    @apply border-l-4 pl-4 py-1 my-4 italic;
+    border-color: var(--theme-accent);
+    color: var(--theme-text-muted);
     background-color: color-mix(in srgb, var(--theme-sidebar) 50%, transparent);
   }
 
   .markdown-preview hr {
-    @apply border-ide-border my-6;
+    @apply my-6;
+    border-color: var(--theme-border);
   }
 
   .markdown-preview strong {
-    @apply font-semibold text-ide-textBright;
+    @apply font-semibold;
+    color: var(--theme-text-bright);
   }
 
   .markdown-preview em {
@@ -459,11 +530,13 @@
 
   .markdown-preview th,
   .markdown-preview td {
-    @apply border border-ide-border px-3 py-2 text-left;
+    @apply border px-3 py-2 text-left;
+    border-color: var(--theme-border);
   }
 
   .markdown-preview th {
-    @apply bg-ide-sidebar font-semibold;
+    @apply font-semibold;
+    background-color: var(--theme-sidebar);
   }
 
   .markdown-preview img {
@@ -472,25 +545,31 @@
 
   /* File path styling in markdown */
   .markdown-preview .file-path {
-    @apply inline-flex items-center gap-1.5 bg-ide-sidebar px-2 py-0.5 rounded text-code-sm;
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-code-sm;
+    background-color: var(--theme-sidebar);
   }
 
   /* Tip/Note boxes */
   .markdown-preview .tip-box {
-    @apply p-4 bg-ide-sidebar rounded border-l-4 border-ide-accent mb-4;
+    @apply p-4 rounded border-l-4 mb-4;
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-accent);
   }
 
   .markdown-preview .tip-box-title {
-    @apply flex items-center gap-2 font-semibold text-ide-accent mb-2;
+    @apply flex items-center gap-2 font-semibold mb-2;
+    color: var(--theme-accent);
   }
 
   .markdown-preview .tip-box-content {
-    @apply text-ide-textMuted text-sm;
+    @apply text-sm;
+    color: var(--theme-text-muted);
   }
 
   /* Article/Publication Badge */
   .markdown-preview .article-badge {
-    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-ide-accent text-sm font-medium mb-4;
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium mb-4;
+    color: var(--theme-accent);
     background-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
   }
 
@@ -500,19 +579,24 @@
 
   /* Timeline Panel - Source Control Style */
   .timeline-panel {
-    @apply font-code text-ide-text;
+    @apply font-code;
+    color: var(--theme-text);
   }
 
   .timeline-header {
-    @apply flex items-center justify-between px-3 py-2 bg-ide-sidebar border-b border-ide-border;
+    @apply flex items-center justify-between px-3 py-2 border-b;
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-border);
   }
 
   .timeline-header-title {
-    @apply flex items-center gap-2 text-[11px] uppercase tracking-wider font-semibold text-ide-textMuted;
+    @apply flex items-center gap-2 text-[11px] uppercase tracking-wider font-semibold;
+    color: var(--theme-text-muted);
   }
 
   .timeline-header-count {
-    @apply text-[11px] text-ide-textMuted;
+    @apply text-[11px];
+    color: var(--theme-text-muted);
   }
 
   .timeline-entries {
@@ -520,11 +604,16 @@
   }
 
   .timeline-entry {
-    @apply border-b border-ide-border;
+    @apply border-b;
+    border-color: var(--theme-border);
   }
 
   .timeline-commit {
-    @apply flex items-center gap-3 w-full px-3 py-2 text-left hover:bg-ide-sidebarHover cursor-pointer transition-colors;
+    @apply flex items-center gap-3 w-full px-3 py-2 text-left cursor-pointer transition-colors;
+  }
+
+  .timeline-commit:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .commit-graph {
@@ -532,23 +621,27 @@
   }
 
   .commit-line {
-    @apply w-0.5 h-3 bg-ide-accent;
+    @apply w-0.5 h-3;
+    background-color: var(--theme-accent);
   }
 
   .commit-line-bottom {
-    @apply w-0.5 h-3 bg-ide-accent;
+    @apply w-0.5 h-3;
+    background-color: var(--theme-accent);
   }
 
   .commit-line-bottom.faded {
-    @apply bg-gradient-to-b from-ide-accent to-transparent;
+    background: linear-gradient(to bottom, var(--theme-accent), transparent);
   }
 
   .commit-dot {
-    @apply w-3 h-3 rounded-full bg-ide-accent border-2 border-ide-bg flex-shrink-0;
+    @apply w-3 h-3 rounded-full border-2 flex-shrink-0;
+    background-color: var(--theme-accent);
+    border-color: var(--theme-bg);
   }
 
   .commit-dot.volunteer {
-    @apply bg-ide-error;
+    background-color: var(--theme-error);
   }
 
   .commit-content {
@@ -560,23 +653,27 @@
   }
 
   .commit-icon {
-    @apply text-ide-accent flex-shrink-0;
+    @apply flex-shrink-0;
+    color: var(--theme-accent);
   }
 
   .commit-icon.volunteer {
-    @apply text-ide-error;
+    color: var(--theme-error);
   }
 
   .commit-company {
-    @apply font-semibold text-ide-text text-sm;
+    @apply font-semibold text-sm;
+    color: var(--theme-text);
   }
 
   .commit-separator {
-    @apply text-ide-textMuted text-xs;
+    @apply text-xs;
+    color: var(--theme-text-muted);
   }
 
   .commit-role {
-    @apply text-ide-textMuted text-sm;
+    @apply text-sm;
+    color: var(--theme-text-muted);
   }
 
   .commit-meta {
@@ -584,15 +681,18 @@
   }
 
   .commit-date {
-    @apply text-xs text-ide-textMuted;
+    @apply text-xs;
+    color: var(--theme-text-muted);
   }
 
   .commit-hash {
-    @apply text-xs text-ide-accent font-code;
+    @apply text-xs font-code;
+    color: var(--theme-accent);
   }
 
   .commit-chevron {
-    @apply text-ide-textMuted transition-transform duration-200 flex-shrink-0;
+    @apply transition-transform duration-200 flex-shrink-0;
+    color: var(--theme-text-muted);
   }
 
   .timeline-commit[aria-expanded='true'] .commit-chevron {
@@ -609,15 +709,18 @@
   }
 
   .diff-section {
-    @apply mx-3 mb-3 rounded border border-ide-border overflow-hidden;
+    @apply mx-3 mb-3 rounded border overflow-hidden;
+    border-color: var(--theme-border);
   }
 
   .diff-header {
-    @apply flex items-center justify-between px-3 py-1.5 bg-ide-sidebar text-xs;
+    @apply flex items-center justify-between px-3 py-1.5 text-xs;
+    background-color: var(--theme-sidebar);
   }
 
   .diff-file {
-    @apply text-ide-text font-code;
+    @apply font-code;
+    color: var(--theme-text);
   }
 
   .diff-stats {
@@ -625,15 +728,16 @@
   }
 
   .diff-additions {
-    @apply text-ide-string;
+    color: var(--theme-string);
   }
 
   .diff-deletions {
-    @apply text-ide-error;
+    color: var(--theme-error);
   }
 
   .diff-content {
-    @apply bg-ide-editor font-code text-code-sm;
+    @apply font-code text-code-sm;
+    background-color: var(--theme-editor);
   }
 
   .diff-line {
@@ -641,21 +745,26 @@
   }
 
   .diff-line.diff-add {
-    @apply border-l-ide-string text-ide-text;
+    @apply border-l-2;
+    border-left-color: var(--theme-string);
+    color: var(--theme-text);
     background-color: color-mix(in srgb, var(--theme-string) 10%, transparent);
   }
 
   .diff-line.diff-remove {
-    @apply border-l-ide-error text-ide-text;
+    @apply border-l-2;
+    border-left-color: var(--theme-error);
+    color: var(--theme-text);
     background-color: color-mix(in srgb, var(--theme-error) 10%, transparent);
   }
 
   .diff-prefix {
-    @apply text-ide-string mr-2 select-none;
+    @apply mr-2 select-none;
+    color: var(--theme-string);
   }
 
   .diff-line.diff-remove .diff-prefix {
-    @apply text-ide-error;
+    color: var(--theme-error);
   }
 
   /* JSON syntax highlighting in diff */
@@ -664,7 +773,8 @@
   }
 
   pre.diff-json {
-    @apply m-0 p-3 bg-ide-editor whitespace-pre overflow-x-auto;
+    @apply m-0 p-3 whitespace-pre overflow-x-auto;
+    background-color: var(--theme-editor);
   }
 
   pre.diff-json code {
@@ -672,33 +782,32 @@
   }
 
   .syntax-punctuation {
-    @apply text-ide-text;
+    color: var(--theme-text);
   }
 
   .syntax-property {
-    @apply text-ide-type;
-  }
-
-  .syntax-string {
-    @apply text-ide-string;
+    color: var(--theme-type);
   }
 
   .syntax-bracket {
-    @apply text-ide-warning;
+    color: var(--theme-warning);
   }
 
   /* Timeline Footer */
   .timeline-footer {
-    @apply flex items-center gap-2 px-3 py-3 text-xs text-ide-textMuted italic;
+    @apply flex items-center gap-2 px-3 py-3 text-xs italic;
+    color: var(--theme-text-muted);
   }
 
   .timeline-footer svg {
-    @apply text-ide-accent;
+    color: var(--theme-accent);
   }
 
   /* Code Editor - TypeScript/Code Display */
   .code-editor {
-    @apply font-code text-code bg-ide-editor max-w-4xl;
+    @apply font-code max-w-4xl p-2;
+    font-size: var(--editor-font-size);
+    background-color: var(--theme-editor);
   }
 
   .code-content {
@@ -719,8 +828,9 @@
   }
 
   .code-block .line-number {
-    @apply inline-block w-10 pr-4 text-right text-ide-lineNumber select-none;
+    @apply inline-block w-10 pr-4 text-right select-none;
     min-width: 2.5rem;
+    color: var(--theme-line-number);
   }
 
   /* Contact Form - TSX Style */
@@ -734,22 +844,34 @@
 
   .tsx-input,
   .tsx-textarea {
-    @apply font-code text-code bg-ide-sidebarActive border border-ide-border rounded px-3 py-2 text-ide-string w-64 my-1 ml-[7.5rem];
-    @apply focus:outline-none focus:border-ide-accent focus:ring-1 focus:ring-ide-accent;
-    @apply placeholder:text-ide-textMuted placeholder:italic;
+    @apply font-code border rounded px-3 py-2 w-64 my-1 ml-[7.5rem];
+    @apply focus:outline-none focus:ring-1;
+    @apply placeholder:italic;
+    font-size: var(--editor-font-size);
+    background-color: var(--theme-sidebar-active);
+    border-color: var(--theme-border);
+    color: var(--theme-string);
+  }
+
+  .tsx-input::placeholder,
+  .tsx-textarea::placeholder {
+    color: var(--theme-text-muted);
+  }
+
+  .tsx-input:focus,
+  .tsx-textarea:focus {
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-accent);
+    --tw-ring-color: var(--theme-accent);
   }
 
   .tsx-textarea {
     @apply w-80 resize-none;
   }
 
-  .tsx-input:focus,
-  .tsx-textarea:focus {
-    @apply bg-ide-sidebar;
-  }
-
   .tsx-error {
-    @apply text-ide-error text-code-sm font-code ml-[7.5rem] h-5;
+    @apply text-code-sm font-code ml-[7.5rem] h-5;
+    color: var(--theme-error);
   }
 
   .tsx-error:not(:empty) {
@@ -758,7 +880,7 @@
 
   .tsx-error::before {
     content: '// TypeError: ';
-    @apply text-ide-comment;
+    color: var(--theme-comment);
   }
 
   .tsx-error:empty::before {
@@ -770,9 +892,15 @@
   }
 
   .tsx-submit-btn {
-    @apply font-code text-code bg-ide-statusBar text-white px-4 py-2 rounded ml-[7.5rem] my-2;
-    @apply hover:bg-ide-statusBarHover transition-colors cursor-pointer;
+    @apply font-code text-white px-4 py-2 rounded ml-[7.5rem] my-2;
+    @apply transition-colors cursor-pointer;
     @apply flex items-center gap-2;
+    font-size: var(--editor-font-size);
+    background-color: var(--theme-status-bar);
+  }
+
+  .tsx-submit-btn:hover {
+    background-color: var(--theme-status-bar-hover);
   }
 
   .tsx-submit-btn:disabled {
@@ -780,7 +908,7 @@
   }
 
   .tsx-submit-btn .btn-text {
-    @apply text-ide-function;
+    color: var(--theme-function);
   }
 
   .tsx-submit-btn:hover .btn-text {
@@ -799,18 +927,31 @@
   }
 
   .tsx-reset-btn {
-    @apply font-code text-code bg-ide-sidebar border border-ide-border px-3 py-1.5 rounded;
-    @apply hover:bg-ide-sidebarHover transition-colors cursor-pointer;
+    @apply font-code border px-3 py-1.5 rounded;
+    @apply transition-colors cursor-pointer;
+    font-size: var(--editor-font-size);
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-border);
+  }
+
+  .tsx-reset-btn:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .tsx-reset-btn:hover .syntax-function {
-    @apply text-ide-accent;
+    color: var(--theme-accent);
   }
 
   /* Validation error state for inputs */
   .tsx-input.error,
   .tsx-textarea.error {
-    @apply border-ide-error focus:border-ide-error focus:ring-ide-error;
+    border-color: var(--theme-error);
+  }
+
+  .tsx-input.error:focus,
+  .tsx-textarea.error:focus {
+    border-color: var(--theme-error);
+    --tw-ring-color: var(--theme-error);
   }
 
   /* ===================================
@@ -834,23 +975,32 @@
 
   /* Mobile breakpoint: < 768px */
   @media (max-width: 767px) {
+
     /* Show mobile header */
     .mobile-header {
-      @apply flex items-center justify-between h-12 px-3 bg-ide-sidebar border-b border-ide-border z-50;
+      @apply flex items-center justify-between h-12 px-3 border-b z-50;
+      background-color: var(--theme-sidebar);
+      border-color: var(--theme-border);
     }
 
     /* Mobile menu button */
     .mobile-menu-btn {
-      @apply w-10 h-10 flex items-center justify-center text-ide-textMuted hover:text-ide-text transition-colors rounded;
+      @apply w-10 h-10 flex items-center justify-center transition-colors rounded;
+      color: var(--theme-text-muted);
+    }
+
+    .mobile-menu-btn:hover {
+      color: var(--theme-text);
     }
 
     .mobile-menu-btn:active {
-      @apply bg-ide-sidebarActive;
+      background-color: var(--theme-sidebar-active);
     }
 
     /* Mobile title */
     .mobile-title {
-      @apply flex items-center gap-2 text-ide-text font-code text-sm;
+      @apply flex items-center gap-2 font-code text-sm;
+      color: var(--theme-text);
     }
 
     /* Mobile tab selector */
@@ -859,9 +1009,16 @@
     }
 
     .mobile-tab-btn {
-      @apply flex items-center gap-1.5 px-2 py-1.5 text-code-sm text-ide-text bg-ide-sidebarActive rounded border border-ide-border;
-      @apply hover:bg-ide-sidebarHover transition-colors;
+      @apply flex items-center gap-1.5 px-2 py-1.5 text-code-sm rounded border;
+      @apply transition-colors;
       max-width: 140px;
+      color: var(--theme-text);
+      background-color: var(--theme-sidebar-active);
+      border-color: var(--theme-border);
+    }
+
+    .mobile-tab-btn:hover {
+      background-color: var(--theme-sidebar-hover);
     }
 
     .mobile-tab-current {
@@ -869,15 +1026,23 @@
     }
 
     .mobile-tab-dropdown {
-      @apply absolute right-0 top-full mt-1 min-w-[180px] max-h-[60vh] overflow-y-auto bg-ide-sidebar border border-ide-border rounded shadow-lg z-50;
+      @apply absolute right-0 top-full mt-1 min-w-[180px] max-h-[60vh] overflow-y-auto rounded shadow-lg z-50;
+      background-color: var(--theme-sidebar);
+      border: 1px solid var(--theme-border);
     }
 
     .mobile-tab-option {
-      @apply w-full px-3 py-2 text-left text-code-sm text-ide-text hover:bg-ide-sidebarHover transition-colors;
+      @apply w-full px-3 py-2 text-left text-code-sm transition-colors;
+      color: var(--theme-text);
+    }
+
+    .mobile-tab-option:hover {
+      background-color: var(--theme-sidebar-hover);
     }
 
     .mobile-tab-option.active {
-      @apply bg-ide-sidebarActive text-ide-accent;
+      background-color: var(--theme-sidebar-active);
+      color: var(--theme-accent);
     }
 
     /* Hide activity bar on mobile */
@@ -909,15 +1074,12 @@
       @apply text-[11px] px-2;
     }
 
-    /* Editor content adjustments */
-    .editor-content-area {
+    /* Markdown preview mobile adjustments */
+    .markdown-preview {
       @apply p-3;
     }
 
-    /* Markdown preview mobile adjustments */
-    .markdown-preview {
-      font-size: 15px;
-    }
+    /* Font size controlled by --editor-font-size CSS variable */
 
     .markdown-preview h1 {
       @apply text-[22px];
@@ -988,13 +1150,14 @@
 
   /* Tablet breakpoint: 768px - 1023px */
   @media (min-width: 768px) and (max-width: 1023px) {
+
     /* Narrower sidebar on tablet */
     .sidebar {
       @apply w-48;
     }
 
-    /* Slightly smaller editor padding */
-    .editor-content-area {
+    /* Slightly smaller markdown padding on tablet */
+    .markdown-preview {
       @apply p-3;
     }
   }
@@ -1018,25 +1181,38 @@
   }
 
   .game-modal-content {
-    @apply relative z-10 bg-ide-sidebar rounded-lg border border-ide-border shadow-2xl overflow-hidden;
+    @apply relative z-10 rounded-lg border shadow-2xl overflow-hidden;
     max-width: 440px;
     width: 90vw;
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-border);
   }
 
   .game-header {
-    @apply flex items-center justify-between px-4 py-3 bg-ide-activityBar border-b border-ide-border;
+    @apply flex items-center justify-between px-4 py-3 border-b;
+    background-color: var(--theme-activity-bar);
+    border-color: var(--theme-border);
   }
 
   .game-title {
-    @apply flex items-center gap-2 text-ide-text font-code text-sm font-medium;
+    @apply flex items-center gap-2 font-code text-sm font-medium;
+    color: var(--theme-text);
   }
 
   .game-close-btn {
-    @apply w-6 h-6 flex items-center justify-center text-ide-textMuted hover:text-ide-text hover:bg-ide-sidebarActive rounded transition-colors;
+    @apply w-6 h-6 flex items-center justify-center rounded transition-colors;
+    color: var(--theme-text-muted);
+  }
+
+  .game-close-btn:hover {
+    color: var(--theme-text);
+    background-color: var(--theme-sidebar-active);
   }
 
   .game-stats {
-    @apply flex items-center justify-center gap-6 px-4 py-2 bg-ide-sidebarActive border-b border-ide-border font-code text-sm;
+    @apply flex items-center justify-center gap-6 px-4 py-2 border-b font-code text-sm;
+    background-color: var(--theme-sidebar-active);
+    border-color: var(--theme-border);
   }
 
   .game-stat {
@@ -1044,15 +1220,17 @@
   }
 
   .game-stat-label {
-    @apply text-ide-textMuted;
+    color: var(--theme-text-muted);
   }
 
   .game-stat-value {
-    @apply text-ide-accent font-medium;
+    @apply font-medium;
+    color: var(--theme-accent);
   }
 
   .game-canvas-container {
-    @apply relative bg-ide-bg;
+    @apply relative;
+    background-color: var(--theme-bg);
   }
 
   #game-canvas {
@@ -1075,15 +1253,19 @@
   }
 
   .game-message {
-    @apply text-ide-text font-code text-lg mb-2;
+    @apply font-code text-lg mb-2;
+    color: var(--theme-text);
   }
 
   .game-controls {
-    @apply text-ide-comment font-code text-sm;
+    @apply font-code text-sm;
+    color: var(--theme-comment);
   }
 
   .game-footer {
-    @apply px-4 py-2 bg-ide-activityBar border-t border-ide-border text-center;
+    @apply px-4 py-2 border-t text-center;
+    background-color: var(--theme-activity-bar);
+    border-color: var(--theme-border);
   }
 
   /* Prevent body scroll when game is open */
@@ -1122,11 +1304,13 @@
   }
 
   .achievement-toast {
-    @apply flex items-start gap-3 p-4 bg-ide-sidebar rounded-lg border border-ide-border shadow-2xl transform translate-x-full opacity-0 pointer-events-auto;
+    @apply flex items-start gap-3 p-4 rounded-lg border shadow-2xl transform translate-x-full opacity-0 pointer-events-auto;
     transition:
       transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
       opacity 0.3s ease;
     max-width: 340px;
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-border);
   }
 
   .achievement-toast.show {
@@ -1138,12 +1322,13 @@
   }
 
   .achievement-toast-icon {
-    @apply w-10 h-10 flex items-center justify-center rounded-lg text-ide-accent flex-shrink-0;
+    @apply w-10 h-10 flex items-center justify-center rounded-lg flex-shrink-0;
+    color: var(--theme-accent);
     background-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
   }
 
   .achievement-toast-icon.all-complete {
-    @apply text-ide-warning;
+    color: var(--theme-warning);
     background-color: color-mix(in srgb, var(--theme-warning) 20%, transparent);
   }
 
@@ -1152,19 +1337,23 @@
   }
 
   .achievement-toast-label {
-    @apply text-xs text-ide-textMuted uppercase tracking-wider mb-0.5 font-code;
+    @apply text-xs uppercase tracking-wider mb-0.5 font-code;
+    color: var(--theme-text-muted);
   }
 
   .achievement-toast-title {
-    @apply text-ide-text font-semibold text-sm mb-1;
+    @apply font-semibold text-sm mb-1;
+    color: var(--theme-text);
   }
 
   .achievement-toast-description {
-    @apply text-ide-textMuted text-xs leading-relaxed;
+    @apply text-xs leading-relaxed;
+    color: var(--theme-text-muted);
   }
 
   .achievement-toast-points {
-    @apply text-xs text-ide-accent font-code mt-1;
+    @apply text-xs font-code mt-1;
+    color: var(--theme-accent);
   }
 
   /* Reduced motion support */
@@ -1201,12 +1390,17 @@
   /* Desktop toggle - positioned at bottom of activity bar area */
   .chat-toggle-desktop {
     @apply fixed left-0 w-12 h-12 flex items-center justify-center;
-    @apply text-ide-textMuted hover:text-ide-text cursor-pointer transition-colors;
+    @apply cursor-pointer transition-colors;
     @apply hidden;
     /* Hidden on mobile by default */
     bottom: calc(22px + 8px);
     /* Above status bar (22px) + margin */
     z-index: 40;
+    color: var(--theme-text-muted);
+  }
+
+  .chat-toggle-desktop:hover {
+    color: var(--theme-text);
   }
 
   /* Show desktop toggle only on desktop screens */
@@ -1217,15 +1411,18 @@
   }
 
   .chat-toggle-desktop.active {
-    @apply text-ide-text;
+    color: var(--theme-text);
   }
 
   /* Mobile FAB - floating action button */
   .chat-toggle-mobile {
-    @apply fixed bottom-10 right-4 w-14 h-14 rounded-full bg-ide-statusBar text-white shadow-lg z-50;
+    @apply fixed bottom-10 right-4 w-14 h-14 rounded-full text-white shadow-lg z-50;
     @apply flex items-center justify-center;
-    @apply hover:bg-ide-statusBarHover active:scale-95 transition-all duration-200;
-    @apply focus:outline-none focus:ring-2 focus:ring-ide-accent focus:ring-offset-2 focus:ring-offset-ide-bg;
+    @apply active:scale-95 transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    background-color: var(--theme-status-bar);
+    --tw-ring-color: var(--theme-accent);
+    --tw-ring-offset-color: var(--theme-bg);
   }
 
   /* Hide mobile FAB on desktop */
@@ -1248,11 +1445,13 @@
 
   /* Chat panel - slides in from right */
   .chat-panel {
-    @apply fixed top-0 right-0 h-full w-[400px] max-w-full bg-ide-sidebar border-l border-ide-border z-[100];
+    @apply fixed top-0 right-0 h-full w-[400px] max-w-full border-l z-[100];
     @apply flex flex-col;
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-border);
   }
 
   .chat-panel.open {
@@ -1261,15 +1460,18 @@
 
   /* Panel header */
   .chat-panel-header {
-    @apply flex items-center justify-between px-4 py-3 bg-ide-activityBar border-b border-ide-border;
+    @apply flex items-center justify-between px-4 py-3 border-b;
+    background-color: var(--theme-activity-bar);
+    border-color: var(--theme-border);
   }
 
   .chat-panel-title {
-    @apply flex items-center gap-2 text-ide-text font-code text-sm font-medium;
+    @apply flex items-center gap-2 font-code text-sm font-medium;
+    color: var(--theme-text);
   }
 
   .chat-panel-title svg {
-    @apply text-ide-accent;
+    color: var(--theme-accent);
   }
 
   .chat-panel-actions {
@@ -1278,9 +1480,17 @@
 
   .chat-panel-clear,
   .chat-panel-close {
-    @apply w-7 h-7 flex items-center justify-center text-ide-textMuted rounded;
-    @apply hover:text-ide-text hover:bg-ide-sidebarActive transition-colors;
-    @apply focus:outline-none focus:ring-2 focus:ring-ide-accent;
+    @apply w-7 h-7 flex items-center justify-center rounded;
+    @apply transition-colors;
+    @apply focus:outline-none focus:ring-2;
+    color: var(--theme-text-muted);
+    --tw-ring-color: var(--theme-accent);
+  }
+
+  .chat-panel-clear:hover,
+  .chat-panel-close:hover {
+    color: var(--theme-text);
+    background-color: var(--theme-sidebar-active);
   }
 
   /* Messages area */
@@ -1298,29 +1508,33 @@
   }
 
   .chat-message-avatar {
-    @apply w-8 h-8 rounded-full text-ide-accent flex items-center justify-center flex-shrink-0;
+    @apply w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0;
+    color: var(--theme-accent);
     background-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
   }
 
   .chat-message-user .chat-message-avatar {
-    @apply text-ide-statusBar;
+    color: var(--theme-status-bar);
     background-color: color-mix(in srgb, var(--theme-status-bar) 20%, transparent);
   }
 
   .chat-message-content {
-    @apply max-w-[85%] text-sm text-ide-text leading-relaxed;
+    @apply max-w-[85%] text-sm leading-relaxed;
+    color: var(--theme-text);
   }
 
   .chat-message-content p {
-    @apply bg-ide-sidebarActive rounded-lg px-3 py-2 mb-1;
+    @apply rounded-lg px-3 py-2 mb-1;
+    background-color: var(--theme-sidebar-active);
   }
 
   .chat-message-user .chat-message-content p {
-    @apply bg-ide-statusBar text-white;
+    @apply text-white;
+    background-color: var(--theme-status-bar);
   }
 
   .chat-message-error .chat-message-content p {
-    @apply text-ide-error;
+    color: var(--theme-error);
     background-color: color-mix(in srgb, var(--theme-error) 20%, transparent);
     border: 1px solid color-mix(in srgb, var(--theme-error) 30%, transparent);
   }
@@ -1331,9 +1545,12 @@
   }
 
   .chat-error-retry {
-    @apply text-xs px-3 py-1.5 rounded bg-ide-accent text-white font-medium;
+    @apply text-xs px-3 py-1.5 rounded text-white font-medium;
     @apply transition-colors cursor-pointer;
-    @apply focus:outline-none focus:ring-2 focus:ring-ide-accent focus:ring-offset-2 focus:ring-offset-ide-sidebar;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    background-color: var(--theme-accent);
+    --tw-ring-color: var(--theme-accent);
+    --tw-ring-offset-color: var(--theme-sidebar);
   }
 
   .chat-error-retry:hover {
@@ -1341,14 +1558,22 @@
   }
 
   .chat-error-email {
-    @apply text-xs px-3 py-1.5 rounded bg-ide-sidebarActive text-ide-textMuted;
-    @apply border border-ide-border hover:border-ide-accent hover:text-ide-accent;
+    @apply text-xs px-3 py-1.5 rounded border;
     @apply transition-colors cursor-pointer no-underline;
+    background-color: var(--theme-sidebar-active);
+    color: var(--theme-text-muted);
+    border-color: var(--theme-border);
+  }
+
+  .chat-error-email:hover {
+    border-color: var(--theme-accent);
+    color: var(--theme-accent);
   }
 
   /* Suggestion chips */
   .chat-suggestions-label {
-    @apply text-ide-textMuted text-xs mt-2 mb-1 bg-transparent px-0;
+    @apply text-xs mt-2 mb-1 bg-transparent px-0;
+    color: var(--theme-text-muted);
   }
 
   .chat-suggestions {
@@ -1356,8 +1581,16 @@
   }
 
   .chat-suggestion {
-    @apply text-xs px-3 py-1.5 rounded-full bg-ide-sidebarActive text-ide-accent border border-ide-border;
-    @apply hover:bg-ide-sidebarHover hover:border-ide-accent transition-colors cursor-pointer;
+    @apply text-xs px-3 py-1.5 rounded-full border;
+    @apply transition-colors cursor-pointer;
+    background-color: var(--theme-sidebar-active);
+    color: var(--theme-accent);
+    border-color: var(--theme-border);
+  }
+
+  .chat-suggestion:hover {
+    background-color: var(--theme-sidebar-hover);
+    border-color: var(--theme-accent);
   }
 
   /* Welcome message with starter questions - hide after first interaction */
@@ -1384,7 +1617,8 @@
   }
 
   .chat-typing-dots span {
-    @apply w-2 h-2 rounded-full bg-ide-textMuted;
+    @apply w-2 h-2 rounded-full;
+    background-color: var(--theme-text-muted);
     animation: typingBounce 1.4s infinite ease-in-out both;
   }
 
@@ -1401,6 +1635,7 @@
   }
 
   @keyframes typingBounce {
+
     0%,
     80%,
     100% {
@@ -1416,30 +1651,48 @@
 
   /* Input area */
   .chat-input-area {
-    @apply p-4 border-t border-ide-border bg-ide-activityBar;
+    @apply p-4 border-t;
+    border-color: var(--theme-border);
+    background-color: var(--theme-activity-bar);
   }
 
   .chat-input-container {
-    @apply flex items-end gap-2 bg-ide-sidebarActive rounded-lg border border-ide-border;
-    @apply focus-within:border-ide-accent focus-within:ring-1 focus-within:ring-ide-accent;
+    @apply flex items-end gap-2 rounded-lg border;
+    background-color: var(--theme-sidebar-active);
+    border-color: var(--theme-border);
+  }
+
+  .chat-input-container:focus-within {
+    border-color: var(--theme-accent);
+    box-shadow: 0 0 0 1px var(--theme-accent);
   }
 
   .chat-input {
-    @apply flex-1 bg-transparent text-ide-text text-sm px-3 py-2 resize-none;
+    @apply flex-1 bg-transparent text-sm px-3 py-2 resize-none;
     @apply focus:outline-none;
-    @apply placeholder:text-ide-textMuted;
     min-height: 58px;
     max-height: 120px;
+    color: var(--theme-text);
+  }
+
+  .chat-input::placeholder {
+    color: var(--theme-text-muted);
   }
 
   .chat-submit {
-    @apply w-10 h-10 flex items-center justify-center text-ide-accent rounded-r-lg;
-    @apply hover:bg-ide-sidebarHover transition-colors;
+    @apply w-10 h-10 flex items-center justify-center rounded-r-lg;
+    @apply transition-colors;
     @apply disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent;
+    color: var(--theme-accent);
+  }
+
+  .chat-submit:hover:not(:disabled) {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .chat-disclaimer {
-    @apply text-[10px] text-ide-textMuted text-center mt-2;
+    @apply text-[10px] text-center mt-2;
+    color: var(--theme-text-muted);
   }
 
   /* Prevent body scroll when chat is open */
@@ -1529,12 +1782,14 @@
 
   /* Search panel - VS Code Quick Open style dropdown */
   .search-panel {
-    @apply fixed top-[10%] left-1/2 -translate-x-1/2 w-[600px] max-w-[90vw] bg-ide-sidebar rounded-md border border-ide-border shadow-2xl z-[100];
+    @apply fixed top-[10%] left-1/2 -translate-x-1/2 w-[600px] max-w-[90vw] rounded-md border shadow-2xl z-[100];
     @apply opacity-0 pointer-events-none scale-95;
     transition:
       opacity 0.15s ease,
       transform 0.15s ease;
     will-change: opacity, transform;
+    background-color: var(--theme-sidebar);
+    border-color: var(--theme-border);
   }
 
   .search-panel.open {
@@ -1543,21 +1798,29 @@
 
   /* Search input wrapper */
   .search-panel-input-wrapper {
-    @apply flex items-center gap-2 px-3 py-2 border-b border-ide-border;
+    @apply flex items-center gap-2 px-3 py-2 border-b;
+    border-color: var(--theme-border);
   }
 
   .search-panel-icon {
-    @apply text-ide-textMuted flex-shrink-0;
+    @apply flex-shrink-0;
+    color: var(--theme-text-muted);
   }
 
   .search-panel-input {
-    @apply flex-1 bg-transparent text-ide-text text-sm font-code;
+    @apply flex-1 bg-transparent text-sm font-code;
     @apply focus:outline-none;
-    @apply placeholder:text-ide-textMuted;
+    color: var(--theme-text);
+  }
+
+  .search-panel-input::placeholder {
+    color: var(--theme-text-muted);
   }
 
   .search-panel-shortcut {
-    @apply text-xs text-ide-textMuted font-code px-1.5 py-0.5 bg-ide-sidebarActive rounded;
+    @apply text-xs font-code px-1.5 py-0.5 rounded;
+    color: var(--theme-text-muted);
+    background-color: var(--theme-sidebar-active);
   }
 
   /* Search results */
@@ -1567,12 +1830,17 @@
 
   .search-panel-result {
     @apply flex items-center gap-3 w-full px-3 py-2 text-left;
-    @apply hover:bg-ide-sidebarHover cursor-pointer transition-colors;
-    @apply focus:outline-none focus:bg-ide-sidebarHover;
+    @apply cursor-pointer transition-colors;
+    @apply focus:outline-none;
+  }
+
+  .search-panel-result:hover,
+  .search-panel-result:focus {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .search-panel-result.selected {
-    @apply bg-ide-sidebarActive;
+    background-color: var(--theme-sidebar-active);
   }
 
   .search-panel-result-icon {
@@ -1580,11 +1848,13 @@
   }
 
   .search-panel-result-name {
-    @apply text-ide-text text-sm font-code;
+    @apply text-sm font-code;
+    color: var(--theme-text);
   }
 
   .search-panel-result-desc {
-    @apply text-ide-textMuted text-xs ml-auto truncate max-w-[40%];
+    @apply text-xs ml-auto truncate max-w-[40%];
+    color: var(--theme-text-muted);
   }
 
   /* Result type badge */
@@ -1594,7 +1864,8 @@
 
   /* Search highlight */
   .search-highlight {
-    @apply text-ide-accent rounded-sm px-0.5;
+    @apply rounded-sm px-0.5;
+    color: var(--theme-accent);
     background-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
   }
 
@@ -1654,11 +1925,12 @@
 
   /* Panel header */
   .git-stats-header {
-    @apply flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-wider text-ide-textMuted font-medium;
+    @apply flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-wider font-medium;
+    color: var(--theme-text-muted);
   }
 
   .git-stats-header-icon {
-    @apply text-ide-text;
+    color: var(--theme-text);
   }
 
   /* Content area */
@@ -1668,7 +1940,8 @@
 
   /* Sections */
   .git-stats-section {
-    @apply border-b border-ide-border;
+    @apply border-b;
+    border-color: var(--theme-border);
   }
 
   .git-stats-section:last-child {
@@ -1676,12 +1949,17 @@
   }
 
   .git-stats-section-header {
-    @apply flex items-center gap-2 px-4 py-2 text-xs text-ide-text cursor-pointer;
-    @apply hover:bg-ide-sidebarHover transition-colors;
+    @apply flex items-center gap-2 px-4 py-2 text-xs cursor-pointer;
+    @apply transition-colors;
+    color: var(--theme-text);
+  }
+
+  .git-stats-section-header:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .git-stats-section-header svg {
-    @apply text-ide-textMuted;
+    color: var(--theme-text-muted);
   }
 
   .git-stats-section-content {
@@ -1690,16 +1968,22 @@
 
   /* Repository link */
   .git-stats-repo-link {
-    @apply flex items-center gap-2 px-2 py-1.5 rounded text-sm text-ide-accent;
-    @apply hover:bg-ide-sidebarHover transition-colors;
+    @apply flex items-center gap-2 px-2 py-1.5 rounded text-sm;
+    @apply transition-colors;
+    color: var(--theme-accent);
+  }
+
+  .git-stats-repo-link:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .git-stats-repo-link svg:first-child {
-    @apply text-ide-warning;
+    color: var(--theme-warning);
   }
 
   .git-stats-external-icon {
-    @apply text-ide-textMuted ml-auto opacity-0;
+    @apply ml-auto opacity-0;
+    color: var(--theme-text-muted);
     transition: opacity 0.15s ease;
   }
 
@@ -1713,15 +1997,18 @@
   }
 
   .git-stats-item {
-    @apply flex items-center gap-2 px-2 py-1.5 rounded bg-ide-sidebarActive;
+    @apply flex items-center gap-2 px-2 py-1.5 rounded;
+    background-color: var(--theme-sidebar-active);
   }
 
   .git-stats-value {
-    @apply text-ide-text font-semibold text-sm;
+    @apply font-semibold text-sm;
+    color: var(--theme-text);
   }
 
   .git-stats-label {
-    @apply text-ide-textMuted text-xs;
+    @apply text-xs;
+    color: var(--theme-text-muted);
   }
 
   /* Languages */
@@ -1747,11 +2034,12 @@
   }
 
   .git-stats-language-name {
-    @apply text-ide-text;
+    color: var(--theme-text);
   }
 
   .git-stats-language-pct {
-    @apply text-ide-textMuted ml-auto;
+    @apply ml-auto;
+    color: var(--theme-text-muted);
   }
 
   /* Commits */
@@ -1760,11 +2048,12 @@
   }
 
   .git-stats-commit {
-    @apply py-2 px-2 -mx-2 border-b border-ide-border rounded transition-colors;
+    @apply py-2 px-2 -mx-2 border-b rounded transition-colors;
+    border-color: var(--theme-border);
   }
 
   .git-stats-commit-link:hover .git-stats-commit {
-    @apply bg-ide-sidebar;
+    background-color: var(--theme-sidebar);
   }
 
   .git-stats-commit-link:last-child .git-stats-commit {
@@ -1776,19 +2065,23 @@
   }
 
   .git-stats-commit-repo {
-    @apply text-xs text-ide-type font-code font-medium;
+    @apply text-xs font-code font-medium;
+    color: var(--theme-type);
   }
 
   .git-stats-commit-sha {
-    @apply text-xs text-ide-accent font-code opacity-70;
+    @apply text-xs font-code opacity-70;
+    color: var(--theme-accent);
   }
 
   .git-stats-commit-date {
-    @apply text-xs text-ide-textMuted;
+    @apply text-xs;
+    color: var(--theme-text-muted);
   }
 
   .git-stats-commit-message {
-    @apply text-xs text-ide-text leading-relaxed mb-1;
+    @apply text-xs leading-relaxed mb-1;
+    color: var(--theme-text);
   }
 
   .git-stats-commit-footer {
@@ -1803,7 +2096,8 @@
 
   /* Footer */
   .git-stats-footer {
-    @apply px-4 py-2 text-xs border-t border-ide-border;
+    @apply px-4 py-2 text-xs border-t;
+    border-color: var(--theme-border);
   }
 
   /* Mobile adjustments */
@@ -1827,15 +2121,18 @@
   }
 
   .contribution-count {
-    @apply text-ide-text font-semibold text-lg;
+    @apply font-semibold text-lg;
+    color: var(--theme-text);
   }
 
   .contribution-label {
-    @apply text-ide-textMuted text-xs;
+    @apply text-xs;
+    color: var(--theme-text-muted);
   }
 
   .contribution-months {
-    @apply flex text-[10px] text-ide-textMuted;
+    @apply flex text-[10px];
+    color: var(--theme-text-muted);
     gap: 0;
     margin-left: 2px;
   }
@@ -1868,7 +2165,7 @@
 
   /* GitHub-style contribution levels (green shades) */
   .contribution-day.level-0 {
-    @apply bg-ide-sidebarActive;
+    background-color: var(--theme-sidebar-active);
   }
 
   .contribution-day.level-1 {
@@ -1888,7 +2185,8 @@
   }
 
   .contribution-legend {
-    @apply flex items-center gap-1 mt-1 text-[10px] text-ide-textMuted;
+    @apply flex items-center gap-1 mt-1 text-[10px];
+    color: var(--theme-text-muted);
     justify-content: flex-end;
   }
 
@@ -1916,11 +2214,12 @@
 
   /* Panel header */
   .customize-header {
-    @apply flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-wider text-ide-textMuted font-medium;
+    @apply flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-wider font-medium;
+    color: var(--theme-text-muted);
   }
 
   .customize-header-icon {
-    @apply text-ide-text;
+    color: var(--theme-text);
   }
 
   /* Content area */
@@ -1930,7 +2229,8 @@
 
   /* Sections */
   .customize-section {
-    @apply border-b border-ide-border;
+    @apply border-b;
+    border-color: var(--theme-border);
   }
 
   .customize-section:last-child {
@@ -1938,12 +2238,16 @@
   }
 
   .customize-section-header {
-    @apply flex items-center gap-2 px-4 py-2 text-xs text-ide-text cursor-pointer;
-    @apply hover:bg-ide-sidebarHover transition-colors;
+    @apply flex items-center gap-2 px-4 py-2 text-xs cursor-pointer transition-colors;
+    color: var(--theme-text);
+  }
+
+  .customize-section-header:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .customize-section-header svg {
-    @apply text-ide-textMuted;
+    color: var(--theme-text-muted);
   }
 
   .customize-section-content {
@@ -1964,21 +2268,30 @@
   }
 
   .customize-setting-name {
-    @apply text-ide-text text-sm font-medium;
+    @apply text-sm font-medium;
+    color: var(--theme-text);
   }
 
   .customize-setting-desc {
-    @apply text-ide-textMuted text-xs leading-relaxed;
+    @apply text-xs leading-relaxed;
+    color: var(--theme-text-muted);
   }
 
   .customize-select {
-    @apply w-full bg-ide-sidebarActive border border-ide-border rounded px-2 py-1.5 text-sm text-ide-text;
-    @apply focus:outline-none focus:border-ide-accent focus:ring-1 focus:ring-ide-accent;
-    @apply cursor-pointer;
+    @apply w-full border rounded px-2 py-1.5 text-sm cursor-pointer focus:outline-none focus:ring-1;
+    background-color: var(--theme-sidebar-active);
+    border-color: var(--theme-border);
+    color: var(--theme-text);
+  }
+
+  .customize-select:focus {
+    border-color: var(--theme-accent);
+    --tw-ring-color: var(--theme-accent);
   }
 
   .customize-select option {
-    @apply bg-ide-sidebar text-ide-text;
+    background-color: var(--theme-sidebar);
+    color: var(--theme-text);
   }
 
   /* Font size control */
@@ -1987,15 +2300,23 @@
   }
 
   .font-size-btn {
-    @apply flex items-center justify-center w-6 h-6 rounded;
-    @apply bg-ide-sidebarActive border border-ide-border text-ide-text;
-    @apply hover:bg-ide-sidebarHover hover:border-ide-textMuted transition-colors;
-    @apply focus:outline-none focus:border-ide-accent;
-    @apply cursor-pointer;
+    @apply flex items-center justify-center w-6 h-6 rounded border cursor-pointer transition-colors focus:outline-none;
+    background-color: var(--theme-sidebar-active);
+    border-color: var(--theme-border);
+    color: var(--theme-text);
+  }
+
+  .font-size-btn:hover {
+    background-color: var(--theme-sidebar-hover);
+    border-color: var(--theme-text-muted);
+  }
+
+  .font-size-btn:focus {
+    border-color: var(--theme-accent);
   }
 
   .font-size-btn:active {
-    @apply bg-ide-sidebar;
+    background-color: var(--theme-sidebar);
   }
 
   .font-size-slider {
@@ -2029,7 +2350,8 @@
   }
 
   .font-size-value {
-    @apply text-xs text-ide-text font-code w-10 text-right;
+    @apply text-xs font-code w-10 text-right;
+    color: var(--theme-text);
   }
 
   /* Accent color swatches */
@@ -2049,7 +2371,7 @@
   }
 
   .accent-color-swatch.active {
-    @apply border-ide-textBright;
+    border-color: var(--theme-text-bright);
     box-shadow: 0 0 0 2px var(--theme-sidebar), 0 0 0 4px currentColor;
   }
 
@@ -2074,7 +2396,8 @@
   }
 
   .accent-color-label {
-    @apply text-xs text-ide-textMuted mt-1;
+    @apply text-xs mt-1;
+    color: var(--theme-text-muted);
   }
 
   /* About section */
@@ -2087,11 +2410,12 @@
   }
 
   .customize-about-label {
-    @apply text-ide-textMuted;
+    color: var(--theme-text-muted);
   }
 
   .customize-about-value {
-    @apply text-ide-text font-code;
+    @apply font-code;
+    color: var(--theme-text);
   }
 
   /* Links section */
@@ -2100,16 +2424,22 @@
   }
 
   .customize-link {
-    @apply flex items-center gap-2 px-2 py-1.5 rounded text-sm text-ide-text;
-    @apply hover:bg-ide-sidebarHover transition-colors no-underline;
+    @apply flex items-center gap-2 px-2 py-1.5 rounded text-sm no-underline transition-colors;
+    color: var(--theme-text);
+  }
+
+  .customize-link:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .customize-link svg:first-child {
-    @apply text-ide-textMuted flex-shrink-0;
+    @apply flex-shrink-0;
+    color: var(--theme-text-muted);
   }
 
   .customize-link-external {
-    @apply text-ide-textMuted ml-auto opacity-0;
+    @apply ml-auto opacity-0;
+    color: var(--theme-text-muted);
     transition: opacity 0.15s ease;
   }
 
@@ -2119,14 +2449,15 @@
 
   /* Reset button */
   .reset-preferences-btn {
-    @apply flex items-center gap-2 px-3 py-1.5 text-sm rounded;
-    @apply text-ide-text border border-ide-border;
+    @apply flex items-center gap-2 px-3 py-1.5 text-sm rounded border;
+    color: var(--theme-text);
+    border-color: var(--theme-border);
     background-color: color-mix(in srgb, var(--theme-sidebar) 100%, transparent);
     transition: background-color 0.15s ease, border-color 0.15s ease;
   }
 
   .reset-preferences-btn:hover {
-    @apply border-ide-textMuted;
+    border-color: var(--theme-text-muted);
     background-color: color-mix(in srgb, var(--theme-sidebar-hover) 100%, transparent);
   }
 
@@ -2135,12 +2466,13 @@
   }
 
   .reset-preferences-btn svg {
-    @apply text-ide-textMuted;
+    color: var(--theme-text-muted);
   }
 
   /* Footer */
   .customize-footer {
-    @apply px-4 py-2 text-xs border-t border-ide-border;
+    @apply px-4 py-2 text-xs border-t;
+    border-color: var(--theme-border);
   }
 
   /* Mobile adjustments */
@@ -2172,10 +2504,12 @@
       background-color: rgba(255, 213, 0, 0.5);
       outline-color: rgba(255, 213, 0, 0.8);
     }
+
     50% {
       background-color: rgba(255, 213, 0, 0.3);
       outline-color: rgba(255, 213, 0, 0.5);
     }
+
     100% {
       background-color: transparent;
       outline-color: transparent;
@@ -2191,9 +2525,11 @@
     0% {
       box-shadow: 0 0 0 3px rgba(255, 213, 0, 0.6);
     }
+
     50% {
       box-shadow: 0 0 0 2px rgba(255, 213, 0, 0.3);
     }
+
     100% {
       box-shadow: none;
     }

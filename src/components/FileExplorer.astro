@@ -114,7 +114,12 @@ const fileTree: FileItem[] = [
   }
 
   .section-header {
-    @apply flex items-center gap-1 px-2 py-1.5 w-full text-left text-ide-text hover:bg-ide-sidebarHover cursor-pointer;
+    @apply flex items-center gap-1 px-2 py-1.5 w-full text-left cursor-pointer transition-colors;
+    color: var(--theme-text);
+  }
+
+  .section-header:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .section-header .chevron {
@@ -130,7 +135,12 @@ const fileTree: FileItem[] = [
   }
 
   .file-tree-item {
-    @apply flex items-center gap-1.5 px-4 py-[3px] w-full text-left text-code-sm text-ide-text cursor-pointer hover:bg-ide-sidebarHover transition-colors;
+    @apply flex items-center gap-1.5 px-4 py-[3px] w-full text-left text-code-sm cursor-pointer transition-colors;
+    color: var(--theme-text);
+  }
+
+  .file-tree-item:hover {
+    background-color: var(--theme-sidebar-hover);
   }
 
   .file-tree-item.folder {
@@ -154,7 +164,7 @@ const fileTree: FileItem[] = [
   }
 
   .file-tree-item.active {
-    @apply bg-ide-sidebarActive;
+    background-color: var(--theme-sidebar-active);
   }
 
   .folder-children {
@@ -170,7 +180,8 @@ const fileTree: FileItem[] = [
   }
 
   .folder-icon {
-    @apply text-ide-warning flex-shrink-0;
+    @apply flex-shrink-0;
+    color: var(--theme-warning);
   }
 
   .filename {
