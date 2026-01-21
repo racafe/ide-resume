@@ -1443,7 +1443,12 @@
   }
 
   .search-panel-result-desc {
-    @apply text-ide-textMuted text-xs ml-auto;
+    @apply text-ide-textMuted text-xs ml-auto truncate max-w-[40%];
+  }
+
+  /* Result type badge */
+  .search-panel-result-badge {
+    @apply text-[10px] font-medium px-1.5 py-0.5 rounded flex-shrink-0;
   }
 
   /* Search highlight */

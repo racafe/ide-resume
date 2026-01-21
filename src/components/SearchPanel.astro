@@ -2,7 +2,138 @@
 /**
  * SearchPanel.astro - VS Code-style Quick Open search dropdown
  * Opens with Cmd/Ctrl+P or by clicking the search icon in the activity bar
+ * Searches through files and all resume content (skills, experience, education, etc.)
  */
+import { resume } from '../data/resume';
+
+// Build search index from resume data
+interface SearchItem {
+  type: 'file' | 'skill' | 'experience' | 'education' | 'certification' | 'project' | 'section';
+  title: string;
+  context: string;
+  file: string;
+  searchText: string;
+  icon: string;
+}
+
+const searchIndex: SearchItem[] = [];
+
+// Files with their sections
+const files = [
+  { name: 'README.md', icon: 'markdown', description: 'Welcome & Overview' },
+  { name: 'about.md', icon: 'markdown', description: 'About Me' },
+  { name: 'experience.json', icon: 'json', description: 'Work Experience' },
+  { name: 'skills.ts', icon: 'typescript', description: 'Technical Skills' },
+  { name: 'education.yaml', icon: 'yaml', description: 'Education & Certifications' },
+  { name: 'contact.tsx', icon: 'react', description: 'Contact Form' },
+];
+
+// Add files to search index
+files.forEach((file) => {
+  searchIndex.push({
+    type: 'file',
+    title: file.name,
+    context: file.description,
+    file: file.name,
+    searchText: `${file.name} ${file.description}`.toLowerCase(),
+    icon: file.icon,
+  });
+});
+
+// Add summary/about section
+searchIndex.push({
+  type: 'section',
+  title: resume.contact.name,
+  context: 'about.md > Summary',
+  file: 'about.md',
+  searchText: `${resume.contact.name} ${resume.contact.title} ${resume.summary}`.toLowerCase(),
+  icon: 'markdown',
+});
+
+// Add all skills by category
+resume.skills.forEach((category) => {
+  category.skills.forEach((skill) => {
+    searchIndex.push({
+      type: 'skill',
+      title: skill,
+      context: `skills.ts > ${category.category}`,
+      file: 'skills.ts',
+      searchText: `${skill} ${category.category}`.toLowerCase(),
+      icon: 'typescript',
+    });
+  });
+});
+
+// Add work experience
+resume.workExperience.forEach((exp) => {
+  // Add job entry
+  searchIndex.push({
+    type: 'experience',
+    title: exp.position,
+    context: `experience.json > ${exp.company}`,
+    file: 'experience.json',
+    searchText:
+      `${exp.position} ${exp.company} ${exp.location} ${exp.highlights.join(' ')} ${(exp.technologies || []).join(' ')}`.toLowerCase(),
+    icon: 'json',
+  });
+  // Add company as searchable
+  searchIndex.push({
+    type: 'experience',
+    title: exp.company,
+    context: `experience.json > ${exp.position}`,
+    file: 'experience.json',
+    searchText: `${exp.company} ${exp.position}`.toLowerCase(),
+    icon: 'json',
+  });
+});
+
+// Add education
+resume.education.forEach((edu) => {
+  searchIndex.push({
+    type: 'education',
+    title: edu.degree,
+    context: `education.yaml > ${edu.institution}`,
+    file: 'education.yaml',
+    searchText: `${edu.degree} ${edu.field} ${edu.institution} ${(edu.relevantCourses || []).join(' ')}`.toLowerCase(),
+    icon: 'yaml',
+  });
+  searchIndex.push({
+    type: 'education',
+    title: edu.institution,
+    context: `education.yaml > ${edu.degree}`,
+    file: 'education.yaml',
+    searchText: `${edu.institution} ${edu.degree} ${edu.field}`.toLowerCase(),
+    icon: 'yaml',
+  });
+});
+
+// Add certifications
+resume.certifications.forEach((cert) => {
+  searchIndex.push({
+    type: 'certification',
+    title: cert.name,
+    context: `education.yaml > ${cert.issuer}`,
+    file: 'education.yaml',
+    searchText: `${cert.name} ${cert.issuer}`.toLowerCase(),
+    icon: 'yaml',
+  });
+});
+
+// Add projects
+resume.projects.forEach((proj) => {
+  searchIndex.push({
+    type: 'project',
+    title: proj.name,
+    context: 'README.md > Projects',
+    file: 'README.md',
+    searchText:
+      `${proj.name} ${proj.description} ${proj.technologies.join(' ')} ${proj.highlights.join(' ')}`.toLowerCase(),
+    icon: 'markdown',
+  });
+});
+
+// Serialize search index for client-side use
+const searchIndexJson = JSON.stringify(searchIndex);
 ---
 
 <!-- Search Panel Overlay (for clicking outside to close) -->
@@ -28,7 +159,7 @@
       type="text"
       id="search-input"
       class="search-panel-input"
-      placeholder="Search files by name..."
+      placeholder="Search files and content..."
       autocomplete="off"
       spellcheck="false"
     />
@@ -41,7 +172,29 @@
   </div>
 </div>
 
+<!-- Pass search index to client -->
+<script define:vars={{ searchIndexJson }}>
+  window.__searchIndex = JSON.parse(searchIndexJson);
+</script>
+
 <script>
+  interface SearchItem {
+    type: 'file' | 'skill' | 'experience' | 'education' | 'certification' | 'project' | 'section';
+    title: string;
+    context: string;
+    file: string;
+    searchText: string;
+    icon: string;
+  }
+
+  declare global {
+    interface Window {
+      __searchIndex: SearchItem[];
+      openSearchPanel?: () => void;
+      closeSearchPanel?: () => void;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const searchPanel = document.getElementById('search-panel');
     const searchOverlay = document.getElementById('search-overlay');
@@ -49,17 +202,17 @@
     const searchResults = document.getElementById('search-results');
     const searchButton = document.querySelector('.activity-bar-icon[title="Search"]');
 
-    // File list - matches the files in the file explorer
-    const files = [
-      { name: 'README.md', icon: 'markdown', description: 'Welcome & Overview' },
-      { name: 'about.md', icon: 'markdown', description: 'About Me' },
-      { name: 'experience.json', icon: 'json', description: 'Work Experience' },
-      { name: 'skills.ts', icon: 'typescript', description: 'Technical Skills' },
-      { name: 'education.yaml', icon: 'yaml', description: 'Education & Certifications' },
-      { name: 'contact.tsx', icon: 'react', description: 'Contact Form' },
-    ];
+    // Get search index from global (set by server-side script)
+    const searchIndex: SearchItem[] = window.__searchIndex || [];
+
+    // Max results to display
+    const MAX_RESULTS = 10;
+
+    // Debounce delay in milliseconds
+    const DEBOUNCE_DELAY = 200;
 
     let selectedIndex = 0;
+    let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
     // Get file icon SVG based on file type
     function getFileIconSvg(icon: string): string {
@@ -83,62 +236,94 @@
       return icons[icon] || icons.markdown;
     }
 
+    // Get type badge for non-file results
+    function getTypeBadge(type: string): string {
+      const badges: Record<string, { label: string; class: string }> = {
+        skill: { label: 'Skill', class: 'bg-ide-type/20 text-ide-type' },
+        experience: { label: 'Experience', class: 'bg-ide-warning/20 text-ide-warning' },
+        education: { label: 'Education', class: 'bg-ide-error/20 text-ide-error' },
+        certification: { label: 'Cert', class: 'bg-ide-string/20 text-ide-string' },
+        project: { label: 'Project', class: 'bg-ide-function/20 text-ide-function' },
+        section: { label: 'Section', class: 'bg-ide-accent/20 text-ide-accent' },
+      };
+      const badge = badges[type];
+      if (!badge) return '';
+      return `<span class="search-panel-result-badge ${badge.class}">${badge.label}</span>`;
+    }
+
     // Render search results
     function renderResults(query: string): void {
       if (!searchResults) return;
 
       const normalizedQuery = query.toLowerCase().trim();
 
-      // Filter and score files
-      const filteredFiles = files
-        .map((file) => {
-          const name = file.name.toLowerCase();
-          const desc = file.description.toLowerCase();
+      // Filter and score search items
+      const filteredItems = searchIndex
+        .map((item) => {
           let score = 0;
 
           if (!normalizedQuery) {
-            score = 1; // Show all files when no query
-          } else if (name === normalizedQuery) {
-            score = 100; // Exact match
-          } else if (name.startsWith(normalizedQuery)) {
-            score = 80; // Starts with query
-          } else if (name.includes(normalizedQuery)) {
-            score = 60; // Contains query
-          } else if (desc.includes(normalizedQuery)) {
-            score = 40; // Description contains query
+            // Show only files when no query
+            score = item.type === 'file' ? 1 : 0;
+          } else {
+            const title = item.title.toLowerCase();
+
+            // Exact title match
+            if (title === normalizedQuery) {
+              score = 100;
+            }
+            // Title starts with query
+            else if (title.startsWith(normalizedQuery)) {
+              score = 80;
+            }
+            // Title contains query
+            else if (title.includes(normalizedQuery)) {
+              score = 60;
+            }
+            // Search text contains query (context, highlights, etc.)
+            else if (item.searchText.includes(normalizedQuery)) {
+              score = 40;
+            }
+
+            // Boost file results slightly to show them first
+            if (item.type === 'file' && score > 0) {
+              score += 5;
+            }
           }
 
-          return { ...file, score };
+          return { ...item, score };
         })
-        .filter((file) => file.score > 0)
-        .sort((a, b) => b.score - a.score);
+        .filter((item) => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, MAX_RESULTS);
 
-      if (filteredFiles.length === 0) {
+      if (filteredItems.length === 0) {
         searchResults.innerHTML = `
           <div class="search-panel-empty">
-            <span class="text-ide-textMuted">No files matching "${escapeHtml(query)}"</span>
+            <span class="text-ide-textMuted">No results found</span>
           </div>
         `;
         return;
       }
 
       // Reset selected index if out of bounds
-      if (selectedIndex >= filteredFiles.length) {
+      if (selectedIndex >= filteredItems.length) {
         selectedIndex = 0;
       }
 
-      searchResults.innerHTML = filteredFiles
+      searchResults.innerHTML = filteredItems
         .map(
-          (file, index) => `
+          (item, index) => `
           <button
             class="search-panel-result ${index === selectedIndex ? 'selected' : ''}"
-            data-file="${file.name}"
+            data-file="${item.file}"
             role="option"
             aria-selected="${index === selectedIndex}"
           >
-            <span class="search-panel-result-icon">${getFileIconSvg(file.icon)}</span>
-            <span class="search-panel-result-name">${highlightMatch(file.name, normalizedQuery)}</span>
-            <span class="search-panel-result-desc">${file.description}</span>
+            <span class="search-panel-result-icon">${getFileIconSvg(item.icon)}</span>
+            <span class="search-panel-result-name">${highlightMatch(item.title, normalizedQuery)}</span>
+            ${item.type !== 'file' ? getTypeBadge(item.type) : ''}
+            <span class="search-panel-result-desc">${item.context}</span>
           </button>
         `
         )
@@ -165,7 +350,7 @@
       if (!query) return escapeHtml(text);
 
       const escapedText = escapeHtml(text);
-      const escapedQuery = escapeHtml(query);
+      const escapedQuery = escapeHtml(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const regex = new RegExp(`(${escapedQuery})`, 'gi');
       return escapedText.replace(regex, '<mark class="search-highlight">$1</mark>');
     }
@@ -213,6 +398,11 @@
       searchOverlay?.classList.remove('visible');
       searchButton?.classList.remove('active');
       document.body.classList.remove('search-panel-open');
+      // Clear any pending debounce
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = null;
+      }
     }
 
     // Escape HTML for safe rendering
@@ -220,6 +410,17 @@
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
+    }
+
+    // Debounced search function
+    function debouncedSearch(): void {
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+      debounceTimeout = setTimeout(() => {
+        selectedIndex = 0;
+        renderResults(searchInput?.value || '');
+      }, DEBOUNCE_DELAY);
     }
 
     // Event: Search button click
@@ -236,11 +437,8 @@
     // Event: Overlay click to close
     searchOverlay?.addEventListener('click', closeSearchPanel);
 
-    // Event: Search input
-    searchInput?.addEventListener('input', () => {
-      selectedIndex = 0;
-      renderResults(searchInput.value);
-    });
+    // Event: Search input with debouncing
+    searchInput?.addEventListener('input', debouncedSearch);
 
     // Event: Keyboard navigation
     searchInput?.addEventListener('keydown', (e) => {
@@ -301,9 +499,7 @@
     });
 
     // Expose functions globally for external use
-    (window as Window & { openSearchPanel?: () => void; closeSearchPanel?: () => void }).openSearchPanel =
-      openSearchPanel;
-    (window as Window & { openSearchPanel?: () => void; closeSearchPanel?: () => void }).closeSearchPanel =
-      closeSearchPanel;
+    window.openSearchPanel = openSearchPanel;
+    window.closeSearchPanel = closeSearchPanel;
   });
 </script>
