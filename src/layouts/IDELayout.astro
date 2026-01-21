@@ -77,7 +77,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
     <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#1e1e1e" />
 
-    <!-- Prevent flash of wrong theme/font-size by loading preferences early -->
+    <!-- Prevent flash of wrong theme/font-size/accent by loading preferences early -->
     <script is:inline>
       (function () {
         const savedTheme = localStorage.getItem('ide-color-theme');
@@ -87,6 +87,22 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
         const savedFontSize = localStorage.getItem('ide-font-size');
         if (savedFontSize) {
           document.documentElement.style.setProperty('--editor-font-size', savedFontSize + 'px');
+        }
+        // Apply saved accent color
+        const savedAccent = localStorage.getItem('ide-accent-color');
+        if (savedAccent) {
+          var accentColors = {
+            blue: { color: '#007acc', hover: '#1f8ad2' },
+            green: { color: '#16825d', hover: '#1a9b6f' },
+            purple: { color: '#8b5cf6', hover: '#a78bfa' },
+            orange: { color: '#f97316', hover: '#fb923c' },
+            red: { color: '#dc2626', hover: '#ef4444' },
+          };
+          var colors = accentColors[savedAccent];
+          if (colors) {
+            document.documentElement.style.setProperty('--accent-color', colors.color);
+            document.documentElement.style.setProperty('--accent-hover', colors.hover);
+          }
         }
       })();
     </script>

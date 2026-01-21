@@ -69,6 +69,46 @@
             <span id="font-size-value" class="font-size-value">14px</span>
           </div>
         </div>
+
+        <div class="customize-setting">
+          <div class="customize-setting-label">
+            <span class="customize-setting-name">Accent Color</span>
+            <span class="customize-setting-desc">Changes the accent color for status bar, links, and buttons</span>
+          </div>
+          <div class="accent-color-swatches" id="accent-color-swatches">
+            <button
+              class="accent-color-swatch active"
+              data-accent="blue"
+              title="Blue (default)"
+              aria-label="Blue accent color"
+            ></button>
+            <button
+              class="accent-color-swatch"
+              data-accent="green"
+              title="Green"
+              aria-label="Green accent color"
+            ></button>
+            <button
+              class="accent-color-swatch"
+              data-accent="purple"
+              title="Purple"
+              aria-label="Purple accent color"
+            ></button>
+            <button
+              class="accent-color-swatch"
+              data-accent="orange"
+              title="Orange"
+              aria-label="Orange accent color"
+            ></button>
+            <button
+              class="accent-color-swatch"
+              data-accent="red"
+              title="Red"
+              aria-label="Red accent color"
+            ></button>
+          </div>
+          <span class="accent-color-label" id="accent-color-label">Blue (default)</span>
+        </div>
       </div>
     </div>
 
@@ -275,6 +315,62 @@
 
     function applyFontSize(size: string): void {
       document.documentElement.style.setProperty('--editor-font-size', `${size}px`);
+    }
+
+    // Accent color definitions
+    const accentColors: Record<string, { color: string; hover: string; label: string }> = {
+      blue: { color: '#007acc', hover: '#1f8ad2', label: 'Blue (default)' },
+      green: { color: '#16825d', hover: '#1a9b6f', label: 'Green' },
+      purple: { color: '#8b5cf6', hover: '#a78bfa', label: 'Purple' },
+      orange: { color: '#f97316', hover: '#fb923c', label: 'Orange' },
+      red: { color: '#dc2626', hover: '#ef4444', label: 'Red' },
+    };
+
+    // Accent color swatches
+    const accentSwatches = document.getElementById('accent-color-swatches');
+    const accentLabel = document.getElementById('accent-color-label');
+
+    // Load saved accent color from localStorage
+    const savedAccent = localStorage.getItem('ide-accent-color') || 'blue';
+    applyAccentColor(savedAccent);
+    updateAccentSwatchActive(savedAccent);
+    if (accentLabel) {
+      accentLabel.textContent = accentColors[savedAccent]?.label || 'Blue (default)';
+    }
+
+    // Handle accent color swatch clicks
+    accentSwatches?.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('accent-color-swatch')) {
+        const accent = target.getAttribute('data-accent');
+        if (accent && accentColors[accent]) {
+          applyAccentColor(accent);
+          updateAccentSwatchActive(accent);
+          localStorage.setItem('ide-accent-color', accent);
+          if (accentLabel) {
+            accentLabel.textContent = accentColors[accent].label;
+          }
+        }
+      }
+    });
+
+    function applyAccentColor(accent: string): void {
+      const colors = accentColors[accent];
+      if (colors) {
+        document.documentElement.style.setProperty('--accent-color', colors.color);
+        document.documentElement.style.setProperty('--accent-hover', colors.hover);
+      }
+    }
+
+    function updateAccentSwatchActive(accent: string): void {
+      const swatches = accentSwatches?.querySelectorAll('.accent-color-swatch');
+      swatches?.forEach((swatch) => {
+        if (swatch.getAttribute('data-accent') === accent) {
+          swatch.classList.add('active');
+        } else {
+          swatch.classList.remove('active');
+        }
+      });
     }
 
     // Open customize panel
