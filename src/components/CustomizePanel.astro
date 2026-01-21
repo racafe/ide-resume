@@ -207,6 +207,32 @@
     </div>
   </div>
 
+    <!-- Reset Section -->
+    <div class="customize-section">
+      <div class="customize-section-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+        <span>Reset</span>
+      </div>
+      <div class="customize-section-content">
+        <div class="customize-setting">
+          <div class="customize-setting-label">
+            <span class="customize-setting-name">Reset to Defaults</span>
+            <span class="customize-setting-desc">Clear all customizations and restore default settings</span>
+          </div>
+          <button id="reset-preferences-btn" class="reset-preferences-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            Reset All
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <div class="customize-footer">
     <span class="syntax-comment">// Settings are stored locally</span>
@@ -423,6 +449,39 @@
     explorerBtn?.addEventListener('click', () => {
       if (customizePanel && !customizePanel.classList.contains('hidden')) {
         closeCustomizePanel();
+      }
+    });
+
+    // Reset to Defaults button
+    const resetBtn = document.getElementById('reset-preferences-btn');
+    resetBtn?.addEventListener('click', () => {
+      // Clear all preferences from localStorage
+      localStorage.removeItem('ide-color-theme');
+      localStorage.removeItem('ide-font-size');
+      localStorage.removeItem('ide-accent-color');
+
+      // Reset theme to Dark+ (default)
+      document.documentElement.removeAttribute('data-theme');
+      if (colorThemeSelect) {
+        colorThemeSelect.value = 'dark-plus';
+      }
+
+      // Reset font size to 14px (default)
+      const defaultFontSize = '14';
+      document.documentElement.style.setProperty('--editor-font-size', `${defaultFontSize}px`);
+      if (fontSizeSlider) {
+        fontSizeSlider.value = defaultFontSize;
+      }
+      if (fontSizeValue) {
+        fontSizeValue.textContent = `${defaultFontSize}px`;
+      }
+
+      // Reset accent color to blue (default)
+      const defaultAccent = 'blue';
+      applyAccentColor(defaultAccent);
+      updateAccentSwatchActive(defaultAccent);
+      if (accentLabel) {
+        accentLabel.textContent = accentColors[defaultAccent].label;
       }
     });
 

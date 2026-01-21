@@ -2117,6 +2117,27 @@
     @apply opacity-100;
   }
 
+  /* Reset button */
+  .reset-preferences-btn {
+    @apply flex items-center gap-2 px-3 py-1.5 text-sm rounded;
+    @apply text-ide-text border border-ide-border;
+    background-color: color-mix(in srgb, var(--theme-sidebar) 100%, transparent);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .reset-preferences-btn:hover {
+    @apply border-ide-textMuted;
+    background-color: color-mix(in srgb, var(--theme-sidebar-hover) 100%, transparent);
+  }
+
+  .reset-preferences-btn:active {
+    background-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
+  }
+
+  .reset-preferences-btn svg {
+    @apply text-ide-textMuted;
+  }
+
   /* Footer */
   .customize-footer {
     @apply px-4 py-2 text-xs border-t border-ide-border;
