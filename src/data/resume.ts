@@ -91,7 +91,7 @@ export const resume: Resume = {
     location: 'United States',
     linkedin: 'https://linkedin.com/in/rafaelcarrion',
     github: 'https://github.com/rafaelcarrion',
-    website: 'https://racafe.dev',
+    website: 'https://rafaelcarrion.dev',
   },
 
   summary:
@@ -181,7 +181,7 @@ export const resume: Resume = {
         'Optimized for performance and SEO',
         'Integrated AI chat functionality',
       ],
-      url: 'https://racafe.dev',
+      url: 'https://rafaelcarrion.dev',
     },
     {
       name: 'Open Source Contributions',

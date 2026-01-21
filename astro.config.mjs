@@ -5,7 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import node from "@astrojs/node";
 
 export default defineConfig({
-  site: "https://racafe.dev",
+  site: "https://rafaelcarrion.dev",
   integrations: [tailwind(), sitemap()],
 
   adapter: node({

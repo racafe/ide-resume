@@ -1,6 +1,6 @@
-# robots.txt for racafe.dev
+# robots.txt for rafaelcarrion.dev
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://racafe.dev/sitemap-index.xml
+Sitemap: https://rafaelcarrion.dev/sitemap-index.xml
