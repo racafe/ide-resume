@@ -1,0 +1,29 @@
+---
+export interface Props {
+  language?: string;
+  code: string;
+  showLineNumbers?: boolean;
+  startLine?: number;
+}
+
+const { language = 'text', code, showLineNumbers = true, startLine = 1 } = Astro.props;
+
+// Split code into lines and add line numbers
+const lines = code.split('\n');
+const formattedCode = lines
+  .map((line, index) => {
+    const lineNum = startLine + index;
+    const paddedNum = String(lineNum).padStart(2, ' ');
+    if (showLineNumbers) {
+      return `<span class="line"><span class="line-number">${paddedNum}</span>${line}</span>`;
+    }
+    return `<span class="line">${line}</span>`;
+  })
+  .join('\n');
+---
+
+<div class="code-editor">
+  <div class="code-content">
+    <pre class="code-block" data-language={language}><code set:html={formattedCode} /></pre>
+  </div>
+</div>

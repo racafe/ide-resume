@@ -1,0 +1,60 @@
+---
+export interface Props {
+  title: string;
+  icon?: string;
+  count?: number;
+}
+
+const { title, icon, count } = Astro.props;
+
+// Default icon paths for common section types
+const defaultIcons: Record<string, string> = {
+  timeline: 'M12 3v6m0 6v6',
+  git: 'M6 3v12M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  search: 'M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z',
+  settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  folder: 'M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z',
+};
+
+// Determine which icon to use
+const iconPath = icon || defaultIcons.timeline;
+const hasCircle = !icon; // Use circle + path for default timeline style
+---
+
+<div class="section-header">
+  <div class="section-header-title">
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      {hasCircle && <circle cx="12" cy="12" r="3" />}
+      <path d={iconPath}></path>
+    </svg>
+    <span>{title}</span>
+  </div>
+  {count !== undefined && <span class="section-header-count">{count} entries</span>}
+</div>
+
+<style>
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--theme-border);
+    background-color: var(--theme-sidebar);
+  }
+
+  .section-header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--theme-text-muted);
+  }
+
+  .section-header-count {
+    font-size: 11px;
+    color: var(--theme-text-muted);
+  }
+</style>

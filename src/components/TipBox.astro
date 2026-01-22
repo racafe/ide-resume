@@ -1,0 +1,55 @@
+---
+export interface Props {
+  variant?: 'info' | 'warning' | 'tip';
+  title?: string;
+}
+
+const { variant = 'info', title } = Astro.props;
+
+// Icon paths for each variant
+const icons = {
+  info: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z',
+  warning: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',
+  tip: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z',
+};
+
+// Default titles for each variant
+const defaultTitles = {
+  info: 'Info',
+  warning: 'Warning',
+  tip: 'Tip',
+};
+
+const displayTitle = title || defaultTitles[variant];
+const iconPath = icons[variant];
+---
+
+<div class="tip-box" data-variant={variant}>
+  <div class="tip-box-title">
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+      <path d={iconPath}></path>
+    </svg>
+    {displayTitle}
+  </div>
+  <div class="tip-box-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .tip-box[data-variant='warning'] {
+    border-color: var(--theme-warning);
+  }
+
+  .tip-box[data-variant='warning'] .tip-box-title {
+    color: var(--theme-warning);
+  }
+
+  .tip-box[data-variant='tip'] {
+    border-color: var(--theme-success);
+  }
+
+  .tip-box[data-variant='tip'] .tip-box-title {
+    color: var(--theme-success);
+  }
+</style>

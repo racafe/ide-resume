@@ -164,7 +164,6 @@
 }
 
 @layer components {
-
   /* IDE Layout container */
   .ide-container {
     @apply h-screen w-screen flex flex-col overflow-hidden;
@@ -395,7 +394,6 @@
 }
 
 @layer utilities {
-
   /* Code syntax highlighting helpers */
   .syntax-keyword {
     color: var(--theme-keyword);
@@ -1032,7 +1030,6 @@
 
   /* Mobile breakpoint: < 768px */
   @media (max-width: 767px) {
-
     /* Show mobile header */
     .mobile-header {
       @apply flex items-center justify-between h-12 px-3 border-b z-50;
@@ -1207,7 +1204,6 @@
 
   /* Tablet breakpoint: 768px - 1023px */
   @media (min-width: 768px) and (max-width: 1023px) {
-
     /* Narrower sidebar on tablet */
     .sidebar {
       @apply w-48;
@@ -1692,7 +1688,6 @@
   }
 
   @keyframes typingBounce {
-
     0%,
     80%,
     100% {
