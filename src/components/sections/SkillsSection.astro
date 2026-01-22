@@ -1,0 +1,89 @@
+---
+export interface SkillsData {
+  languages: string[];
+  frameworks: string[];
+  databases: string[];
+  os: string[];
+  cloud: string[];
+}
+
+export interface Props {
+  skills: SkillsData;
+}
+
+const { skills } = Astro.props;
+
+// Helper to create a line with syntax highlighting
+let lineNum = 1;
+const line = (content: string) =>
+  `<span class="line"><span class="line-number">${String(lineNum++).padStart(2, ' ')}</span>${content}</span>`;
+
+const code = [
+  line('<span class="syntax-comment">// skills.ts - Technical Skills & Expertise</span>'),
+  line('<span class="syntax-comment">// Last updated: 2026</span>'),
+  line(''),
+  line('<span class="syntax-keyword">interface</span> <span class="syntax-type">Developer</span> &#123;'),
+  line('  <span class="syntax-variable">languages</span>: <span class="syntax-type">string</span>[];'),
+  line('  <span class="syntax-variable">frameworks</span>: <span class="syntax-type">string</span>[];'),
+  line('  <span class="syntax-variable">databases</span>: <span class="syntax-type">string</span>[];'),
+  line('  <span class="syntax-variable">os</span>: <span class="syntax-type">string</span>[];'),
+  line('  <span class="syntax-variable">cloud</span>: <span class="syntax-type">string</span>[];'),
+  line('&#125;'),
+  line(''),
+  line(
+    `<span class="syntax-keyword">const</span> <span class="syntax-variable">rafael</span>: <span class="syntax-type">Developer</span> = &#123;`
+  ),
+  line('  <span class="syntax-variable">languages</span>: ['),
+  ...skills.languages.map((skill, i) =>
+    line(
+      `    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.languages.length - 1 ? ',' : ''}`
+    )
+  ),
+  line('  ],'),
+  line(''),
+  line('  <span class="syntax-variable">frameworks</span>: ['),
+  ...skills.frameworks.map((skill, i) =>
+    line(
+      `    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.frameworks.length - 1 ? ',' : ''}`
+    )
+  ),
+  line('  ],'),
+  line(''),
+  line('  <span class="syntax-variable">databases</span>: ['),
+  ...skills.databases.map((skill, i) =>
+    line(
+      `    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.databases.length - 1 ? ',' : ''}`
+    )
+  ),
+  line('  ],'),
+  line(''),
+  line('  <span class="syntax-variable">os</span>: ['),
+  ...skills.os.map((skill, i) =>
+    line(
+      `    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.os.length - 1 ? ',' : ''}`
+    )
+  ),
+  line('  ],'),
+  line(''),
+  line('  <span class="syntax-variable">cloud</span>: ['),
+  ...skills.cloud.map((skill, i) =>
+    line(
+      `    <span class="syntax-string">"${skill.replace(/"/g, '&quot;')}"</span>${i < skills.cloud.length - 1 ? ',' : ''}`
+    )
+  ),
+  line('  ],'),
+  line('&#125;;'),
+  line(''),
+  line(
+    '<span class="syntax-keyword">export</span> <span class="syntax-keyword">default</span> <span class="syntax-variable">rafael</span>;'
+  ),
+].join('\n');
+---
+
+<div class="file-content" data-content="skills.ts">
+  <div class="code-editor">
+    <div class="code-content">
+      <pre class="code-block"><code set:html={code} /></pre>
+    </div>
+  </div>
+</div>

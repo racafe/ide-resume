@@ -1,0 +1,198 @@
+---
+import TipBox from '../TipBox.astro';
+
+export interface Props {
+  filename: string;
+}
+
+const { filename } = Astro.props;
+---
+
+{
+  filename === 'entity-framework-mysql.md' && (
+    <div class="file-content" data-content="entity-framework-mysql.md">
+      <div class="markdown-preview max-w-4xl">
+        <h1>Entity Framework Core with MySQL</h1>
+
+        <div class="article-badge">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+          </svg>
+          <span>Published Article</span>
+        </div>
+
+        <p>
+          A comprehensive guide on integrating <strong>Entity Framework Core</strong> with
+          <strong>MySQL</strong> databases. This article covers best practices, configuration, and real-world examples
+          for .NET developers looking to work with MySQL.
+        </p>
+
+        <h2>Overview</h2>
+
+        <p>
+          Entity Framework Core is a powerful ORM for .NET applications, but working with MySQL requires specific
+          configuration and considerations. This guide walks through the complete setup process.
+        </p>
+
+        <h2>Key Topics Covered</h2>
+
+        <ul>
+          <li>
+            <strong>Database Configuration</strong> - Setting up connection strings and DbContext
+          </li>
+          <li>
+            <strong>Model Design</strong> - Creating entities with MySQL-compatible data types
+          </li>
+          <li>
+            <strong>Migrations</strong> - Managing database schema changes
+          </li>
+          <li>
+            <strong>Performance Optimization</strong> - Query optimization and indexing strategies
+          </li>
+          <li>
+            <strong>Common Pitfalls</strong> - Avoiding typical issues when using EF Core with MySQL
+          </li>
+        </ul>
+
+        <h2>Code Sample</h2>
+
+        <pre>
+          <code>
+            <span class="syntax-keyword">public class</span> <span class="syntax-type">ApplicationDbContext</span> :{' '}
+            <span class="syntax-type">DbContext</span>
+            {`
+{
+    `}
+            <span class="syntax-keyword">public</span> <span class="syntax-type">DbSet</span>&lt;
+            <span class="syntax-type">Product</span>&gt; <span class="syntax-variable">Products</span> {'{ '}
+            <span class="syntax-keyword">get</span>; <span class="syntax-keyword">set</span>;{' }'}
+            {`
+
+    `}
+            <span class="syntax-keyword">protected override void</span>{' '}
+            <span class="syntax-function">OnConfiguring</span>(
+            {`
+        `}
+            <span class="syntax-type">DbContextOptionsBuilder</span> <span class="syntax-variable">options</span>)
+            {`
+    {
+        `}
+            <span class="syntax-variable">options</span>.<span class="syntax-function">UseMySql</span>(
+            {`
+            `}
+            <span class="syntax-variable">connectionString</span>,
+            {`
+            `}
+            <span class="syntax-type">ServerVersion</span>.<span class="syntax-function">AutoDetect</span>(
+            <span class="syntax-variable">connectionString</span>)
+            {`
+        );
+    }
+}`}
+          </code>
+        </pre>
+
+        <h2>Why This Matters</h2>
+
+        <p>
+          MySQL remains one of the most popular open-source databases, and understanding how to integrate it with modern
+          .NET applications is a valuable skill. This article bridges the gap between the official documentation and
+          practical implementation.
+        </p>
+
+        <TipBox variant="info" title="Read the Full Article">
+          This article was published on my technical blog. The full version includes step-by-step instructions, complete
+          code samples, and troubleshooting tips.
+        </TipBox>
+      </div>
+    </div>
+  )
+}
+
+{
+  filename === 'other-projects.md' && (
+    <div class="file-content" data-content="other-projects.md">
+      <div class="markdown-preview max-w-4xl">
+        <h1>Other Projects</h1>
+
+        <p>
+          A collection of side projects, experiments, and contributions that showcase different aspects of my
+          development work. These projects range from utility tools to learning experiments.
+        </p>
+
+        <h2>rafaelcarrion.dev</h2>
+
+        <blockquote>
+          <p>This very portfolio you're viewing!</p>
+        </blockquote>
+
+        <p>
+          A VS Code-inspired interactive portfolio built with <strong>Astro</strong> and
+          <strong>Tailwind CSS</strong>. Features include a functional file explorer, tabbed content system, and the
+          iconic Dark+ theme.
+        </p>
+
+        <ul>
+          <li>
+            <strong>Stack:</strong> Astro, TypeScript, Tailwind CSS
+          </li>
+          <li>
+            <strong>Features:</strong> File explorer, tabs, syntax highlighting, responsive design
+          </li>
+        </ul>
+
+        <h2>CLI Tools & Automation</h2>
+
+        <p>Various command-line utilities built for personal productivity and workflow automation:</p>
+
+        <ul>
+          <li>
+            <strong>Git workflow helpers</strong> - Scripts for common Git operations
+          </li>
+          <li>
+            <strong>Project scaffolding</strong> - Templates for quick project setup
+          </li>
+          <li>
+            <strong>Data processing scripts</strong> - Python tools for ETL tasks
+          </li>
+        </ul>
+
+        <h2>Open Source Contributions</h2>
+
+        <p>
+          I believe in giving back to the community that has helped me grow as a developer. My contributions include:
+        </p>
+
+        <ul>
+          <li>Documentation improvements for popular libraries</li>
+          <li>Bug fixes and feature implementations</li>
+          <li>Issue triage and community support</li>
+        </ul>
+
+        <h2>Learning Projects</h2>
+
+        <p>Projects built specifically to explore new technologies and concepts:</p>
+
+        <ul>
+          <li>
+            <strong>Security labs</strong> - CTF challenges and vulnerability research
+          </li>
+          <li>
+            <strong>Cloud infrastructure</strong> - Terraform and Docker experiments
+          </li>
+          <li>
+            <strong>API integrations</strong> - Connecting various third-party services
+          </li>
+        </ul>
+
+        <TipBox variant="info" title="GitHub">
+          Check out my{' '}
+          <a href="https://github.com/racafe" target="_blank" rel="noopener noreferrer">
+            GitHub profile
+          </a>{' '}
+          for the latest projects and contributions.
+        </TipBox>
+      </div>
+    </div>
+  )
+}

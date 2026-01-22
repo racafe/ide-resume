@@ -1,0 +1,149 @@
+---
+import type { Resume } from '../../data/resume';
+
+export interface Props {
+  resume: Resume;
+  formatEducationPeriod: (graduationDate: string, degree: string) => string;
+}
+
+const { resume, formatEducationPeriod } = Astro.props;
+
+// Helper to create a line with syntax highlighting
+let lineNum = 1;
+const line = (content: string) =>
+  `<span class="line"><span class="line-number">${String(lineNum++).padStart(2, ' ')}</span>${content}</span>`;
+
+const lines: string[] = [
+  line('<span class="syntax-comment"># education.yaml - Education & Certifications</span>'),
+  line(`<span class="syntax-comment"># ${resume.contact.name} - ${resume.contact.title}</span>`),
+  line(''),
+  line('<span class="syntax-keyword">certifications</span><span class="syntax-punctuation">:</span>'),
+];
+
+// Add certifications entries
+resume.certifications.forEach((cert, index) => {
+  lines.push(
+    line(
+      `  <span class="syntax-punctuation">-</span> <span class="syntax-keyword">name</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${cert.name}"</span>`
+    )
+  );
+  lines.push(
+    line(
+      `    <span class="syntax-keyword">issuer</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${cert.issuer}"</span>`
+    )
+  );
+  lines.push(
+    line(
+      `    <span class="syntax-keyword">year</span><span class="syntax-punctuation">:</span> <span class="syntax-number">${cert.dateObtained}</span>`
+    )
+  );
+  if (index < resume.certifications.length - 1) {
+    lines.push(line(''));
+  }
+});
+
+lines.push(line(''));
+lines.push(line('<span class="syntax-keyword">education</span><span class="syntax-punctuation">:</span>'));
+
+resume.education.forEach((edu, index) => {
+  const degreeDisplay =
+    edu.degree === 'Master' ? `Master in ${edu.field}` : edu.degree === 'Bachelor' ? edu.field : edu.field;
+  const period = formatEducationPeriod(edu.graduationDate, edu.degree);
+
+  lines.push(
+    line(
+      `  <span class="syntax-punctuation">-</span> <span class="syntax-keyword">degree</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${degreeDisplay}"</span>`
+    )
+  );
+  lines.push(
+    line(
+      `    <span class="syntax-keyword">institution</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${edu.institution}"</span>`
+    )
+  );
+  lines.push(
+    line(
+      `    <span class="syntax-keyword">location</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${edu.location}"</span>`
+    )
+  );
+  lines.push(
+    line(
+      `    <span class="syntax-keyword">year</span><span class="syntax-punctuation">:</span> <span class="syntax-number">${edu.graduationDate}</span>`
+    )
+  );
+  lines.push(
+    line(
+      `    <span class="syntax-keyword">period</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${period}"</span>`
+    )
+  );
+
+  if (edu.gpa) {
+    lines.push(
+      line(
+        `    <span class="syntax-keyword">gpa</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"${edu.gpa}"</span>`
+      )
+    );
+  }
+
+  if (edu.honors && edu.honors.length > 0) {
+    lines.push(line('    <span class="syntax-keyword">honors</span><span class="syntax-punctuation">:</span>'));
+    edu.honors.forEach((honor) => {
+      lines.push(
+        line(
+          `      <span class="syntax-punctuation">-</span> <span class="syntax-string">"${honor.replace(/"/g, '&quot;')}"</span>`
+        )
+      );
+    });
+  }
+
+  if (edu.relevantCourses && edu.relevantCourses.length > 0) {
+    lines.push(
+      line('    <span class="syntax-keyword">specializations</span><span class="syntax-punctuation">:</span>')
+    );
+    edu.relevantCourses.forEach((course) => {
+      lines.push(
+        line(
+          `      <span class="syntax-punctuation">-</span> <span class="syntax-string">"${course.replace(/"/g, '&quot;')}"</span>`
+        )
+      );
+    });
+  }
+
+  if (edu.degree === 'Certificate') {
+    lines.push(
+      line(
+        '    <span class="syntax-keyword">type</span><span class="syntax-punctuation">:</span> <span class="syntax-string">"Language Certificate"</span>'
+      )
+    );
+  }
+
+  if (index < resume.education.length - 1) {
+    lines.push(line(''));
+  }
+});
+
+lines.push(line(''));
+lines.push(line('<span class="syntax-keyword">continuous_learning</span><span class="syntax-punctuation">:</span>'));
+lines.push(line('  <span class="syntax-keyword">platforms</span><span class="syntax-punctuation">:</span>'));
+lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"NOW Learning"</span>'));
+lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Pluralsight"</span>'));
+lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Udemy"</span>'));
+lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Frontend Masters"</span>'));
+lines.push(line('  <span class="syntax-keyword">current_focus</span><span class="syntax-punctuation">:</span>'));
+lines.push(
+  line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Cloud Architecture"</span>')
+);
+lines.push(
+  line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"Security Best Practices"</span>')
+);
+lines.push(line('    <span class="syntax-punctuation">-</span> <span class="syntax-string">"System Design"</span>'));
+
+const code = lines.join('\n');
+---
+
+<div class="file-content" data-content="education.yaml">
+  <div class="code-editor">
+    <div class="code-content">
+      <pre class="code-block"><code set:html={code} /></pre>
+    </div>
+  </div>
+</div>

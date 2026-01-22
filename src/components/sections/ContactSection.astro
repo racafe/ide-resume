@@ -1,0 +1,139 @@
+---
+import type { Resume } from '../../data/resume';
+
+export interface Props {
+  resume: Resume;
+}
+
+const { resume } = Astro.props;
+---
+
+<div class="file-content" data-content="contact.tsx">
+  <div class="code-editor contact-form-editor" id="contact-editor">
+    <div class="code-content">
+      <pre
+        class="code-block"><code><span class="line"><span class="line-number"> 1</span><span class="syntax-comment">// contact.tsx - Get in Touch Component</span></span>
+<span class="line"><span class="line-number"> 2</span><span class="syntax-comment">// {resume.contact.name} - {resume.contact.title}</span></span>
+<span class="line"><span class="line-number"> 3</span></span>
+<span class="line"><span class="line-number"> 4</span><span class="syntax-keyword">import</span> <span class="syntax-variable">React</span>, &#123; <span class="syntax-variable">useState</span> &#125; <span class="syntax-keyword">from</span> <span class="syntax-string">'react'</span>;</span>
+<span class="line"><span class="line-number"> 5</span></span>
+<span class="line"><span class="line-number"> 6</span><span class="syntax-keyword">interface</span> <span class="syntax-type">ContactFormProps</span> &#123;</span>
+<span class="line"><span class="line-number"> 7</span>  <span class="syntax-variable">recipient</span>: <span class="syntax-type">string</span>;</span>
+<span class="line"><span class="line-number"> 8</span>  <span class="syntax-variable">theme</span>?: <span class="syntax-string">'dark'</span> | <span class="syntax-string">'light'</span>;</span>
+<span class="line"><span class="line-number"> 9</span>&#125;</span>
+<span class="line"><span class="line-number">10</span></span>
+<span class="line"><span class="line-number">11</span><span class="syntax-keyword">export const</span> <span class="syntax-function">ContactForm</span>: <span class="syntax-type">React.FC</span>&lt;<span class="syntax-type">ContactFormProps</span>&gt; = (&#123;</span>
+<span class="line"><span class="line-number">12</span>  <span class="syntax-variable">recipient</span> = <span class="syntax-string">"{resume.contact.email}"</span>,</span>
+<span class="line"><span class="line-number">13</span>  <span class="syntax-variable">theme</span> = <span class="syntax-string">"dark"</span></span>
+<span class="line"><span class="line-number">14</span>&#125;) =&gt; &#123;</span>
+<span class="line"><span class="line-number">15</span></span>
+<span class="line"><span class="line-number">16</span>  <span class="syntax-keyword">return</span> (</span>
+<span class="line"><span class="line-number">17</span>    &lt;<span class="syntax-type">form</span> <span class="syntax-variable">className</span>=<span class="syntax-string">"contact-form"</span>&gt;</span>
+<span class="line"><span class="line-number">18</span></span></code></pre>
+      <!-- Name Input Field -->
+      <div class="tsx-form-field">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number">19</span>      &lt;<span class="syntax-type">Input</span></span>
+<span class="line"><span class="line-number">20</span>        <span class="syntax-variable">type</span>=<span class="syntax-string">"text"</span></span>
+<span class="line"><span class="line-number">21</span>        <span class="syntax-variable">name</span>=<span class="syntax-string">"name"</span></span>
+<span class="line"><span class="line-number">22</span>        <span class="syntax-variable">label</span>=<span class="syntax-string">"Your Name"</span></span>
+<span class="line"><span class="line-number">23</span>        <span class="syntax-variable">required</span>=&#123;<span class="syntax-keyword">true</span>&#125;</span>
+<span class="line"><span class="line-number">24</span>        <span class="syntax-variable">value</span>=&#123;</span></code></pre>
+        <input type="text" id="contact-name" name="name" class="tsx-input" placeholder="string" required />
+        <pre
+          class="code-block"><code><span class="line">&#125;</span>
+<span class="line"><span class="line-number">25</span>      /&gt;</span></code></pre>
+        <div class="tsx-error" id="name-error"></div>
+      </div>
+
+      <!-- Email Input Field -->
+      <div class="tsx-form-field">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number">26</span></span>
+<span class="line"><span class="line-number">27</span>      &lt;<span class="syntax-type">Input</span></span>
+<span class="line"><span class="line-number">28</span>        <span class="syntax-variable">type</span>=<span class="syntax-string">"email"</span></span>
+<span class="line"><span class="line-number">29</span>        <span class="syntax-variable">name</span>=<span class="syntax-string">"email"</span></span>
+<span class="line"><span class="line-number">30</span>        <span class="syntax-variable">label</span>=<span class="syntax-string">"Email Address"</span></span>
+<span class="line"><span class="line-number">31</span>        <span class="syntax-variable">required</span>=&#123;<span class="syntax-keyword">true</span>&#125;</span>
+<span class="line"><span class="line-number">32</span>        <span class="syntax-variable">value</span>=&#123;</span></code></pre>
+        <input type="email" id="contact-email" name="email" class="tsx-input" placeholder="string" required />
+        <pre
+          class="code-block"><code><span class="line">&#125;</span>
+<span class="line"><span class="line-number">33</span>      /&gt;</span></code></pre>
+        <div class="tsx-error" id="email-error"></div>
+      </div>
+
+      <!-- Message Textarea Field -->
+      <div class="tsx-form-field">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number">34</span></span>
+<span class="line"><span class="line-number">35</span>      &lt;<span class="syntax-type">TextArea</span></span>
+<span class="line"><span class="line-number">36</span>        <span class="syntax-variable">name</span>=<span class="syntax-string">"message"</span></span>
+<span class="line"><span class="line-number">37</span>        <span class="syntax-variable">label</span>=<span class="syntax-string">"Message"</span></span>
+<span class="line"><span class="line-number">38</span>        <span class="syntax-variable">rows</span>=&#123;<span class="syntax-number">5</span>&#125;</span>
+<span class="line"><span class="line-number">39</span>        <span class="syntax-variable">required</span>=&#123;<span class="syntax-keyword">true</span>&#125;</span>
+<span class="line"><span class="line-number">40</span>        <span class="syntax-variable">value</span>=&#123;</span></code></pre>
+        <textarea id="contact-message" name="message" class="tsx-textarea" placeholder="string" rows="4" required>
+        </textarea>
+        <pre
+          class="code-block"><code><span class="line">&#125;</span>
+<span class="line"><span class="line-number">41</span>      /&gt;</span></code></pre>
+        <div class="tsx-error" id="message-error"></div>
+      </div>
+
+      <!-- Submit Button as Function Call -->
+      <div class="tsx-form-field tsx-submit-section">
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number">42</span></span>
+<span class="line"><span class="line-number">43</span>      &lt;<span class="syntax-type">Button</span></span>
+<span class="line"><span class="line-number">44</span>        <span class="syntax-variable">type</span>=<span class="syntax-string">"submit"</span></span>
+<span class="line"><span class="line-number">45</span>        <span class="syntax-variable">variant</span>=<span class="syntax-string">"primary"</span></span>
+<span class="line"><span class="line-number">46</span>        <span class="syntax-variable">onClick</span>=&#123;<span class="syntax-function">handleSubmit</span>&#125;</span>
+<span class="line"><span class="line-number">47</span>      &gt;</span></code></pre>
+        <button type="submit" id="contact-submit" class="tsx-submit-btn">
+          <span class="btn-text">sendMessage()</span>
+          <span class="btn-loading hidden">
+            <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              >
+              </path>
+            </svg>
+          </span>
+        </button>
+        <pre
+          class="code-block"><code><span class="line"><span class="line-number">48</span>      &lt;/<span class="syntax-type">Button</span>&gt;</span></code></pre>
+      </div>
+
+      <!-- Closing Tags -->
+      <pre
+        class="code-block"><code><span class="line"><span class="line-number">49</span></span>
+<span class="line"><span class="line-number">50</span>    &lt;/<span class="syntax-type">form</span>&gt;</span>
+<span class="line"><span class="line-number">51</span>  );</span>
+<span class="line"><span class="line-number">52</span>&#125;;</span>
+<span class="line"><span class="line-number">53</span></span>
+<span class="line"><span class="line-number">54</span><span class="syntax-keyword">export default</span> <span class="syntax-function">ContactForm</span>;</span></code></pre>
+    </div>
+
+    <!-- Success State -->
+    <div class="tsx-success hidden" id="contact-success">
+      <pre
+        class="code-block"><code><span class="line"><span class="line-number">56</span><span class="syntax-comment">// ✓ Component rendered successfully</span></span>
+<span class="line"><span class="line-number">57</span><span class="syntax-comment">// Message sent to: {resume.contact.email}</span></span>
+<span class="line"><span class="line-number">58</span></span>
+<span class="line"><span class="line-number">59</span><span class="syntax-keyword">const</span> <span class="syntax-variable">response</span>: <span class="syntax-type">ApiResponse</span> = &#123;</span>
+<span class="line"><span class="line-number">60</span>  <span class="syntax-variable">status</span>: <span class="syntax-number">200</span>,</span>
+<span class="line"><span class="line-number">61</span>  <span class="syntax-variable">message</span>: <span class="syntax-string">"Thank you! I'll get back to you soon."</span>,</span>
+<span class="line"><span class="line-number">62</span>  <span class="syntax-variable">timestamp</span>: <span class="syntax-keyword">new</span> <span class="syntax-type">Date</span>().<span class="syntax-function">toISOString</span>()</span>
+<span class="line"><span class="line-number">63</span>&#125;;</span>
+<span class="line"><span class="line-number">64</span></span>
+<span class="line"><span class="line-number">65</span><span class="syntax-variable">console</span>.<span class="syntax-function">log</span>(<span class="syntax-string">'✓ Email queued for delivery'</span>);</span></code></pre>
+      <button id="contact-reset" class="tsx-reset-btn">
+        <span class="syntax-function">resetForm</span><span class="syntax-punctuation">()</span>
+      </button>
+    </div>
+  </div>
+</div>

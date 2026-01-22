@@ -1,0 +1,107 @@
+---
+import TipBox from '../TipBox.astro';
+import type { Resume } from '../../data/resume';
+
+export interface Props {
+  resume: Resume;
+  currentPositions: { company?: string; position?: string }[];
+}
+
+const { resume, currentPositions } = Astro.props;
+---
+
+<div class="file-content" data-content="about.md">
+  <div class="markdown-preview max-w-4xl">
+    <h1>About Me</h1>
+
+    <p>
+      Hi there! I'm <strong>{resume.contact.name}</strong>, a <strong>
+        {resume.contact.title}
+      </strong>
+      based in <strong>{resume.contact.location}</strong>. I'm currently working at
+      <a href="https://www.noris.de" target="_blank" rel="noopener noreferrer">
+        {currentPositions[0]?.company || 'Noris Network AG'}
+      </a> as {currentPositions[0]?.position || 'Senior Software Engineer'}, and I'm also the co-owner and CTO of <a
+        href="https://technit.com.mx"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {currentPositions.length > 1 ? currentPositions[1]?.company : 'Technit Solutions México'}
+      </a>, where I've led the development of 30+ mobile applications.
+    </p>
+
+    <h2>What I Do</h2>
+
+    <p>
+      {resume.summary}
+    </p>
+
+    <ul>
+      {
+        resume.skills.map((skillCategory) => (
+          <li>
+            <strong>{skillCategory.category}:</strong> {skillCategory.skills.join(', ')}
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>My Approach</h2>
+
+    <p>
+      I believe in understanding business problems first, then designing software solutions that best meet the project's
+      needs. I focus on how technology can solve business challenges, which frameworks and platforms to use, how
+      applications will scale, and how they will be maintained. I'm passionate about software architecture, system
+      design, and leading development teams to deliver high-quality solutions.
+    </p>
+
+    <blockquote>
+      <p>"The best code is no code at all. The second best is code that's easy to understand and change."</p>
+    </blockquote>
+
+    <h2>Key Strengths</h2>
+
+    <p>
+      {
+        resume.personalInterests.find((interest) => interest.category === 'Strengths')?.items.join(', ') ||
+          'Teamwork, active listening & communication, leadership, forward thinking, comfortable working with deadlines, creative problem-solving, adaptability, and thinking outside the box.'
+      }
+    </p>
+
+    <h2>Beyond the Code</h2>
+
+    <p>
+      When I'm not coding, you'll find me exploring {resume.contact.location.split(',')[0]}, contributing to open-source
+      projects, or working on new mobile applications and software solutions through Technit.
+    </p>
+
+    <h2>Let's Connect</h2>
+
+    <p>I'm always open to interesting conversations and new opportunities. Find me on:</p>
+
+    <ul>
+      <li>
+        <a href={resume.contact.github} target="_blank" rel="noopener noreferrer">GitHub</a> — Check out my open-source work
+      </li>
+      <li>
+        <a href={resume.contact.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a> — Professional network
+      </li>
+      <li>
+        <a href={resume.contact.twitter} target="_blank" rel="noopener noreferrer">Twitter/X</a> — Occasional tech thoughts
+      </li>
+      <li>
+        <a href={resume.contact.bsky} target="_blank" rel="noopener noreferrer">Bluesky</a> — Occasional tech thoughts
+      </li>
+      <li>
+        <a href={resume.contact.xing} target="_blank" rel="noopener noreferrer">Xing</a> — Professional network
+      </li>
+      <li>
+        <a href={resume.contact.instagram} target="_blank" rel="noopener noreferrer">Instagram</a> — Personal life
+      </li>
+    </ul>
+
+    <TipBox variant="info" title="Get in Touch">
+      Want to work together or just say hi? Check out <code>contact.tsx</code> in the file explorer for my contact form.
+    </TipBox>
+  </div>
+</div>
