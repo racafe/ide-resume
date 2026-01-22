@@ -17,7 +17,7 @@ const { resume, currentPositions } = Astro.props;
   <p>
     Hello! I'm <strong>{resume.contact.name}</strong>, a {resume.contact.title} based in
     {resume.contact.location}. Currently working at <strong>
-      {currentPositions[0]?.company || 'Noris Network AG'}
+      {currentPositions[0]?.company || 'noris network AG'}
     </strong>{
       currentPositions.length > 1 ? (
         <>

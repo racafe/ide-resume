@@ -103,11 +103,11 @@ export const resume: Resume = {
   },
 
   summary:
-    'Senior Software Engineer at Noris Network AG and CTO/Co-owner of Technit Solutions México with 15+ years of experience in solution architecture, full-stack development, and mobile app development. Led development of 30+ mobile applications and enterprise software solutions. Expert in system design, cloud architecture, and leading technical teams.',
+    'Senior Software Engineer at noris network AG and CTO/Co-owner of Technit Solutions México with 15+ years of experience in solution architecture, full-stack development, and mobile app development. Led development of 30+ mobile applications and enterprise software solutions. Expert in system design, cloud architecture, and leading technical teams.',
 
   workExperience: [
     {
-      company: 'Noris Network AG',
+      company: 'noris network AG',
       position: 'Senior Software Engineer',
       location: 'Nuremberg, Germany',
       startDate: '2021-01',
