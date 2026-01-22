@@ -1,0 +1,53 @@
+---
+export interface LogEntry {
+  year?: number;
+  level?: 'INFO' | 'DEBUG' | 'WARN' | 'ERROR';
+  message: string;
+  type?: 'comment' | 'entry' | 'empty';
+}
+
+export interface Props {
+  filename: string;
+  entries: LogEntry[];
+}
+
+const { filename, entries } = Astro.props;
+
+// Helper function to escape HTML entities
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Format log entry with syntax highlighting
+function formatLogEntry(entry: LogEntry): string {
+  switch (entry.type) {
+    case 'comment':
+      return `<span class="syntax-comment">${escapeHtml(entry.message)}</span>`;
+    case 'empty':
+      return '';
+    default:
+      if (entry.year !== undefined && entry.level) {
+        const levelClass = entry.level === 'DEBUG' ? 'syntax-comment' : 'syntax-type';
+        return `[<span class="syntax-number">${entry.year}</span>] <span class="${levelClass}">${entry.level}</span>  - ${escapeHtml(entry.message)}`;
+      }
+      return escapeHtml(entry.message);
+  }
+}
+
+// Generate formatted code with line numbers
+const formattedCode = entries
+  .map((entry, index) => {
+    const lineNum = String(index + 1).padStart(2, ' ');
+    const formattedContent = formatLogEntry(entry);
+    return `<span class="line"><span class="line-number">${lineNum}</span>${formattedContent}</span>`;
+  })
+  .join('\n');
+---
+
+<div class="file-content" data-content={filename}>
+  <div class="code-editor career-log">
+    <div class="code-content">
+      <pre class="code-block"><code set:html={formattedCode} /></pre>
+    </div>
+  </div>
+</div>

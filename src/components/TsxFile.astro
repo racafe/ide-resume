@@ -1,0 +1,125 @@
+---
+export interface TsxFormField {
+  linesBefore: string[];
+  inputType: 'text' | 'email' | 'textarea';
+  inputId: string;
+  inputName: string;
+  placeholder?: string;
+  required?: boolean;
+  rows?: number;
+  linesAfter?: string[];
+}
+
+export interface Props {
+  filename: string;
+  headerLines: string[];
+  formFields: TsxFormField[];
+  submitButton?: {
+    linesBefore: string[];
+    buttonId: string;
+    buttonText: string;
+  };
+  footerLines: string[];
+  successLines?: string[];
+  resetButtonId?: string;
+}
+
+const { filename, headerLines, formFields, submitButton, footerLines, successLines, resetButtonId } = Astro.props;
+
+let currentLine = 1;
+
+function getLineNumber(): string {
+  return String(currentLine++).padStart(2, ' ');
+}
+
+function formatCodeLine(content: string): string {
+  return `<span class="line"><span class="line-number">${getLineNumber()}</span>${content}</span>`;
+}
+---
+
+<div class="file-content" data-content={filename}>
+  <div class="code-editor contact-form-editor" id="contact-editor">
+    <div class="code-content">
+      <pre class="code-block"><code>{headerLines.map(line => formatCodeLine(line)).join('\n')}</code></pre>
+
+      {
+        formFields.map((field) => (
+          <div class="tsx-form-field">
+            <pre class="code-block">
+              <code set:html={field.linesBefore.map((line) => formatCodeLine(line)).join('\n')} />
+            </pre>
+            {field.inputType === 'textarea' ? (
+              <textarea
+                id={field.inputId}
+                name={field.inputName}
+                class="tsx-textarea"
+                placeholder={field.placeholder || 'string'}
+                rows={field.rows || 4}
+                required={field.required}
+              />
+            ) : (
+              <input
+                type={field.inputType}
+                id={field.inputId}
+                name={field.inputName}
+                class="tsx-input"
+                placeholder={field.placeholder || 'string'}
+                required={field.required}
+              />
+            )}
+            {field.linesAfter && (
+              <pre class="code-block">
+                <code set:html={field.linesAfter.map((line) => formatCodeLine(line)).join('\n')} />
+              </pre>
+            )}
+            <div class="tsx-error" id={`${field.inputName}-error`} />
+          </div>
+        ))
+      }
+
+      {
+        submitButton && (
+          <div class="tsx-form-field tsx-submit-section">
+            <pre class="code-block">
+              <code set:html={submitButton.linesBefore.map((line) => formatCodeLine(line)).join('\n')} />
+            </pre>
+            <button type="submit" id={submitButton.buttonId} class="tsx-submit-btn">
+              <span class="btn-text">{submitButton.buttonText}</span>
+              <span class="btn-loading hidden">
+                <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              </span>
+            </button>
+            <pre class="code-block">
+              <code set:html={formatCodeLine(`&lt;/<span class="syntax-type">Button</span>&gt;`)} />
+            </pre>
+          </div>
+        )
+      }
+
+      <pre class="code-block"><code set:html={footerLines.map(line => formatCodeLine(line)).join('\n')} /></pre>
+    </div>
+
+    {
+      successLines && (
+        <div class="tsx-success hidden" id="contact-success">
+          <pre class="code-block">
+            <code set:html={successLines.map((line) => formatCodeLine(line)).join('\n')} />
+          </pre>
+          {resetButtonId && (
+            <button id={resetButtonId} class="tsx-reset-btn">
+              <span class="syntax-function">resetForm</span>
+              <span class="syntax-punctuation">()</span>
+            </button>
+          )}
+        </div>
+      )
+    }
+  </div>
+</div>

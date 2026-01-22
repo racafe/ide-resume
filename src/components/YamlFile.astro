@@ -1,0 +1,89 @@
+---
+export interface YamlLine {
+  content: string;
+  indent?: number;
+  type?: 'comment' | 'key' | 'value' | 'list-item' | 'empty';
+}
+
+export interface Props {
+  filename: string;
+  lines: YamlLine[];
+}
+
+const { filename, lines } = Astro.props;
+
+// Helper function to format YAML line with proper syntax highlighting
+function formatYamlLine(line: YamlLine): string {
+  const indent = '  '.repeat(line.indent || 0);
+
+  switch (line.type) {
+    case 'comment':
+      return `${indent}<span class="syntax-comment">${escapeHtml(line.content)}</span>`;
+    case 'empty':
+      return '';
+    case 'list-item':
+      // Parse list item: "- key: value" or "- value"
+      const listMatch = line.content.match(/^-\s*(.*)$/);
+      if (listMatch) {
+        const itemContent = listMatch[1];
+        const keyValueMatch = itemContent.match(/^(\w+):\s*(.*)$/);
+        if (keyValueMatch) {
+          return `${indent}<span class="syntax-punctuation">-</span> <span class="syntax-keyword">${escapeHtml(keyValueMatch[1])}</span><span class="syntax-punctuation">:</span> ${formatValue(keyValueMatch[2])}`;
+        }
+        return `${indent}<span class="syntax-punctuation">-</span> ${formatValue(itemContent)}`;
+      }
+      return `${indent}${escapeHtml(line.content)}`;
+    case 'key':
+      // Key without value (nested object start)
+      return `${indent}<span class="syntax-keyword">${escapeHtml(line.content)}</span><span class="syntax-punctuation">:</span>`;
+    default:
+      // Key-value pair
+      const kvMatch = line.content.match(/^(\w+):\s*(.*)$/);
+      if (kvMatch) {
+        const [, key, value] = kvMatch;
+        if (value) {
+          return `${indent}<span class="syntax-keyword">${escapeHtml(key)}</span><span class="syntax-punctuation">:</span> ${formatValue(value)}`;
+        }
+        return `${indent}<span class="syntax-keyword">${escapeHtml(key)}</span><span class="syntax-punctuation">:</span>`;
+      }
+      return `${indent}${escapeHtml(line.content)}`;
+  }
+}
+
+function formatValue(value: string): string {
+  // Check for quoted strings
+  if (value.match(/^".*"$/)) {
+    return `<span class="syntax-string">${escapeHtml(value)}</span>`;
+  }
+  // Check for numbers
+  if (value.match(/^\d+$/)) {
+    return `<span class="syntax-number">${escapeHtml(value)}</span>`;
+  }
+  // Check for boolean-like values
+  if (value.match(/^(true|false|yes|no|null)$/i)) {
+    return `<span class="syntax-keyword">${escapeHtml(value)}</span>`;
+  }
+  return `<span class="syntax-string">"${escapeHtml(value)}"</span>`;
+}
+
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Generate formatted code with line numbers
+const formattedCode = lines
+  .map((line, index) => {
+    const lineNum = String(index + 1).padStart(2, ' ');
+    const formattedContent = formatYamlLine(line);
+    return `<span class="line"><span class="line-number">${lineNum}</span>${formattedContent}</span>`;
+  })
+  .join('\n');
+---
+
+<div class="file-content" data-content={filename}>
+  <div class="code-editor">
+    <div class="code-content">
+      <pre class="code-block"><code set:html={formattedCode} /></pre>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+---
+export interface Props {
+  filename: string;
+  maxWidth?: string;
+}
+
+const { filename, maxWidth = 'max-w-4xl' } = Astro.props;
+---
+
+<div class="file-content" data-content={filename}>
+  <div class={`markdown-preview ${maxWidth}`}>
+    <slot />
+  </div>
+</div>

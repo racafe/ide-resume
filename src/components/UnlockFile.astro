@@ -1,0 +1,107 @@
+---
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  hint?: string;
+  status: 'UNLOCKED' | 'LOCKED';
+  points: number;
+}
+
+export interface Props {
+  filename: string;
+  achievements: Achievement[];
+  headerComment?: string;
+  statusComment?: string;
+  totalPoints?: number;
+}
+
+const {
+  filename,
+  achievements,
+  headerComment = '// achievements.unlock - Hidden Features Registry',
+  statusComment = '// Status: CLASSIFIED',
+  totalPoints,
+} = Astro.props;
+
+// Helper function to escape HTML entities
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/{/g, '&#123;')
+    .replace(/}/g, '&#125;');
+}
+
+// Calculate total points if not provided
+const calculatedTotal = totalPoints || achievements.reduce((sum, a) => sum + a.points, 0);
+
+// Build the content lines
+const lines: string[] = [
+  `<span class="syntax-comment">${escapeHtml(headerComment)}</span>`,
+  `<span class="syntax-comment">${escapeHtml(statusComment)}</span>`,
+  '',
+  '<span class="syntax-type">ACHIEVEMENT_LIST</span> = &#123;',
+  '',
+  '  <span class="syntax-comment">// ══════════════════════════════════════════════</span>',
+  '  <span class="syntax-comment">//  DISCOVERABLE EASTER EGGS</span>',
+  '  <span class="syntax-comment">// ══════════════════════════════════════════════</span>',
+  '',
+];
+
+// Add each achievement
+achievements.forEach((achievement, index) => {
+  lines.push(`  <span class="syntax-string">"${escapeHtml(achievement.id)}"</span>: &#123;`);
+  lines.push(
+    `    <span class="syntax-variable">name</span>: <span class="syntax-string">"${escapeHtml(achievement.name)}"</span>,`
+  );
+  lines.push(
+    `    <span class="syntax-variable">description</span>: <span class="syntax-string">"${escapeHtml(achievement.description)}"</span>,`
+  );
+
+  if (achievement.hint) {
+    lines.push(
+      `    <span class="syntax-variable">hint</span>: <span class="syntax-string">"${escapeHtml(achievement.hint)}"</span>,`
+    );
+  }
+
+  lines.push(
+    `    <span class="syntax-variable">status</span>: <span class="syntax-string">"[${achievement.status}]"</span>,`
+  );
+  lines.push(
+    `    <span class="syntax-variable">points</span>: <span class="syntax-number">${achievement.points}</span>,`
+  );
+  lines.push('  &#125;,');
+
+  if (index < achievements.length - 1) {
+    lines.push('');
+  }
+});
+
+// Add footer
+lines.push('');
+lines.push('  <span class="syntax-comment">// ══════════════════════════════════════════════</span>');
+lines.push(`  <span class="syntax-comment">//  TOTAL POINTS AVAILABLE: ${calculatedTotal}</span>`);
+lines.push('  <span class="syntax-comment">//  YOUR SCORE: ???</span>');
+lines.push('  <span class="syntax-comment">// ══════════════════════════════════════════════</span>');
+lines.push('');
+lines.push('&#125;;');
+
+// Generate formatted code with line numbers
+const formattedCode = lines
+  .map((line, index) => {
+    const lineNum = String(index + 1).padStart(2, ' ');
+    return `<span class="line"><span class="line-number">${lineNum}</span>${line}</span>`;
+  })
+  .join('\n');
+---
+
+<div class="file-content" data-content={filename}>
+  <div class="code-editor">
+    <div class="code-content">
+      <pre class="code-block"><code set:html={formattedCode} /></pre>
+    </div>
+  </div>
+</div>

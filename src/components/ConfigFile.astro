@@ -1,0 +1,101 @@
+---
+export interface ConfigLine {
+  content: string;
+  type?: 'comment' | 'key' | 'value' | 'empty' | 'code';
+}
+
+export interface Props {
+  filename: string;
+  lines: ConfigLine[];
+}
+
+const { filename, lines } = Astro.props;
+
+// Helper function to escape HTML entities
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/{/g, '&#123;')
+    .replace(/}/g, '&#125;');
+}
+
+// Format JavaScript/Config code with syntax highlighting
+function formatConfigLine(line: ConfigLine): string {
+  const content = line.content;
+
+  switch (line.type) {
+    case 'comment':
+      return `<span class="syntax-comment">${escapeHtml(content)}</span>`;
+    case 'empty':
+      return '';
+    default:
+      return highlightJavaScript(content);
+  }
+}
+
+function highlightJavaScript(code: string): string {
+  let result = escapeHtml(code);
+
+  // Keywords
+  const keywords = [
+    'module',
+    'exports',
+    'require',
+    'const',
+    'let',
+    'var',
+    'function',
+    'return',
+    'if',
+    'else',
+    'true',
+    'false',
+    'null',
+    'undefined',
+    'process',
+  ];
+  keywords.forEach((keyword) => {
+    result = result.replace(new RegExp(`\\b(${keyword})\\b`, 'g'), '<span class="syntax-keyword">$1</span>');
+  });
+
+  // Strings (double and single quoted)
+  result = result.replace(/(&quot;[^&]*&quot;|'[^']*')/g, '<span class="syntax-string">$1</span>');
+
+  // Numbers
+  result = result.replace(/\b(\d+)\b/g, '<span class="syntax-number">$1</span>');
+
+  // Variable/property names (before colons)
+  result = result.replace(/^\s*([a-zA-Z_][a-zA-Z0-9_]*):/gm, '<span class="syntax-variable">$1</span>:');
+
+  // Function names
+  result = result.replace(/([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/g, '<span class="syntax-function">$1</span>(');
+
+  // Object property access
+  result = result.replace(/\.([a-zA-Z_][a-zA-Z0-9_]*)/g, '.<span class="syntax-variable">$1</span>');
+
+  // Arrow function
+  result = result.replace(/=&gt;/g, '<span class="syntax-keyword">=&gt;</span>');
+
+  return result;
+}
+
+// Generate formatted code with line numbers
+const formattedCode = lines
+  .map((line, index) => {
+    const lineNum = String(index + 1).padStart(2, ' ');
+    const formattedContent = formatConfigLine(line);
+    return `<span class="line"><span class="line-number">${lineNum}</span>${formattedContent}</span>`;
+  })
+  .join('\n');
+---
+
+<div class="file-content" data-content={filename}>
+  <div class="code-editor">
+    <div class="code-content">
+      <pre class="code-block"><code set:html={formattedCode} /></pre>
+    </div>
+  </div>
+</div>

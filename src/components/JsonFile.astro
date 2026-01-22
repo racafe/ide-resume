@@ -1,0 +1,16 @@
+---
+import Timeline, { type TimelineItem } from './Timeline.astro';
+
+export interface Props {
+  filename: string;
+  items: TimelineItem[];
+  title?: string;
+  footerText?: string;
+}
+
+const { filename, items, title = 'TIMELINE', footerText = 'Career journey continues...' } = Astro.props;
+---
+
+<div class="file-content" data-content={filename}>
+  <Timeline items={items} title={title} footerText={footerText} />
+</div>
