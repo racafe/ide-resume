@@ -2,12 +2,13 @@
 export interface Props {
   filename: string;
   maxWidth?: string;
+  active?: boolean;
 }
 
-const { filename, maxWidth = 'max-w-4xl' } = Astro.props;
+const { filename, maxWidth = 'max-w-4xl', active = false } = Astro.props;
 ---
 
-<div class="file-content" data-content={filename}>
+<div class={`file-content${active ? ' active' : ''}`} data-content={filename}>
   <div class={`markdown-preview ${maxWidth}`}>
     <slot />
   </div>

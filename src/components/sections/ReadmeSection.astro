@@ -1,4 +1,5 @@
 ---
+import MarkdownFile from '../MarkdownFile.astro';
 import TipBox from '../TipBox.astro';
 import type { Resume } from '../../data/resume';
 
@@ -10,72 +11,69 @@ export interface Props {
 const { resume, currentPositions } = Astro.props;
 ---
 
-<div class="file-content active" data-content="README.md">
-  <div class="markdown-preview max-w-4xl">
-    <h1>Welcome to rafaelcarrion.dev</h1>
+<MarkdownFile filename="README.md" active={true}>
+  <h1>Welcome to rafaelcarrion.dev</h1>
 
-    <p>
-      Hello! I'm <strong>{resume.contact.name}</strong>, a {resume.contact.title} based in
-      {resume.contact.location}. Currently working at <strong>
-        {currentPositions[0]?.company || 'Noris Network AG'}
-      </strong>{
-        currentPositions.length > 1 ? (
-          <>
-            {' '}
-            and co-owning <strong>{currentPositions[1]?.company || 'Technit Solutions México'}</strong>
-          </>
-        ) : (
-          ''
-        )
-      }, where I've led the development of 30+ mobile applications. This portfolio is designed to look and feel like
-      <a href="https://code.visualstudio.com/">VS Code</a> — because if you're going to read about a developer, why not do
-      it in their natural habitat?
-    </p>
+  <p>
+    Hello! I'm <strong>{resume.contact.name}</strong>, a {resume.contact.title} based in
+    {resume.contact.location}. Currently working at <strong>
+      {currentPositions[0]?.company || 'Noris Network AG'}
+    </strong>{
+      currentPositions.length > 1 ? (
+        <>
+          {' '}
+          and co-owning <strong>{currentPositions[1]?.company || 'Technit Solutions México'}</strong>
+        </>
+      ) : (
+        ''
+      )
+    }, where I've led the development of 30+ mobile applications. This portfolio is designed to look and feel like
+    <a href="https://code.visualstudio.com/">VS Code</a> — because if you're going to read about a developer, why not do it
+    in their natural habitat?
+  </p>
 
-    <h2>Quick Start</h2>
+  <h2>Quick Start</h2>
 
-    <p>Navigate through the <strong>file explorer</strong> on the left to discover different sections:</p>
+  <p>Navigate through the <strong>file explorer</strong> on the left to discover different sections:</p>
 
-    <ul>
-      <li><code>README.md</code> — You are here</li>
-      <li><code>about.md</code> — Learn more about me</li>
-      <li><code>experience.json</code> — My professional journey</li>
-      <li><code>skills.ts</code> — Technical toolkit</li>
-      <li><code>education.yaml</code> — Education & certifications</li>
-      <li><code>contact.tsx</code> — Let's connect</li>
-    </ul>
+  <ul>
+    <li><code>README.md</code> — You are here</li>
+    <li><code>about.md</code> — Learn more about me</li>
+    <li><code>experience.json</code> — My professional journey</li>
+    <li><code>skills.ts</code> — Technical toolkit</li>
+    <li><code>education.yaml</code> — Education & certifications</li>
+    <li><code>contact.tsx</code> — Let's connect</li>
+  </ul>
 
-    <h2>Features</h2>
+  <h2>Features</h2>
 
-    <p>This interactive portfolio includes:</p>
+  <p>This interactive portfolio includes:</p>
 
-    <ul>
-      <li><strong>File Explorer</strong> — Click files to open them as tabs</li>
-      <li><strong>Tab System</strong> — Multiple files open at once, just like a real IDE</li>
-      <li><strong>Search</strong> — Search for files and content</li>
-      <li><strong>Source Control</strong> — View Git commit history and diffs</li>
-      <li><strong>Customize Panel</strong> — Customize the appearance of the IDE</li>
-      <li><strong>Themes</strong> — Dark+, Light and Monokai</li>
-      <li><strong>Syntax Highlighting</strong> — Code displayed with proper colors</li>
-      <li><strong>Mobile Responsive</strong> — Collapsible sidebar and touch-friendly navigation</li>
-      <li><strong>AI Chat Assistant</strong> — Ask questions about Rafael's experience</li>
-    </ul>
+  <ul>
+    <li><strong>File Explorer</strong> — Click files to open them as tabs</li>
+    <li><strong>Tab System</strong> — Multiple files open at once, just like a real IDE</li>
+    <li><strong>Search</strong> — Search for files and content</li>
+    <li><strong>Source Control</strong> — View Git commit history and diffs</li>
+    <li><strong>Customize Panel</strong> — Customize the appearance of the IDE</li>
+    <li><strong>Themes</strong> — Dark+, Light and Monokai</li>
+    <li><strong>Syntax Highlighting</strong> — Code displayed with proper colors</li>
+    <li><strong>Mobile Responsive</strong> — Collapsible sidebar and touch-friendly navigation</li>
+    <li><strong>AI Chat Assistant</strong> — Ask questions about Rafael's experience</li>
+  </ul>
 
-    <h2>About This Project</h2>
+  <h2>About This Project</h2>
 
-    <p>
-      Built with <a href="https://astro.build/">Astro</a> and styled with
-      <a href="https://tailwindcss.com/">Tailwind CSS</a>. The design faithfully recreates VS Code's Dark+ theme with
-      attention to the small details: the activity bar icons, the file tree animations, and the status bar at the
-      bottom.
-    </p>
+  <p>
+    Built with <a href="https://astro.build/">Astro</a> and styled with
+    <a href="https://tailwindcss.com/">Tailwind CSS</a>. The design faithfully recreates VS Code's Dark+ theme with
+    attention to the small details: the activity bar icons, the file tree animations, and the status bar at the bottom.
+  </p>
 
-    <blockquote>
-      <p>"Any sufficiently advanced portfolio is indistinguishable from an actual IDE."</p>
-    </blockquote>
+  <blockquote>
+    <p>"Any sufficiently advanced portfolio is indistinguishable from an actual IDE."</p>
+  </blockquote>
 
-    <TipBox variant="tip" title="Tip">
-      Use the file explorer on the left to navigate, or click on any tab to switch between open files.
-    </TipBox>
-  </div>
-</div>
+  <TipBox variant="tip" title="Tip">
+    Use the file explorer on the left to navigate, or click on any tab to switch between open files.
+  </TipBox>
+</MarkdownFile>
