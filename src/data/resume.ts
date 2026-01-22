@@ -98,7 +98,7 @@ export const resume: Resume = {
     instagram: 'https://www.instagram.com/racafe',
     twitter: 'https://www.twitter.com/rafael_carrion',
     bsky: 'https://bsky.app/profile/racafe.bsky.social',
-    github: 'https://github.com/rafaelcarrion',
+    github: 'https://github.com/racafe',
     website: 'https://rafaelcarrion.dev',
   },
 
