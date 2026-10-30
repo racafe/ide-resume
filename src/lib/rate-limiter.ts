@@ -22,9 +22,12 @@ interface RateLimitResult {
 // ============================================================================
 
 // Read limits from environment variables with defaults
-// Note: These are read at module load time for performance
-const SESSION_LIMIT = parseInt(import.meta.env.CHAT_RATE_LIMIT_SESSION || '50', 10) || 50;
-const IP_HOURLY_LIMIT = parseInt(import.meta.env.CHAT_RATE_LIMIT_IP_HOURLY || '100', 10) || 100;
+// Note: These are read at module load time for performance, from process.env at runtime
+// (Astro 6+ inlines import.meta.env at build time; it is only the `astro dev` .env fallback)
+const SESSION_LIMIT =
+  parseInt(process.env.CHAT_RATE_LIMIT_SESSION || import.meta.env.CHAT_RATE_LIMIT_SESSION || '50', 10) || 50;
+const IP_HOURLY_LIMIT =
+  parseInt(process.env.CHAT_RATE_LIMIT_IP_HOURLY || import.meta.env.CHAT_RATE_LIMIT_IP_HOURLY || '100', 10) || 100;
 
 // Time windows
 const HOUR_MS = 60 * 60 * 1000;

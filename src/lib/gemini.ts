@@ -32,8 +32,10 @@ export interface ChatOptions {
 // Configuration
 // ============================================================================
 
-const GEMINI_MODEL = import.meta.env.GEMINI_MODEL || 'gemini-1.5-flash';
-const GEMINI_API_KEY = import.meta.env.GEMINI_API_KEY;
+// Read from process.env at runtime (the Docker image is built without secrets); Astro 6+ inlines
+// import.meta.env at build time, so it is only the fallback for .env files in `astro dev`.
+const GEMINI_MODEL = process.env.GEMINI_MODEL || import.meta.env.GEMINI_MODEL || 'gemini-1.5-flash';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
 
 function getApiEndpoint(): string {
   return `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
