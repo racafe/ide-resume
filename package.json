@@ -3,6 +3,9 @@
   "description": "Racafe Astro website",
   "author": "Rafael Carrion",
   "type": "module",
+  "engines": {
+    "node": ">=22.23.4"
+  },
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",

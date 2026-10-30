@@ -25,7 +25,7 @@ A personal portfolio website styled as a VS Code IDE, built with Astro and Tailw
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22.23.4+ (required by Astro 7)
 - npm
 
 ### Installation
